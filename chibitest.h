@@ -23,6 +23,8 @@ private:
 
 protected:
     QString name;
+    void setGpio(int gpio, int val);
+    int getGpio(int gpio);
 
 public:
     ChibiTest();

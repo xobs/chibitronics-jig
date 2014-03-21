@@ -1,4 +1,5 @@
 #include "chibitest.h"
+#include <QProcess>
 
 ChibiTest::ChibiTest()
     : lastString("")
@@ -46,4 +47,49 @@ void ChibiTest::testError(const QString string)
 void ChibiTest::testDebug(const QString string)
 {
     emit testMessage(testName(), debugMessage, 0, string);
+}
+
+void ChibiTest::setGpio(int gpio, int val)
+{
+    QProcess setGpio;
+    setGpio.start("./gpio_out", QStringList() << QString::number(gpio) << QString::number(val));
+    if (!setGpio.waitForStarted()) {
+        testError("Unable to start gpio_out process");
+        return;
+    }
+
+    setGpio.closeWriteChannel();
+
+    if (!setGpio.waitForFinished()) {
+        testError("gpio_out never finished");
+        return;
+    }
+
+    if (setGpio.exitCode()) {
+        testError(QString("gpio_out failed: ") + setGpio.readAll());
+        return;
+    }
+}
+
+int ChibiTest::getGpio(int gpio)
+{
+    QProcess getGpio;
+    getGpio.start("./gpio_out", QStringList() << QString::number(gpio));
+    if (!getGpio.waitForStarted()) {
+        testError("Unable to start gpio_out process");
+        return -1;
+    }
+
+    getGpio.closeWriteChannel();
+
+    if (!getGpio.waitForFinished()) {
+        testError("gpio_out never finished");
+        return -1;
+    }
+
+    if (getGpio.exitCode() != 1 && getGpio.exitCode() != 0) {
+        testError(QString("gpio_out failed: ") + getGpio.readAll());
+        return -1;
+    }
+    return getGpio.exitCode();
 }
