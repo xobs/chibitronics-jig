@@ -3,3 +3,4 @@ Makefile
 *.app
 *.swp
 *.swo
+moc_*.cpp
