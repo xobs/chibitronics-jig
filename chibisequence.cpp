@@ -150,8 +150,10 @@ void ChibiSequence::receiveTestMessage(const QString name,
 {
     if (type == ChibiTest::infoMessage)
         qDebug() << name << "INFO:" << value << message;
-    else if (type == ChibiTest::errorMessage)
+    else if (type == ChibiTest::errorMessage) {
+        errorCount++;
         qDebug() << name << "ERROR:" << value << message;
+    }
     else if (type == ChibiTest::debugMessage)
         qDebug() << name << "DEBUG:" << value << message;
     else if (type == ChibiTest::setHeader)
