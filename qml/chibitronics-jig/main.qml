@@ -58,17 +58,24 @@ Rectangle {
     }
 
     onButtonClick: {
+        console.log("User input.  State started at: " + stickersTest.state);
         if(stickersTest.state == "finished")
             stickersTest.state = "startScreen";
         else if (stickersTest.state == "startScreen") {
             stickersTest.state = "burning";
             startTest();
         }
+        console.log("User input.  State ended at: " + stickersTest.state);
     }
 
     MouseArea {
         anchors.fill: parent
         onClicked: buttonClick()
+    }
+
+    focus: true
+    Keys.onPressed: {
+        buttonClick()
     }
 
     Item {
