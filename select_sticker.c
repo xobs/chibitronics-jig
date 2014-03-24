@@ -20,11 +20,12 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	sticker--;
 	gpio_export(55);
 	gpio_export(56);
 	gpio_set_direction(55, GPIO_OUT);
 	gpio_set_direction(56, GPIO_OUT);
 	gpio_set_value(55, !!(sticker & 1));
-	gpio_set_value(55, !!(sticker & 2));
+	gpio_set_value(56, !!(sticker & 2));
 	return 0;
 }

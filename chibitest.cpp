@@ -93,3 +93,23 @@ int ChibiTest::getGpio(int gpio)
     }
     return getGpio.exitCode();
 }
+
+void ChibiTest::selectSticker(int stickerNum)
+{
+    QProcess s;
+
+    emit testMessage(testName(), setStickerNum, stickerNum, "");
+    s.start("./select_sticker", QStringList() << QString::number(stickerNum));
+
+    if (!s.waitForStarted()) {
+        testError("Unable to select sticker");
+        return;
+    }
+
+    s.closeWriteChannel();
+    s.waitForFinished();
+    if (s.exitCode()) {
+        testError(QString("select_sticker returned an error: ") + s.readAll());
+        return;
+    }
+}

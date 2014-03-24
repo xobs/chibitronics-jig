@@ -26,7 +26,6 @@ public:
     }
 };
 
-
 ChibiSequence::ChibiSequence(QObject *parent) :
     QObject(parent)
 {
@@ -136,7 +135,8 @@ const QList<ChibiTest *> & ChibiSequence::effectsTests()
 }
 
 /* Returns true if there are more tests to run */
-bool ChibiSequence::runEffectsTests() {
+bool ChibiSequence::runEffectsTests()
+{
     currentTestNumber = -1;
     errorCount = 0;
     testsToRun.clear();
@@ -148,14 +148,24 @@ void ChibiSequence::receiveTestMessage(const QString name,
                                        int type,
                                        int value, const QString message)
 {
-    if (type == ChibiTest::infoMessage)
-        qDebug() << name << "INFO:" << value << message;
+    if (type == ChibiTest::infoMessage) {
+        QString txt;
+        txt = "INFO [" + name + "]: " + QString::number(value) + " " + message;
+        qDebug() << txt;
+        emit appendLog(txt);
+    }
     else if (type == ChibiTest::errorMessage) {
         errorCount++;
-        qDebug() << name << "ERROR:" << value << message;
+        QString txt;
+        txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message;
+        qDebug() << txt;
+        emit appendError(txt);
     }
-    else if (type == ChibiTest::debugMessage)
-        qDebug() << name << "DEBUG:" << value << message;
+    else if (type == ChibiTest::debugMessage) {
+        QString txt;
+        txt = "DEBUG [" + name + "]: " + QString::number(value) + message;
+        qDebug() << txt;
+    }
     else if (type == ChibiTest::setHeader)
         emit setHeader(message);
     else if (type == ChibiTest::setStickerNum)
@@ -163,8 +173,6 @@ void ChibiSequence::receiveTestMessage(const QString name,
     else
         qDebug() << name << "????:" << type << value << message;
 }
-
-
 
 void ChibiSequence::cleanupCurrentTest()
 {
@@ -174,7 +182,6 @@ void ChibiSequence::cleanupCurrentTest()
     runNextTest();
     return;
 }
-
 
 bool ChibiSequence::runNextTest(int continueOnErrors)
 {

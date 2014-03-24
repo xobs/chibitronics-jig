@@ -46,6 +46,8 @@ signals:
     void testsFinished();
     void setHeader(const QString header);
     void setStickerNum(int stickerNum);
+    void appendLog(const QString message);
+    void appendError(const QString message);
 };
 
 #endif // CHIBISEQUENCE_H

@@ -8,6 +8,10 @@ TestSticker::TestSticker(enum stickerType t, int num)
 }
 
 void TestSticker::runTest() {
-    testInfo("Testing sticker...");
-    emit testMessage(testName(), setStickerNum, stickerNum, "");
+    testInfo(QString("Testing sticker ") + QString::number(stickerNum));
+    /* Twinkle */
+    /* Heartbeat */
+    /* Blink */
+    /* Fade */
+    selectSticker(stickerNum);
 }

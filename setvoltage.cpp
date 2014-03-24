@@ -8,12 +8,14 @@ SetVoltage::SetVoltage(enum voltageLevel l)
 
 void SetVoltage::runTest()
 {
-    if (voltage == fiveVolts)
+    if (voltage == fiveVolts) {
         testInfo("Setting 5V");
-    else if (voltage == threeVolts)
+	setGpio(59, 1);
+    }
+    else if (voltage == threeVolts) {
         testInfo("setting 3.3V");
+	setGpio(59, 0);
+    }
     else
         testError("Unrecognized voltage");
-
-    // Actually toggle voltage here
 }

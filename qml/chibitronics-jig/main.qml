@@ -2,8 +2,8 @@ import QtQuick 1.1
 
 Rectangle {
     id: stickersTest
-    width: 800
-    height: 480
+    width: 1920
+    height: 1080
     color: "white"
     state: "startScreen"
 
@@ -13,14 +13,13 @@ Rectangle {
     signal testsFinished
     signal setHeader(string header)
     signal setSticker(int stickerNum)
+    signal appendLog(string txt)
 
     onTestsFinished: {
-        console.log("Tests finished");
         stickersTest.state = "finished"
     }
 
     onSetSticker: {
-        console.log("Picking sticker " + stickerNum)
         if (stickerNum == 1)
             downArrow.state = "sticker1"
         else if (stickerNum == 2)
@@ -34,7 +33,6 @@ Rectangle {
     }
 
     onNextStep: {
-        console.log("State started at: " + stickersTest.state);
         if (stickersTest.state == "finished")
             ;
 
@@ -49,8 +47,6 @@ Rectangle {
             stickersTest.state = "burningSticker4";
         else if(stickersTest.state == "burningSticker4")
             stickersTest.state = "finished";
-
-        console.log("State is now: " + stickersTest.state);
     }
 
     onSetHeader: {
@@ -58,14 +54,16 @@ Rectangle {
     }
 
     onButtonClick: {
-        console.log("User input.  State started at: " + stickersTest.state);
         if(stickersTest.state == "finished")
             stickersTest.state = "startScreen";
         else if (stickersTest.state == "startScreen") {
             stickersTest.state = "burning";
             startTest();
         }
-        console.log("User input.  State ended at: " + stickersTest.state);
+    }
+
+    onAppendLog: {
+        debugLog.text = txt + "\n" + debugLog.text;
     }
 
     MouseArea {
@@ -78,92 +76,97 @@ Rectangle {
         buttonClick()
     }
 
-    Item {
-        width: 800
-        height: 480
+    Image {
+        id: testEffectsImage
+        x: -1
+        y: -1
         anchors.centerIn: parent
-        clip: true
+        opacity: 1
+        source: "test-effects.jpg"
+    }
 
-        Image {
-            id: testEffectsImage
-            x: -1
-            y: -1
-            anchors.centerIn: parent
-            opacity: 1
-            source: "test-effects.jpg"
-        }
-
-        Image {
-            id: downArrow
-            y: -1
-            opacity: 0
-            anchors.bottom: testEffectsImage.top
-            anchors.left: testEffectsImage.left
-            anchors.leftMargin: 43
-            source: "downarrow.png"
-            states: [
-                State {
-                    name: "sticker1"
-                    PropertyChanges {
-                        target: downArrow
-                        opacity: 1
-                        anchors.leftMargin: 43
-                    }
-                },
-                State {
-                    name: "sticker2"
-                    PropertyChanges {
-                        target: downArrow
-                        opacity: 1
-                        anchors.leftMargin: 140
-                    }
-                },
-                State {
-                    name: "sticker3"
-                    PropertyChanges {
-                        target: downArrow
-                        opacity: 1
-                        anchors.leftMargin: 238
-                    }
-                },
-                State {
-                    name: "sticker4"
-                    PropertyChanges {
-                        target: downArrow
-                        opacity: 1
-                        anchors.leftMargin: 335
-                    }
+    Image {
+        id: downArrow
+        y: -1
+        opacity: 0
+        anchors.bottom: testEffectsImage.top
+        anchors.left: testEffectsImage.left
+        anchors.leftMargin: 43
+        source: "downarrow.png"
+        states: [
+            State {
+                name: "sticker1"
+                PropertyChanges {
+                    target: downArrow
+                    opacity: 1
+                    anchors.leftMargin: 43
                 }
-            ]
-            transitions: [
-                Transition {
-                    NumberAnimation {
-                        target: downArrow;
-                        property: "anchors.leftMargin";
-                        duration: 250
-                    }
-                    NumberAnimation {
-                        target: downArrow;
-                        property: "opacity";
-                        duration: 250
-                    }
+            },
+            State {
+                name: "sticker2"
+                PropertyChanges {
+                    target: downArrow
+                    opacity: 1
+                    anchors.leftMargin: 140
                 }
-            ]
-        }
+            },
+            State {
+                name: "sticker3"
+                PropertyChanges {
+                    target: downArrow
+                    opacity: 1
+                    anchors.leftMargin: 238
+                }
+            },
+            State {
+                name: "sticker4"
+                PropertyChanges {
+                    target: downArrow
+                    opacity: 1
+                    anchors.leftMargin: 335
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    target: downArrow;
+                    property: "anchors.leftMargin";
+                    duration: 250
+                }
+                NumberAnimation {
+                    target: downArrow;
+                    property: "opacity";
+                    duration: 250
+                }
+            }
+        ]
+    }
 
-        Text {
-            id: statusText
-            text: qsTr("Click to begin test")
-            anchors.centerIn: parent
-            opacity: 0
-            y: 200
-        }
-        Text {
-            id: titleText
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
-            font.pointSize: 48
-        }
+    Text {
+        id: statusText
+        text: qsTr("Click to begin test")
+        anchors.centerIn: parent
+        opacity: 0
+        y: 200
+    }
+
+    Text {
+        id: debugLog
+        text: "Log initialized"
+        opacity: 1
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        font.pointSize: 12
+        width: parent.width * 0.80 // 80%
+        height: parent.height * 0.90 // 100%
+    }
+
+    Text {
+        id: titleText
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        font.pointSize: 48
     }
 
     states: [
@@ -189,7 +192,6 @@ Rectangle {
             signal animationFinished
             onAnimationFinished: {
                 stickersTest.state = "burningSticker1"
-                console.log(">> State is now: " + stickersTest.state);
             }
         },
 

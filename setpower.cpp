@@ -8,10 +8,12 @@ SetPower::SetPower(enum powerState onoff)
 
 void SetPower::runTest()
 {
-    if (state == powerOn)
+    if (state == powerOn) {
         testInfo("Turning power on");
-    else
+        setGpio(59, 1);
+    }
+    else {
         testInfo("Turning power off");
-
-    // Actually toggle power here
+        setGpio(59, 0);
+    }
 }
