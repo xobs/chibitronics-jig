@@ -8,6 +8,7 @@
 #include "delay.h"
 #include "header.h"
 #include "programsticker.h"
+#include "verifysticker.h"
 #include "setstickerfuse.h"
 #include "teststicker.h"
 #include "testaudio.h"
@@ -143,7 +144,10 @@ ChibiSequence::ChibiSequence(QObject *parent) :
 
     _sensorTests.append(new Header("Programming"));
     _sensorTests.append(new ProgramSticker(8, "chibi-trigger.hex"));
+    _sensorTests.append(new VerifySticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new ProgramSticker(5, "stickers_byte_attiny85_memorize.cpp.hex",
+                                            "chibi-micro.conf", "attiny85"));
+    _sensorTests.append(new VerifySticker(5, "stickers_byte_attiny85_memorize.cpp.hex",
                                             "chibi-micro.conf", "attiny85"));
     // Disable self-programming of flash
     _sensorTests.append(new SetStickerFuse(5, "efuse", 0xFF,
@@ -172,7 +176,6 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetPower(SetPower::powerOn));
     _sensorTests.append(new TestAudio(3 * 1000));
     _sensorTests.append(new TestLed(50));
-    _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
 
     _sensorTests.append(new Header("Test completed"));

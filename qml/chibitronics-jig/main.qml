@@ -49,7 +49,7 @@ Rectangle {
         else if (currentSticker == 7)
             statusSticker7.state = "error";
         else if (currentSticker == 8)
-            statusSticker7.state = "error";
+            statusSticker8.state = "error";
         else
             console.log("Unable to find a sticker to error");
     }
@@ -70,7 +70,7 @@ Rectangle {
         else if (currentSticker == 7)
             statusSticker7.state = "pass";
         else if (currentSticker == 8)
-            statusSticker7.state = "pass";
+            statusSticker8.state = "pass";
         else
             console.log("Unable to find a sticker to pass");
     }
@@ -324,10 +324,10 @@ Rectangle {
 
     Image {
         id: statusSticker5
-        anchors.top: testEffectsImage.bottom
+        anchors.bottom: testEffectsImage.top
         anchors.left: testEffectsImage.left
-        rotation: 270
-        anchors.leftMargin: -60
+        rotation: 90
+        anchors.leftMargin: -120
         anchors.bottomMargin: -200
         opacity: 0
         states: [
@@ -367,9 +367,11 @@ Rectangle {
 
     Image {
         id: statusSticker6
-        anchors.top: testEffectsImage.bottom
+        anchors.bottom: testEffectsImage.top
         anchors.left: testEffectsImage.left
         anchors.leftMargin: 180
+        anchors.bottomMargin: 60
+        rotation: 180
         opacity: 0
         states: [
             State {
@@ -408,9 +410,11 @@ Rectangle {
 
     Image {
         id: statusSticker7
-        anchors.top: testEffectsImage.bottom
+        anchors.bottom: testEffectsImage.top
         anchors.left: testEffectsImage.left
-                    anchors.leftMargin: 32
+        anchors.leftMargin: 32
+        anchors.bottomMargin: 60
+        rotation: 180
         opacity: 0
         states: [
             State {
@@ -449,11 +453,11 @@ Rectangle {
 
     Image {
         id: statusSticker8
-        anchors.top: testEffectsImage.bottom
+        anchors.bottom: testEffectsImage.top
         anchors.left: testEffectsImage.left
-        anchors.leftMargin: 280
+        anchors.leftMargin: 340
         anchors.bottomMargin: -200
-        rotation: 90
+        rotation: 270
         opacity: 0
         states: [
             State {

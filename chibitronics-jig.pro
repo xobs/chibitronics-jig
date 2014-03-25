@@ -19,6 +19,7 @@ SOURCES += main.cpp \
     header.cpp \
     finished.cpp \
     programsticker.cpp \
+    verifysticker.cpp \
     setstickerfuse.cpp \
     testaudio.cpp \
     testled.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     header.h \
     finished.h \
     programsticker.h \
+    verifysticker.h \
     setstickerfuse.h \
     testaudio.h \
     testled.h \
