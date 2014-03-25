@@ -11,7 +11,10 @@ ProgramSticker::ProgramSticker(QString firmware, int num)
 void ProgramSticker::runTest()
 {
     QProcess avrdude;
-    testInfo(QString("Programming sticker ") + QString::number(stickerNum));
+
+    emit testMessage(testName(), infoMessage, stickerNum, 
+            QString("Programming sticker ") + QString::number(stickerNum));
+
     selectSticker(stickerNum);
 
     avrdude.start("./avrdude", QStringList()

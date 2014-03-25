@@ -1,5 +1,15 @@
 #include "chibitest.h"
 #include <QProcess>
+#include <QThread>
+
+class SleeperThread : public QThread
+{
+public:
+    static void msleep(unsigned long msecs)
+    {
+        QThread::msleep(msecs);
+    }
+};
 
 ChibiTest::ChibiTest()
     : lastString("")
@@ -74,21 +84,21 @@ void ChibiTest::setGpio(int gpio, int val)
 int ChibiTest::getGpio(int gpio)
 {
     QProcess getGpio;
-    getGpio.start("./gpio_out", QStringList() << QString::number(gpio));
+    getGpio.start("./gpio_in", QStringList() << QString::number(gpio));
     if (!getGpio.waitForStarted()) {
-        testError("Unable to start gpio_out process");
+        testError("Unable to start gpio_in process");
         return -1;
     }
 
     getGpio.closeWriteChannel();
 
     if (!getGpio.waitForFinished()) {
-        testError("gpio_out never finished");
+        testError("gpio_in never finished");
         return -1;
     }
 
     if (getGpio.exitCode() != 1 && getGpio.exitCode() != 0) {
-        testError(QString("gpio_out failed: ") + getGpio.readAll());
+        testError(QString("gpio_in failed: ") + getGpio.readAll());
         return -1;
     }
     return getGpio.exitCode();
@@ -112,4 +122,9 @@ void ChibiTest::selectSticker(int stickerNum)
         testError(QString("select_sticker returned an error: ") + s.readAll());
         return;
     }
+}
+
+void ChibiTest::msleep(int msecs)
+{
+    SleeperThread::msleep(msecs);
 }

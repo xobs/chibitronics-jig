@@ -8,6 +8,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     ChibiSequence chibiSequence(&app);
 
+    app.setOverrideCursor(Qt::BlankCursor);
+
     QtQuick1ApplicationViewer viewer;
     viewer.addImportPath(QLatin1String("modules"));
     viewer.setOrientation(QtQuick1ApplicationViewer::ScreenOrientationAuto);
@@ -27,5 +29,7 @@ int main(int argc, char *argv[])
                      rootObject, SLOT(testsFinished()));
     QObject::connect(&chibiSequence, SIGNAL(appendLog(const QString)),
 		     rootObject, SLOT(appendLog(const QString)));
+    QObject::connect(&chibiSequence, SIGNAL(appendError(const QString)),
+		     rootObject, SLOT(appendError(const QString)));
     return app.exec();
 }

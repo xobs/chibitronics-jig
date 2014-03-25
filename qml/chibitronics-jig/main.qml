@@ -14,22 +14,41 @@ Rectangle {
     signal setHeader(string header)
     signal setSticker(int stickerNum)
     signal appendLog(string txt)
+    signal appendError(string txt)
+
+    onSetHeader: {
+        titleText.text = header;
+    }
+
+    onAppendLog: {
+        debugLog.text = txt + "\n" + debugLog.text;
+    }
+
+    onAppendError: {
+        errorText.opacity = 1;
+        errorText.text = txt;
+        titleText.text = "Error";
+        stickersTest.state = "error";
+    }
 
     onTestsFinished: {
-        stickersTest.state = "finished"
+        debugLog.text = "---\n" + debugLog.text;
+        if (stickersTest.state != "error") {
+            stickersTest.state = "finished";
+        }
     }
 
     onSetSticker: {
         if (stickerNum == 1)
-            downArrow.state = "sticker1"
+            downArrow.state = "sticker1";
         else if (stickerNum == 2)
-            downArrow.state = "sticker2"
+            downArrow.state = "sticker2";
         else if (stickerNum == 3)
-            downArrow.state = "sticker3"
+            downArrow.state = "sticker3";
         else if (stickerNum == 4)
-            downArrow.state = "sticker4"
+            downArrow.state = "sticker4";
         else
-            downArrow.state = ""
+            downArrow.state = "parked";
     }
 
     onNextStep: {
@@ -38,32 +57,17 @@ Rectangle {
 
         else if (stickersTest.state == "startScreen")
             stickersTest.state = "burning";
-
-        else if(stickersTest.state == "burningSticker1")
-            stickersTest.state = "burningSticker2";
-        else if(stickersTest.state == "burningSticker2")
-            stickersTest.state = "burningSticker3";
-        else if(stickersTest.state == "burningSticker3")
-            stickersTest.state = "burningSticker4";
-        else if(stickersTest.state == "burningSticker4")
-            stickersTest.state = "finished";
-    }
-
-    onSetHeader: {
-        titleText.text = header;
     }
 
     onButtonClick: {
-        if(stickersTest.state == "finished")
+        if(stickersTest.state == "finished" || stickersTest.state == "error") {
+            errorText.text = "";
             stickersTest.state = "startScreen";
+        }
         else if (stickersTest.state == "startScreen") {
             stickersTest.state = "burning";
             startTest();
         }
-    }
-
-    onAppendLog: {
-        debugLog.text = txt + "\n" + debugLog.text;
     }
 
     MouseArea {
@@ -94,6 +98,14 @@ Rectangle {
         anchors.leftMargin: 43
         source: "downarrow.png"
         states: [
+            State {
+                name: "parked"
+                PropertyChanges {
+                    target: downArrow
+                    opacity: 0
+                    anchors.leftMargin: 43
+                }
+            },
             State {
                 name: "sticker1"
                 PropertyChanges {
@@ -166,6 +178,18 @@ Rectangle {
         id: titleText
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: 43
+        font.pointSize: 48
+    }
+
+    Text {
+        id: errorText
+        anchors.top: titleText.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "red"
+        text: "Error Here"
+        opacity: 0
+        anchors.topMargin: 43
         font.pointSize: 48
     }
 
@@ -184,15 +208,20 @@ Rectangle {
                 target: testEffectsImage
                 opacity: 0
             }
+            PropertyChanges {
+                target: errorText
+                opacity: 0
+            }
+            PropertyChanges {
+                target: downArrow
+                opacity: 0
+                state: "parked"
+            }
         },
 
         State {
             name: "burning"
             id: burning
-            signal animationFinished
-            onAnimationFinished: {
-                stickersTest.state = "burningSticker1"
-            }
         },
 
         State {
@@ -200,6 +229,23 @@ Rectangle {
             PropertyChanges {
                 target: testEffectsImage
                 opacity: 0
+            }
+            PropertyChanges {
+                target: downArrow
+                state: "parked"
+            }
+        },
+
+        State {
+            name: "error"
+            PropertyChanges {
+                target: errorText
+                opacity: 1
+            }
+            PropertyChanges {
+                target: downArrow
+                opacity: 0
+                state: "parked"
             }
         }
     ]
@@ -213,11 +259,17 @@ Rectangle {
                     NumberAnimation { target: testEffectsImage; property: "opacity"; duration: 500 }
                     NumberAnimation { target: statusText; property: "opacity"; duration: 250 }
                 }
-                ScriptAction { script: burning.animationFinished() }
             }
         },
         Transition {
             to: "finished"
+            ParallelAnimation {
+                NumberAnimation { target: downArrow; property: "opacity"; duration: 500 }
+                NumberAnimation { target: testEffectsImage; property: "opacity"; duration: 500 }
+            }
+        },
+        Transition {
+            to: "startScreen"
             ParallelAnimation {
                 NumberAnimation { target: downArrow; property: "opacity"; duration: 500 }
                 NumberAnimation { target: testEffectsImage; property: "opacity"; duration: 500 }

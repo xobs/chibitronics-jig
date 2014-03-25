@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QFile>
 #include "chibitest.h"
 
 class ChibiTestEngineThread;
@@ -20,13 +21,14 @@ private:
     ChibiTest *currentTest;
     int currentTestNumber;
     ChibiTestEngineThread *currentThread;
+    QFile log;
     int errorCount;
     bool debugMode;
 
     bool runSelectedTests(QList<ChibiTest *> &tests);
     const QList<ChibiTest *> & effectsTests();
 
-    bool runNextTest(int continueOnErrors = 0);
+    bool runNextTest();
 
 public slots:
     /* 

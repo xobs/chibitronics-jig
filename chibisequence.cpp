@@ -119,14 +119,18 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     */
 
     /* Wire up signals and slots for all tests */
-    qDebug() << "Connecting signals...";
     for (int i = 0; i < _effectsTests.count(); i++)
         connect(
             _effectsTests.at(i),
             SIGNAL(testMessage(const QString,int,int,const QString)),
             this,
             SLOT(receiveTestMessage(const QString,int,int,const QString)));
-    qDebug() << "Done";
+
+    log.setFileName("/home/aqs/stickers.log");
+    if (!log.open(QFile::ReadWrite | QFile::Append)) {
+        emit appendError("Unable to open logfile");
+        qDebug() << "Unable to open logfile: " << log.errorString();
+    }
 }
 
 const QList<ChibiTest *> & ChibiSequence::effectsTests()
@@ -141,6 +145,12 @@ bool ChibiSequence::runEffectsTests()
     errorCount = 0;
     testsToRun.clear();
     testsToRun = _effectsTests;
+
+    QString txt("---\n");
+    QByteArray txtBytes = txt.toUtf8();
+    // For some reason, log.write() doesn't work, and never calls write()
+    write(log.handle(), txtBytes, txtBytes.size());
+
     return runNextTest();
 }
 
@@ -150,16 +160,31 @@ void ChibiSequence::receiveTestMessage(const QString name,
 {
     if (type == ChibiTest::infoMessage) {
         QString txt;
+        QByteArray txtBytes;
+
         txt = "INFO [" + name + "]: " + QString::number(value) + " " + message;
         qDebug() << txt;
         emit appendLog(txt);
+
+        txt += "\n";
+        txtBytes = txt.toUtf8();
+        // For some reason, log.write() doesn't work, and never calls write()
+        write(log.handle(), txtBytes, txtBytes.size());
     }
     else if (type == ChibiTest::errorMessage) {
         errorCount++;
         QString txt;
+        QByteArray txtBytes;
+
         txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message;
         qDebug() << txt;
-        emit appendError(txt);
+        emit appendLog(txt);
+        emit appendError(message);
+
+        txt += "\n";
+        txtBytes = txt.toUtf8();
+        // For some reason, log.write() doesn't work, and never calls write()
+        write(log.handle(), txtBytes, txtBytes.size());
     }
     else if (type == ChibiTest::debugMessage) {
         QString txt;
@@ -183,11 +208,9 @@ void ChibiSequence::cleanupCurrentTest()
     return;
 }
 
-bool ChibiSequence::runNextTest(int continueOnErrors)
+bool ChibiSequence::runNextTest()
 {
-    if (errorCount && !continueOnErrors && !debugMode) {
-        QString str;
-        str.append(testsToRun.at(currentTestNumber)->testName());
+    if (errorCount) {
         emit testsFinished();
         return false;
     }
@@ -195,8 +218,6 @@ bool ChibiSequence::runNextTest(int continueOnErrors)
     // Increment the test number, and return if we've run out of tests.
     currentTestNumber++;
     if (currentTestNumber >= testsToRun.count()) {
-        //ui->setProgressBar(1);
-        //ui->finishTests(errorCount?false:true);
         return false;
     }
 

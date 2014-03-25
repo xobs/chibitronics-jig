@@ -8,10 +8,27 @@ TestSticker::TestSticker(enum stickerType t, int num)
 }
 
 void TestSticker::runTest() {
-    testInfo(QString("Testing sticker ") + QString::number(stickerNum));
-    /* Twinkle */
-    /* Heartbeat */
-    /* Blink */
-    /* Fade */
+    /* 1: Twinkle */
+    /* 2: Heartbeat */
+    /* 3: Blink */
+    /* 4: Fade */
+    int i;
+    emit testMessage(testName(), infoMessage, stickerNum,
+            QString("Testing sticker ") + QString::number(stickerNum));
+
     selectSticker(stickerNum);
+
+    int count = 0;
+    for (i = 0; i < 100; i++) {
+        int g = getGpio(54);
+        count += g;
+        msleep(10);
+    }
+
+    if (count > 80)
+        testError(QString() 
+                + "Sticker " + QString::number(stickerNum) + " stuck high");
+    else if (count < 20)
+        testError(QString() 
+                + "Sticker " + QString::number(stickerNum) + " stuck low");
 }

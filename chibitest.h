@@ -26,6 +26,7 @@ protected:
     void setGpio(int gpio, int val);
     int getGpio(int gpio);
     void selectSticker(int stickerNum);
+    void msleep(int msec);
 
 public:
     ChibiTest();
