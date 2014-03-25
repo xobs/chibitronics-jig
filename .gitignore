@@ -4,3 +4,9 @@ Makefile
 *.swp
 *.swo
 moc_*.cpp
+
+# Executables
+gpio_in
+gpio_out
+select_sticker
+chibitronics-jig
