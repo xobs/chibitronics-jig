@@ -25,10 +25,12 @@ void TestSticker::runTest() {
         msleep(10);
     }
 
-    if (count > 80)
+    if (count > 90)
         testError(QString() 
                 + "Sticker " + QString::number(stickerNum) + " stuck high");
-    else if (count < 20)
+    else if (count < 10)
         testError(QString() 
                 + "Sticker " + QString::number(stickerNum) + " stuck low");
+    else
+        emit testMessage(testName(), testPass, stickerNum, "Test passed");
 }

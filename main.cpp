@@ -31,5 +31,7 @@ int main(int argc, char *argv[])
 		     rootObject, SLOT(appendLog(const QString)));
     QObject::connect(&chibiSequence, SIGNAL(appendError(const QString)),
 		     rootObject, SLOT(appendError(const QString)));
+    QObject::connect(&chibiSequence, SIGNAL(appendPass()),
+		     rootObject, SLOT(appendPass()));
     return app.exec();
 }

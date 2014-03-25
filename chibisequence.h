@@ -51,6 +51,7 @@ signals:
     void setStickerNum(int stickerNum);
     void appendLog(const QString message);
     void appendError(const QString message);
+    void appendPass();
 };
 
 #endif // CHIBISEQUENCE_H

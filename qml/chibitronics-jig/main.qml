@@ -6,6 +6,8 @@ Rectangle {
     height: 1080
     color: "white"
     state: "startScreen"
+    property int errorCount
+    property int currentSticker
 
     signal buttonClick
     signal startTest
@@ -15,6 +17,7 @@ Rectangle {
     signal setSticker(int stickerNum)
     signal appendLog(string txt)
     signal appendError(string txt)
+    signal appendPass
 
     onSetHeader: {
         titleText.text = header;
@@ -27,15 +30,40 @@ Rectangle {
     onAppendError: {
         errorText.opacity = 1;
         errorText.text = txt;
-        titleText.text = "Error";
-        stickersTest.state = "error";
+        errorCount++;
+
+        if (currentSticker == 1)
+            statusSticker1.state = "error";
+        else if (currentSticker == 2)
+            statusSticker2.state = "error";
+        else if (currentSticker == 3)
+            statusSticker3.state = "error";
+        else if (currentSticker == 4)
+            statusSticker4.state = "error";
+        else
+            console.log("Unable to find a sticker to error");
+    }
+
+    onAppendPass: {
+        if (currentSticker == 1)
+            statusSticker1.state = "pass";
+        else if (currentSticker == 2)
+            statusSticker2.state = "pass";
+        else if (currentSticker == 3)
+            statusSticker3.state = "pass";
+        else if (currentSticker == 4)
+            statusSticker4.state = "pass";
+        else
+            console.log("Unable to find a sticker to pass");
     }
 
     onTestsFinished: {
-        debugLog.text = "---\n" + debugLog.text;
-        if (stickersTest.state != "error") {
+        if (errorCount == 0)
             stickersTest.state = "finished";
-        }
+        else
+            stickersTest.state = "error";
+        errorCount = 0;
+        debugLog.text = "---\n" + debugLog.text;
     }
 
     onSetSticker: {
@@ -49,6 +77,7 @@ Rectangle {
             downArrow.state = "sticker4";
         else
             downArrow.state = "parked";
+        currentSticker = stickerNum;
     }
 
     onNextStep: {
@@ -63,6 +92,10 @@ Rectangle {
         if(stickersTest.state == "finished" || stickersTest.state == "error") {
             errorText.text = "";
             stickersTest.state = "startScreen";
+            statusSticker1.state = "parked";
+            statusSticker2.state = "parked";
+            statusSticker3.state = "parked";
+            statusSticker4.state = "parked";
         }
         else if (stickersTest.state == "startScreen") {
             stickersTest.state = "burning";
@@ -87,6 +120,170 @@ Rectangle {
         anchors.centerIn: parent
         opacity: 1
         source: "test-effects.jpg"
+    }
+
+    Image {
+        id: statusSticker1
+        anchors.top: testEffectsImage.bottom
+        anchors.left: testEffectsImage.left
+        anchors.leftMargin: 43
+        opacity: 0
+        states: [
+            State {
+                name: "parked"
+                PropertyChanges {
+                    target: statusSticker1
+                    opacity: 0
+                    source: ""
+                }
+            },
+            State {
+                name: "error"
+                PropertyChanges {
+                    target: statusSticker1
+                    opacity: 1
+                    source: "arrow-error.png"
+                }
+            },
+            State {
+                name: "pass"
+                PropertyChanges {
+                    target: statusSticker1
+                    opacity: 1
+                    source: "arrow-pass.png"
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                SequentialAnimation {
+                    NumberAnimation { target: statusSticker1; property: "opacity"; duration: 250; }
+                }
+            }
+        ]
+    }
+
+    Image {
+        id: statusSticker2
+        anchors.top: testEffectsImage.bottom
+        anchors.left: testEffectsImage.left
+        anchors.leftMargin: 140
+        opacity: 0
+        states: [
+            State {
+                name: "parked"
+                PropertyChanges {
+                    target: statusSticker2
+                    opacity: 0
+                    source: ""
+                }
+            },
+            State {
+                name: "error"
+                PropertyChanges {
+                    target: statusSticker2
+                    opacity: 1
+                    source: "arrow-error.png"
+                }
+            },
+            State {
+                name: "pass"
+                PropertyChanges {
+                    target: statusSticker2
+                    opacity: 1
+                    source: "arrow-pass.png"
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                SequentialAnimation {
+                    NumberAnimation { target: statusSticker2; property: "opacity"; duration: 250; }
+                }
+            }
+        ]
+    }
+
+    Image {
+        id: statusSticker3
+        anchors.top: testEffectsImage.bottom
+        anchors.left: testEffectsImage.left
+        anchors.leftMargin: 238
+        opacity: 0
+        states: [
+            State {
+                name: "parked"
+                PropertyChanges {
+                    target: statusSticker3
+                    opacity: 0
+                    source: ""
+                }
+            },
+            State {
+                name: "error"
+                PropertyChanges {
+                    target: statusSticker3
+                    opacity: 1
+                    source: "arrow-error.png"
+                }
+            },
+            State {
+                name: "pass"
+                PropertyChanges {
+                    target: statusSticker3
+                    opacity: 1
+                    source: "arrow-pass.png"
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                SequentialAnimation {
+                    NumberAnimation { target: statusSticker3; property: "opacity"; duration: 250; }
+                }
+            }
+        ]
+    }
+
+    Image {
+        id: statusSticker4
+        anchors.top: testEffectsImage.bottom
+        anchors.left: testEffectsImage.left
+        anchors.leftMargin: 335
+        opacity: 0
+        states: [
+            State {
+                name: "parked"
+                PropertyChanges {
+                    target: statusSticker4
+                    opacity: 0
+                    source: ""
+                }
+            },
+            State {
+                name: "error"
+                PropertyChanges {
+                    target: statusSticker4
+                    opacity: 1
+                    source: "arrow-error.png"
+                }
+            },
+            State {
+                name: "pass"
+                PropertyChanges {
+                    target: statusSticker4
+                    opacity: 1
+                    source: "arrow-pass.png"
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                SequentialAnimation {
+                    NumberAnimation { target: statusSticker4; property: "opacity"; duration: 250; }
+                }
+            }
+        ]
     }
 
     Image {
@@ -227,10 +424,6 @@ Rectangle {
         State {
             name: "finished"
             PropertyChanges {
-                target: testEffectsImage
-                opacity: 0
-            }
-            PropertyChanges {
                 target: downArrow
                 state: "parked"
             }
@@ -241,6 +434,10 @@ Rectangle {
             PropertyChanges {
                 target: errorText
                 opacity: 1
+            }
+            PropertyChanges {
+                target: downArrow
+                state: "parked"
             }
         }
     ]

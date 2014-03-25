@@ -50,6 +50,7 @@ public:
         debugMessage,
         setHeader,
         setStickerNum,
+        testPass,
     };
 
     enum gpio {

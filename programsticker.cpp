@@ -38,7 +38,7 @@ void ProgramSticker::runTest()
     }
 
     if (avrdude.exitCode()) {
-        testError(QString("avrdude returned an error: ") + avrdude.readAll());
+        testError(QString("Failed to program"));
         return;
     }
 }

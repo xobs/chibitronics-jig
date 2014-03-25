@@ -11,4 +11,3 @@ gpio_out
 gpio_export
 gpio_unexport
 select_sticker
-chibitronics-jig

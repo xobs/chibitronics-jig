@@ -254,6 +254,8 @@ void ChibiSequence::receiveTestMessage(const QString name,
         emit setHeader(message);
     else if (type == ChibiTest::setStickerNum)
         emit setStickerNum(value);
+    else if (type == ChibiTest::testPass)
+        emit appendPass();
     else
         qDebug() << name << "????:" << type << value << message;
 }
@@ -269,10 +271,12 @@ void ChibiSequence::cleanupCurrentTest()
 
 bool ChibiSequence::runNextTest()
 {
+    /*
     if (errorCount) {
         emit testsFinished();
         return false;
     }
+    */
 
     // Increment the test number, and return if we've run out of tests.
     currentTestNumber++;
