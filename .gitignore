@@ -8,5 +8,6 @@ moc_*.cpp
 # Executables
 gpio_in
 gpio_out
+gpio_export
 select_sticker
 chibitronics-jig
