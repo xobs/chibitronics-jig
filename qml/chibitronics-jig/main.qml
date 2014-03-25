@@ -242,11 +242,6 @@ Rectangle {
                 target: errorText
                 opacity: 1
             }
-            PropertyChanges {
-                target: downArrow
-                opacity: 0
-                state: "parked"
-            }
         }
     ]
 
