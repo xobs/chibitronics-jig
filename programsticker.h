@@ -6,12 +6,16 @@ class ProgramSticker : public ChibiTest
 {
 	Q_OBJECT
 public:
-    ProgramSticker(QString firmwareFile, int stickerNum);
+    ProgramSticker(int stickerNum, QString firmwareFile,
+                   QString configFile = "chibi-sensor.conf",
+                   QString partName = "attiny5");
     void runTest();
 
 private:
     int stickerNum;
     QString firmwareFile;
+    QString configFile;
+    QString partName;
 };
 
 #endif // PROGRAMSTICKER_H

@@ -12,10 +12,15 @@ SOURCES += main.cpp \
     chibitest.cpp \
     setpower.cpp \
     setvoltage.cpp \
+    setmicrodrive.cpp \
+    unexportgpio.cpp \
     delay.cpp \
     header.cpp \
     finished.cpp \
     programsticker.cpp \
+    setstickerfuse.cpp \
+    testaudio.cpp \
+    testled.cpp \
     teststicker.cpp
 
 # Installation path
@@ -30,8 +35,13 @@ HEADERS += \
     chibitest.h \
     setpower.h \
     setvoltage.h \
+    setmicrodrive.h \
+    unexportgpio.h \
     delay.h \
     header.h \
     finished.h \
     programsticker.h \
+    setstickerfuse.h \
+    testaudio.h \
+    testled.h \
     teststicker.h

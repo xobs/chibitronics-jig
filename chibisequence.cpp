@@ -2,10 +2,15 @@
 #include "chibisequence.h"
 #include "setpower.h"
 #include "setvoltage.h"
+#include "setmicrodrive.h"
+#include "unexportgpio.h"
 #include "delay.h"
 #include "header.h"
 #include "programsticker.h"
+#include "setstickerfuse.h"
 #include "teststicker.h"
+#include "testaudio.h"
+#include "testled.h"
 #include "finished.h"
 
 class ChibiTest;
@@ -59,29 +64,24 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _effectsTests.append(new SetPower(SetPower::powerOff));
     _effectsTests.append(new Delay(100));
     _effectsTests.append(new SetVoltage(SetVoltage::fiveVolts));
+    _effectsTests.append(new UnexportGpio(ChibiTest::tpiSignalGpio));
+    _effectsTests.append(new UnexportGpio(ChibiTest::tpiDatGpio));
+    _effectsTests.append(new UnexportGpio(ChibiTest::spiResetGpio));
+    _effectsTests.append(new UnexportGpio(ChibiTest::spiSckGpio));
+    _effectsTests.append(new UnexportGpio(ChibiTest::spiMosiGpio));
+    _effectsTests.append(new UnexportGpio(ChibiTest::spiMisoGpio));
     _effectsTests.append(new Delay(100));
     _effectsTests.append(new SetPower(SetPower::powerOn));
 
     _effectsTests.append(new Header("Programming"));
-    _effectsTests.append(new ProgramSticker("chibitrigger1.hex", 1));
-    _effectsTests.append(new ProgramSticker("chibitrigger1.hex", 2));
-    _effectsTests.append(new ProgramSticker("chibitrigger1.hex", 3));
-    _effectsTests.append(new ProgramSticker("chibitrigger1.hex", 4));
+    _effectsTests.append(new ProgramSticker(1, "chibi-pattern.hex"));
+    _effectsTests.append(new ProgramSticker(2, "chibi-pattern.hex"));
+    _effectsTests.append(new ProgramSticker(3, "chibi-pattern.hex"));
+    _effectsTests.append(new ProgramSticker(4, "chibi-pattern.hex"));
     _effectsTests.append(new SetPower(SetPower::powerOff));
     _effectsTests.append(new Delay(100));
 
     _effectsTests.append(new Header("Testing at 5V"));
-    _effectsTests.append(new SetPower(SetPower::powerOn));
-    _effectsTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
-    _effectsTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
-    _effectsTests.append(new TestSticker(TestSticker::blinkSticker, 3));
-    _effectsTests.append(new TestSticker(TestSticker::fadeSticker, 4));
-    _effectsTests.append(new SetPower(SetPower::powerOff));
-    _effectsTests.append(new Delay(100));
-
-    _effectsTests.append(new Header("Testing at 3.3V"));
-    _effectsTests.append(new SetVoltage(SetVoltage::threeVolts));
-    _effectsTests.append(new Delay(100));
     _effectsTests.append(new SetPower(SetPower::powerOn));
     _effectsTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
     _effectsTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
@@ -117,6 +117,65 @@ ChibiSequence::ChibiSequence(QObject *parent) :
        21) Program final microcontroller behavior
        22) Toggle power off
     */
+    _sensorTests.append(new Header("Reset Jig"));
+    _sensorTests.append(new SetPower(SetPower::powerOff));
+    _sensorTests.append(new Delay(100));
+    _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
+    _sensorTests.append(new UnexportGpio(ChibiTest::tpiSignalGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::tpiDatGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiResetGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiSckGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMosiGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMisoGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiResetMicroGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiSckMicroGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMosiMicroGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMisoMicroGpio));
+    _sensorTests.append(new SetMicroDrive(SetMicroDrive::program));
+    _sensorTests.append(new Delay(100));
+    _sensorTests.append(new SetPower(SetPower::powerOn));
+
+    _sensorTests.append(new Header("Programming"));
+    _sensorTests.append(new ProgramSticker(1, "chibi-trigger.hex"));
+    _sensorTests.append(new ProgramSticker(2, "stickers_byte_attiny85.cpp.hex",
+                                            "chibi-micro.conf"));
+    // Disable self-programming of flash
+    _sensorTests.append(new SetStickerFuse(2, "efuse", 0xFF,
+                                           "chibi-micro.conf", "t85"));
+    // Set brown-out detect to 1.8V
+    _sensorTests.append(new SetStickerFuse(2, "hfuse", 0xDE,
+                                           "chibi-micro.conf", "t85"));
+    // Set clock to 8MHz
+    _sensorTests.append(new SetStickerFuse(2, "lfuse", 0xE2,
+                                           "chibi-micro.conf", "t85"));
+    _sensorTests.append(new SetPower(SetPower::powerOff));
+    _sensorTests.append(new Delay(100));
+
+    _sensorTests.append(new Header("Testing at 5V"));
+    _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
+    _sensorTests.append(new SetMicroDrive(SetMicroDrive::execute));
+    _sensorTests.append(new SetPower(SetPower::powerOn));
+    _sensorTests.append(new TestAudio());
+    _sensorTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
+    _sensorTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
+    _sensorTests.append(new TestSticker(TestSticker::blinkSticker, 3));
+    _sensorTests.append(new TestSticker(TestSticker::fadeSticker, 4));
+    _sensorTests.append(new SetPower(SetPower::powerOff));
+    _sensorTests.append(new Delay(100));
+
+    _sensorTests.append(new Header("Testing at 3.3V"));
+    _sensorTests.append(new SetVoltage(SetVoltage::threeVolts));
+    _sensorTests.append(new Delay(100));
+    _sensorTests.append(new SetPower(SetPower::powerOn));
+    _sensorTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
+    _sensorTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
+    _sensorTests.append(new TestSticker(TestSticker::blinkSticker, 3));
+    _sensorTests.append(new TestSticker(TestSticker::fadeSticker, 4));
+    _sensorTests.append(new SetPower(SetPower::powerOff));
+    _sensorTests.append(new Delay(100));
+
+    _sensorTests.append(new Header("Test completed"));
+    _sensorTests.append(new Finished());
 
     /* Wire up signals and slots for all tests */
     for (int i = 0; i < _effectsTests.count(); i++)
@@ -218,6 +277,7 @@ bool ChibiSequence::runNextTest()
     // Increment the test number, and return if we've run out of tests.
     currentTestNumber++;
     if (currentTestNumber >= testsToRun.count()) {
+        emit testsFinished();
         return false;
     }
 

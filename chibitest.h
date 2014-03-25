@@ -25,6 +25,7 @@ protected:
     QString name;
     void setGpio(int gpio, int val);
     int getGpio(int gpio);
+    int unexportGpio(int gpio);
     void selectSticker(int stickerNum);
     void msleep(int msec);
 
@@ -49,6 +50,31 @@ public:
         debugMessage,
         setHeader,
         setStickerNum,
+    };
+
+    enum gpio {
+        powerGpio = 17,
+        outputGpio = 54,
+        microDriveGpio = 57,
+        voltageGpio = 59,
+
+        tpiSignalGpio = 67,
+        tpiDatGpio = 68,
+
+        /* SPI lines for effects stickers */
+        spiResetGpio = 64,
+        spiSckGpio = 66,
+        spiMosiGpio = 65,
+        spiMisoGpio = 53,
+
+        /* Separate SPI lines for Microcontroller sticker */
+        spiResetMicroGpio = 69,
+        spiSckMicroGpio = 70,
+        spiMosiMicroGpio = 72,
+        spiMisoMicroGpio = 52,
+
+        /* Sensor GPIOs */
+        buzzerGpio = 76,
     };
 
 public slots:

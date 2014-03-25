@@ -104,6 +104,27 @@ int ChibiTest::getGpio(int gpio)
     return getGpio.exitCode();
 }
 
+int ChibiTest::unexportGpio(int gpio)
+{
+    QProcess unexport;
+    unexport.start("./gpio_unexport", QStringList() << QString::number(gpio));
+    if (!unexport.waitForStarted()) {
+        testError("Unable to start gpio_unexport process");
+        return -1;
+    }
+
+    unexport.closeWriteChannel();
+
+    if (!unexport.waitForFinished()) {
+        testError("gpio_unexport never finished");
+        return -1;
+    }
+
+    if (unexport.exitCode())
+        testError(QString("gpio_unexport failed: ") + unexport.readAll());
+    return unexport.exitCode();
+}
+
 void ChibiTest::selectSticker(int stickerNum)
 {
     QProcess s;

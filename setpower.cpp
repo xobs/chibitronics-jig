@@ -10,10 +10,10 @@ void SetPower::runTest()
 {
     if (state == powerOn) {
         testInfo("Turning power on");
-        setGpio(59, 1);
+        setGpio(powerGpio, 1);
     }
     else {
         testInfo("Turning power off");
-        setGpio(59, 0);
+        setGpio(powerGpio, 0);
     }
 }

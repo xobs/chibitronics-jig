@@ -16,6 +16,7 @@ public:
 
 private:
     QList<ChibiTest *> _effectsTests;
+    QList<ChibiTest *> _sensorTests;
     QList<ChibiTest *> testsToRun;
 
     ChibiTest *currentTest;

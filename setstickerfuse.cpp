@@ -1,21 +1,22 @@
 #include <QString>
 #include <QProcess>
-#include "programsticker.h"
+#include "setstickerfuse.h"
 
-ProgramSticker::ProgramSticker(int num, QString firmware,
+SetStickerFuse::SetStickerFuse(int num, QString fuse, int value,
                                QString config, QString part)
-    : stickerNum(num), firmwareFile(firmware),
-    configFile(config), partName(part)
+    : stickerNum(num), fuseValue(value), fuseName(fuse),
+      configFile(config), partName(part)
 {
-    name = "Program sticker";
+    name = "Set sticker fuse";
 }
 
-void ProgramSticker::runTest()
+void SetStickerFuse::runTest()
 {
     QProcess avrdude;
 
     emit testMessage(testName(), infoMessage, stickerNum, 
-            QString("Programming sticker ") + QString::number(stickerNum));
+            QString("Setting fuse ") + fuseName 
+            + " to 0x" + QString::number(fuseValue, 16));
 
     selectSticker(stickerNum);
 
@@ -24,7 +25,8 @@ void ProgramSticker::runTest()
             << "-c" << "linuxgpio"
             << "-P" << "linuxgpio"
             << "-p" << partName
-            << "-U" << (QString("flash:w:") + firmwareFile)
+            << "-U" << (QString() 
+                  + fuseName + ":w:0x" + QString::number(fuseValue, 16) + ":m")
     );
     if (!avrdude.waitForStarted()) {
         testError("Unable to start avrdude");
