@@ -1,0 +1,11 @@
+[Unit]
+Description=GUI and program launcher for Chibitronics stickers
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/startx /home/aqs/gui/xsession.sh
+User=aqs
+WorkingDirectory=/home/aqs/gui
+
+[Install]
+WantedBy=getty.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Program the FPGA for factory service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash ./config-fpga.sh
+User=root
+WorkingDirectory=/home/aqs/program-fpga
+
+[Install]
+WantedBy=factory-test.service
