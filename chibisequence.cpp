@@ -142,7 +142,7 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetPower(SetPower::powerOn));
 
     _sensorTests.append(new Header("Programming"));
-    _sensorTests.append(new ProgramSticker(5, "chibi-trigger.hex"));
+    _sensorTests.append(new ProgramSticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new ProgramSticker(5, "stickers_byte_attiny85_memorize.cpp.hex",
                                             "chibi-micro.conf", "attiny85"));
     // Disable self-programming of flash

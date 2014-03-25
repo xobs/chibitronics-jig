@@ -48,6 +48,8 @@ Rectangle {
             statusSticker6.state = "error";
         else if (currentSticker == 7)
             statusSticker7.state = "error";
+        else if (currentSticker == 8)
+            statusSticker7.state = "error";
         else
             console.log("Unable to find a sticker to error");
     }
@@ -66,6 +68,8 @@ Rectangle {
         else if (currentSticker == 6)
             statusSticker6.state = "pass";
         else if (currentSticker == 7)
+            statusSticker7.state = "pass";
+        else if (currentSticker == 8)
             statusSticker7.state = "pass";
         else
             console.log("Unable to find a sticker to pass");
@@ -95,6 +99,8 @@ Rectangle {
             downArrow.state = "sticker6";
         else if (stickerNum == 7)
             downArrow.state = "sticker7";
+        else if (stickerNum == 8)
+            downArrow.state = "sticker8";
         else
             downArrow.state = "parked";
         currentSticker = stickerNum;
@@ -119,6 +125,7 @@ Rectangle {
             statusSticker5.state = "parked";
             statusSticker6.state = "parked";
             statusSticker7.state = "parked";
+            statusSticker8.state = "parked";
         }
         else if (stickersTest.state == "startScreen") {
             stickersTest.state = "burning";
@@ -441,6 +448,49 @@ Rectangle {
     }
 
     Image {
+        id: statusSticker8
+        anchors.top: testEffectsImage.bottom
+        anchors.left: testEffectsImage.left
+        anchors.leftMargin: 280
+        anchors.bottomMargin: -200
+        rotation: 90
+        opacity: 0
+        states: [
+            State {
+                name: "parked"
+                PropertyChanges {
+                    target: statusSticker8
+                    opacity: 0
+                    source: ""
+                }
+            },
+            State {
+                name: "error"
+                PropertyChanges {
+                    target: statusSticker8
+                    opacity: 1
+                    source: "arrow-error.png"
+                }
+            },
+            State {
+                name: "pass"
+                PropertyChanges {
+                    target: statusSticker8
+                    opacity: 1
+                    source: "arrow-pass.png"
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                SequentialAnimation {
+                    NumberAnimation { target: statusSticker8; property: "opacity"; duration: 250; }
+                }
+            }
+        ]
+    }
+
+    Image {
         id: downArrow
         y: -1
         opacity: 0
@@ -513,6 +563,16 @@ Rectangle {
                     target: downArrow
                     opacity: 1
                     anchors.leftMargin: 32
+                }
+            },
+            State {
+                name: "sticker8"
+                PropertyChanges {
+                    target: downArrow
+                    opacity: 1
+                    rotation: 90
+                    anchors.leftMargin: 280
+                    anchors.bottomMargin: -200
                 }
             }
         ]
