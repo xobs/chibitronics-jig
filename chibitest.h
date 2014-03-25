@@ -76,6 +76,7 @@ public:
 
         /* Sensor GPIOs */
         buzzerGpio = 76,
+        ledGpio = 75,
     };
 
 public slots:

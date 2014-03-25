@@ -4,6 +4,7 @@
 #include "setvoltage.h"
 #include "setmicrodrive.h"
 #include "unexportgpio.h"
+#include "setgpio.h"
 #include "delay.h"
 #include "header.h"
 #include "programsticker.h"
@@ -121,6 +122,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
+
+    /* Reset these so we don't hear the buzzer during programming */
+    _sensorTests.append(new SetGpio(ChibiTest::buzzerGpio, 0));
+    _sensorTests.append(new SetGpio(ChibiTest::ledGpio, 0));
+
     _sensorTests.append(new UnexportGpio(ChibiTest::tpiSignalGpio));
     _sensorTests.append(new UnexportGpio(ChibiTest::tpiDatGpio));
     _sensorTests.append(new UnexportGpio(ChibiTest::spiResetGpio));
@@ -136,17 +142,17 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetPower(SetPower::powerOn));
 
     _sensorTests.append(new Header("Programming"));
-    _sensorTests.append(new ProgramSticker(1, "chibi-trigger.hex"));
-    _sensorTests.append(new ProgramSticker(2, "stickers_byte_attiny85.cpp.hex",
-                                            "chibi-micro.conf"));
+    _sensorTests.append(new ProgramSticker(5, "chibi-trigger.hex"));
+    _sensorTests.append(new ProgramSticker(5, "stickers_byte_attiny85_memorize.cpp.hex",
+                                            "chibi-micro.conf", "attiny85"));
     // Disable self-programming of flash
-    _sensorTests.append(new SetStickerFuse(2, "efuse", 0xFF,
+    _sensorTests.append(new SetStickerFuse(5, "efuse", 0xFF,
                                            "chibi-micro.conf", "t85"));
     // Set brown-out detect to 1.8V
-    _sensorTests.append(new SetStickerFuse(2, "hfuse", 0xDE,
+    _sensorTests.append(new SetStickerFuse(5, "hfuse", 0xDE,
                                            "chibi-micro.conf", "t85"));
     // Set clock to 8MHz
-    _sensorTests.append(new SetStickerFuse(2, "lfuse", 0xE2,
+    _sensorTests.append(new SetStickerFuse(5, "lfuse", 0xE2,
                                            "chibi-micro.conf", "t85"));
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
@@ -155,11 +161,8 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
     _sensorTests.append(new SetMicroDrive(SetMicroDrive::execute));
     _sensorTests.append(new SetPower(SetPower::powerOn));
-    _sensorTests.append(new TestAudio());
-    _sensorTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
-    _sensorTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
-    _sensorTests.append(new TestSticker(TestSticker::blinkSticker, 3));
-    _sensorTests.append(new TestSticker(TestSticker::fadeSticker, 4));
+    _sensorTests.append(new TestAudio(3 * 1000));
+    _sensorTests.append(new TestLed(300));
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
 
@@ -167,10 +170,8 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetVoltage(SetVoltage::threeVolts));
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetPower(SetPower::powerOn));
-    _sensorTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
-    _sensorTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
-    _sensorTests.append(new TestSticker(TestSticker::blinkSticker, 3));
-    _sensorTests.append(new TestSticker(TestSticker::fadeSticker, 4));
+    _sensorTests.append(new TestAudio(3 * 1000));
+    _sensorTests.append(new TestLed(50));
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
 
@@ -181,6 +182,13 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     for (int i = 0; i < _effectsTests.count(); i++)
         connect(
             _effectsTests.at(i),
+            SIGNAL(testMessage(const QString,int,int,const QString)),
+            this,
+            SLOT(receiveTestMessage(const QString,int,int,const QString)));
+
+    for (int i = 0; i < _sensorTests.count(); i++)
+        connect(
+            _sensorTests.at(i),
             SIGNAL(testMessage(const QString,int,int,const QString)),
             this,
             SLOT(receiveTestMessage(const QString,int,int,const QString)));
@@ -204,6 +212,21 @@ bool ChibiSequence::runEffectsTests()
     errorCount = 0;
     testsToRun.clear();
     testsToRun = _effectsTests;
+
+    QString txt("---\n");
+    QByteArray txtBytes = txt.toUtf8();
+    // For some reason, log.write() doesn't work, and never calls write()
+    write(log.handle(), txtBytes, txtBytes.size());
+
+    return runNextTest();
+}
+
+bool ChibiSequence::runSensorTests()
+{
+    currentTestNumber = -1;
+    errorCount = 0;
+    testsToRun.clear();
+    testsToRun = _sensorTests;
 
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();
@@ -271,13 +294,6 @@ void ChibiSequence::cleanupCurrentTest()
 
 bool ChibiSequence::runNextTest()
 {
-    /*
-    if (errorCount) {
-        emit testsFinished();
-        return false;
-    }
-    */
-
     // Increment the test number, and return if we've run out of tests.
     currentTestNumber++;
     if (currentTestNumber >= testsToRun.count()) {

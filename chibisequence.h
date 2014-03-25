@@ -43,6 +43,7 @@ public slots:
                             const QString message);
     void cleanupCurrentTest(void);
     bool runEffectsTests(void);
+    bool runSensorTests(void);
 
 signals:
     void testFinished();

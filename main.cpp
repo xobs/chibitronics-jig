@@ -17,8 +17,10 @@ int main(int argc, char *argv[])
     viewer.showExpanded();
 
     QObject *rootObject = viewer.rootObject();
-    QObject::connect(rootObject, SIGNAL(startTest()),
+    QObject::connect(rootObject, SIGNAL(startEffectsTests()),
                      &chibiSequence, SLOT(runEffectsTests()));
+    QObject::connect(rootObject, SIGNAL(startSensorTests()),
+                     &chibiSequence, SLOT(runSensorTests()));
     QObject::connect(&chibiSequence, SIGNAL(testFinished()),
                      rootObject, SLOT(nextStep()));
     QObject::connect(&chibiSequence, SIGNAL(setHeader(const QString)),

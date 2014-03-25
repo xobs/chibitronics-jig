@@ -130,6 +130,10 @@ void ChibiTest::selectSticker(int stickerNum)
     QProcess s;
 
     emit testMessage(testName(), setStickerNum, stickerNum, "");
+
+    if (stickerNum > 4)
+        return;
+
     s.start("./select_sticker", QStringList() << QString::number(stickerNum));
 
     if (!s.waitForStarted()) {

@@ -11,8 +11,6 @@ void SetMicroDrive::runTest()
     if (microDrive == program) {
         testInfo("Setting Microcontroller to program");
         setGpio(microDriveGpio, 0);
-        unexportGpio(tpiDatGpio);
-        unexportGpio(tpiSignalGpio);
     }
     else if (microDrive == execute) {
         testInfo("Setting Microcontroller to run");

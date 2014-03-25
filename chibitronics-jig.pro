@@ -14,6 +14,7 @@ SOURCES += main.cpp \
     setvoltage.cpp \
     setmicrodrive.cpp \
     unexportgpio.cpp \
+    setgpio.cpp \
     delay.cpp \
     header.cpp \
     finished.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
     setvoltage.h \
     setmicrodrive.h \
     unexportgpio.h \
+    setgpio.h \
     delay.h \
     header.h \
     finished.h \

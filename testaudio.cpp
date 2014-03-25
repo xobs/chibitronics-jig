@@ -1,20 +1,34 @@
 #include "testaudio.h"
 #include <QString>
 
-TestAudio::TestAudio(void)
+TestAudio::TestAudio(int e)
 {
     name = "Test audio sensor";
+    equalizationMsecs = e;
 }
 
 void TestAudio::runTest() {
     int passed;
     int passTry;
 
+    selectSticker(6);
+
     /* Let the audio level equalize */
-    msleep(3 * 1000);
+    testInfo("Equalizing silence level...");
+    msleep(equalizationMsecs);
+
+    /* Not sure what this does */
+    setGpio(spiResetGpio, 1);
+    setGpio(tpiSignalGpio, 1);
+
+    /* Pre-measure to make sure it's off */
+    testInfo("Trying to listen for buzzer");
+    if (getGpio(outputGpio)) {
+        testError("Room too noisy for silence test");
+        return;
+    }
 
     /* Measure audio level */
-    testInfo("Trying to listen for buzzer");
     passed = 0;
     for (passTry = 0; passTry < 3 && !passed; passTry++) {
         setGpio(buzzerGpio, 1);
@@ -25,10 +39,12 @@ void TestAudio::runTest() {
 
         if (!passed) {
             testInfo("Buzzer not heard");
-            msleep(500);
+            msleep(equalizationMsecs);
         }
     }
 
-    if (!passed)
+    if (passed)
+        emit testMessage(testName(), testPass, 6, "Test passed");
+    else
         testError("Buzzer sticker not working");
 }

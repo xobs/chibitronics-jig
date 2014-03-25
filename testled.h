@@ -6,10 +6,11 @@ class TestLed : public ChibiTest
 {
 	Q_OBJECT
 public:
-    TestLed(void);
+    TestLed(int threshold);
     void runTest();
 
 private:
+    int threshold;
 };
 
 #endif // TESTLED_H
