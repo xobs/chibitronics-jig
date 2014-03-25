@@ -13,13 +13,13 @@ void TestAudio::runTest() {
 
     selectSticker(6);
 
-    /* Let the audio level equalize */
-    testInfo("Equalizing silence level...");
-    msleep(equalizationMsecs);
-
     /* Not sure what this does */
     setGpio(spiResetGpio, 1);
     setGpio(tpiSignalGpio, 1);
+
+    /* Let the audio level equalize */
+    testInfo("Equalizing silence level...");
+    msleep(equalizationMsecs);
 
     /* Pre-measure to make sure it's off */
     testInfo("Trying to listen for buzzer");
@@ -39,9 +39,13 @@ void TestAudio::runTest() {
 
         if (!passed) {
             testInfo("Buzzer not heard");
-            msleep(equalizationMsecs);
+            if (passTry < 2)
+                msleep(equalizationMsecs);
         }
     }
+
+    /* Tristate the programming outputs */
+    setGpio(tpiSignalGpio, 0);
 
     if (passed)
         emit testMessage(testName(), testPass, 6, "Test passed");

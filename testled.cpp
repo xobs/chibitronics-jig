@@ -142,7 +142,6 @@ void TestLed::runTest() {
     selectSticker(7);
 
     /* Not sure what this does */
-
     setGpio(tpiSignalGpio, 1);
     setGpio(spiResetGpio, 1);
 
