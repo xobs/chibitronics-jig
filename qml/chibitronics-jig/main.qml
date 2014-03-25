@@ -55,21 +55,21 @@ Rectangle {
     }
 
     onAppendPass: {
-        if (currentSticker == 1)
+        if (currentSticker == 1 && statusSticker1.state != "error")
             statusSticker1.state = "pass";
-        else if (currentSticker == 2)
+        else if (currentSticker == 2 && statusSticker2.state != "error")
             statusSticker2.state = "pass";
-        else if (currentSticker == 3)
+        else if (currentSticker == 3 && statusSticker3.state != "error")
             statusSticker3.state = "pass";
-        else if (currentSticker == 4)
+        else if (currentSticker == 4 && statusSticker4.state != "error")
             statusSticker4.state = "pass";
-        else if (currentSticker == 5)
+        else if (currentSticker == 5 && statusSticker5.state != "error")
             statusSticker5.state = "pass";
-        else if (currentSticker == 6)
+        else if (currentSticker == 6 && statusSticker6.state != "error")
             statusSticker6.state = "pass";
-        else if (currentSticker == 7)
+        else if (currentSticker == 7 && statusSticker7.state != "error")
             statusSticker7.state = "pass";
-        else if (currentSticker == 8)
+        else if (currentSticker == 8 && statusSticker8.state != "error")
             statusSticker8.state = "pass";
         else
             console.log("Unable to find a sticker to pass");
