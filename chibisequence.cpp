@@ -146,14 +146,15 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new ProgramSticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new VerifySticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new SetPower(SetPower::powerOff));
-    _sensorTests.append(new Delay(100));
+    _sensorTests.append(new Delay(500));
 
     _sensorTests.append(new Header("Testing at 5V"));
     _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
     _sensorTests.append(new SetMicroDrive(SetMicroDrive::execute));
+
     _sensorTests.append(new SetPower(SetPower::powerOn));
-    _sensorTests.append(new TestAudio(3 * 1000));
     _sensorTests.append(new TestLed(300));
+    _sensorTests.append(new TestAudio(3 * 1000));
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
 
@@ -161,8 +162,8 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetVoltage(SetVoltage::threeVolts));
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetPower(SetPower::powerOn));
-    _sensorTests.append(new TestAudio(3 * 1000));
     _sensorTests.append(new TestLed(50));
+    _sensorTests.append(new TestAudio(3 * 1000));
     _sensorTests.append(new Delay(100));
 
     /* Program Micro last, so it doesn't "learn" anything during testing */

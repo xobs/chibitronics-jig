@@ -15,6 +15,7 @@ void SetMicroDrive::runTest()
     else if (microDrive == execute) {
         testInfo("Setting Microcontroller to run");
         setGpio(microDriveGpio, 1);
+        setGpio(spiResetGpio, 1);
         setGpio(tpiDatGpio, 0);
         setGpio(tpiSignalGpio, 0);
     }
