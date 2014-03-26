@@ -142,22 +142,9 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetPower(SetPower::powerOn));
 
-    _sensorTests.append(new Header("Programming"));
+    _sensorTests.append(new Header("Programming trigger"));
     _sensorTests.append(new ProgramSticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new VerifySticker(8, "chibi-trigger.hex"));
-    _sensorTests.append(new ProgramSticker(5, "stickers_byte_attiny85_memorize_optimized.cpp.hex",
-                                            "chibi-micro.conf", "attiny85"));
-    _sensorTests.append(new VerifySticker(5, "stickers_byte_attiny85_memorize_optimized.cpp.hex",
-                                            "chibi-micro.conf", "attiny85"));
-    // Disable self-programming of flash
-    _sensorTests.append(new SetStickerFuse(5, "efuse", 0xFF,
-                                           "chibi-micro.conf", "t85"));
-    // Set brown-out detect to 1.8V
-    _sensorTests.append(new SetStickerFuse(5, "hfuse", 0xDE,
-                                           "chibi-micro.conf", "t85"));
-    // Set clock to 8MHz
-    _sensorTests.append(new SetStickerFuse(5, "lfuse", 0xE2,
-                                           "chibi-micro.conf", "t85"));
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
 
@@ -177,6 +164,44 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new TestAudio(3 * 1000));
     _sensorTests.append(new TestLed(50));
     _sensorTests.append(new Delay(100));
+
+    /* Program Micro last, so it doesn't "learn" anything during testing */
+    _sensorTests.append(new SetPower(SetPower::powerOff));
+    _sensorTests.append(new Delay(100));
+    _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
+
+    /* Reset these so we don't hear the buzzer during programming */
+    _sensorTests.append(new SetGpio(ChibiTest::buzzerGpio, 0));
+    _sensorTests.append(new SetGpio(ChibiTest::ledGpio, 0));
+
+    _sensorTests.append(new UnexportGpio(ChibiTest::tpiSignalGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::tpiDatGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiResetGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiSckGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMosiGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMisoGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiResetMicroGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiSckMicroGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMosiMicroGpio));
+    _sensorTests.append(new UnexportGpio(ChibiTest::spiMisoMicroGpio));
+    _sensorTests.append(new SetMicroDrive(SetMicroDrive::program));
+    _sensorTests.append(new Delay(100));
+    _sensorTests.append(new SetPower(SetPower::powerOn));
+
+    _sensorTests.append(new Header("Programming micro"));
+    _sensorTests.append(new ProgramSticker(5, "stickers_byte_attiny85_memorize_optimized.cpp.hex",
+                                            "chibi-micro.conf", "attiny85"));
+    _sensorTests.append(new VerifySticker(5, "stickers_byte_attiny85_memorize_optimized.cpp.hex",
+                                            "chibi-micro.conf", "attiny85"));
+    /* Disable self-programming of flash */
+    _sensorTests.append(new SetStickerFuse(5, "efuse", 0xFF,
+                                           "chibi-micro.conf", "t85"));
+    /* Set brown-out detect to 1.8V */
+    _sensorTests.append(new SetStickerFuse(5, "hfuse", 0xDE,
+                                           "chibi-micro.conf", "t85"));
+    /* Set clock to 8MHz */
+    _sensorTests.append(new SetStickerFuse(5, "lfuse", 0xE2,
+                                           "chibi-micro.conf", "t85"));
 
     _sensorTests.append(new Header("Test completed"));
     _sensorTests.append(new Finished());
