@@ -44,7 +44,7 @@ echo 1 | sudo tee /sys/class/gpio/gpio135/value 2> /dev/null
 
 echo "configuring FPGA"
 
-sudo dd if="${bitfile}" of=/dev/spidev2.0 bs=128
+sudo dd if="${bitfile}" of=/dev/spidev2.0 bs=32
 
 echo "turning on clock to FPGA"
 sudo ./devmem2 0x020c8160 w 0x00000D2B
