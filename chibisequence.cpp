@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <QDebug>
 #include "chibisequence.h"
 #include "setpower.h"

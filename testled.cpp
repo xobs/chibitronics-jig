@@ -1,6 +1,8 @@
+#include <unistd.h>
 #include <QDebug>
 #include <QString>
 #include <fcntl.h>
+#include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include "testled.h"
@@ -46,7 +48,7 @@ int i2c_write(unsigned char addr, unsigned char data)
     msg[0].addr  = slave_address;
     msg[0].flags = 0; // no flag means do a write
     msg[0].len   = 2;
-    msg[0].buf   = i2cbuf;
+    msg[0].buf   = (__u8 *)i2cbuf;
 
     msgst.msgs  = msg;
     msgst.nmsgs = 1;
@@ -82,13 +84,13 @@ static int i2c_read(unsigned char addr, unsigned char *data)
     msg[0].addr  = slave_address;
     msg[0].flags = 0; // no flag means do a write
     msg[0].len   = 1;
-    msg[0].buf   = i2cbuf;
+    msg[0].buf   = (__u8 *)i2cbuf;
 
     // set readback buffer
     msg[1].addr  = slave_address;
     msg[1].flags = I2C_M_NOSTART | I2C_M_RD;
     msg[1].len   = 1;
-    msg[1].buf   = (char *) data;
+    msg[1].buf   = (__u8 *) data;
 
     msgst.msgs  = msg;
     msgst.nmsgs = 2;
