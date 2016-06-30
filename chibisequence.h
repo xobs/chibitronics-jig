@@ -5,6 +5,7 @@
 #include <QList>
 #include <QFile>
 #include "chibitest.h"
+#include "chibitestregistry.h"
 
 class ChibiTestEngineThread;
 
@@ -18,6 +19,7 @@ private:
     QList<ChibiTest *> _effectsTests;
     QList<ChibiTest *> _sensorTests;
     QList<ChibiTest *> testsToRun;
+    ChibiTestRegistry testRegistry;
 
     ChibiTest *currentTest;
     int currentTestNumber;
