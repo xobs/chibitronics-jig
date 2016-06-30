@@ -8,7 +8,7 @@ Rectangle {
     state: "startScreen"
     property int errorCount
     property int currentSticker
-    property string mode: "sensor"
+    property string mode: "effects"
 
     signal buttonClick
     signal startEffectsTests
