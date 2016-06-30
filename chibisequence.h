@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QFile>
+#include <QVariant>
 #include "chibitest.h"
 #include "chibitestregistry.h"
 
@@ -42,7 +43,7 @@ public slots:
     void receiveTestMessage(const QString name,
                             int testMessageType,
                             int value,
-                            const QString message);
+                            const QVariant message);
     void cleanupCurrentTest(void);
     bool runEffectsTests(void);
     bool runSensorTests(void);

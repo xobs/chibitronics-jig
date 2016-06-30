@@ -133,12 +133,14 @@ ChibiSequence::ChibiSequence(QObject *parent) :
 #endif
 
     /* Wire up signals and slots for all tests */
-    for (int i = 0; i < _effectsTests.count(); i++)
+    for (int i = 0; i < _effectsTests.count(); i++) {
+        qDebug() << "Test " << i << ": " << _effectsTests.at(i)->testName();
         connect(
             _effectsTests.at(i),
-            SIGNAL(testMessage(const QString,int,int,const QString)),
+            SIGNAL(testMessage(const QString,int,int,const QVariant)),
             this,
-            SLOT(receiveTestMessage(const QString,int,int,const QString)));
+            SLOT(receiveTestMessage(const QString,int,int,const QVariant)));
+    }
 
     log.setFileName("/home/aqs/stickers.log");
     if (!log.open(QFile::ReadWrite | QFile::Append)) {
@@ -185,13 +187,13 @@ bool ChibiSequence::runSensorTests()
 
 void ChibiSequence::receiveTestMessage(const QString name,
                                        int type,
-                                       int value, const QString message)
+                                       int value, const QVariant message)
 {
     if (type == infoMessageType) {
         QString txt;
         QByteArray txtBytes;
 
-        txt = "INFO [" + name + "]: " + QString::number(value) + " " + message;
+        txt = "INFO [" + name + "]: " + QString::number(value) + " " + message.toString();
         qDebug() << txt;
         emit appendLog(txt);
 
@@ -205,10 +207,10 @@ void ChibiSequence::receiveTestMessage(const QString name,
         QString txt;
         QByteArray txtBytes;
 
-        txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message;
+        txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message.toString();
         qDebug() << txt;
         emit appendLog(txt);
-        emit appendError(message);
+        emit appendError(message.toString());
 
         txt += "\n";
         txtBytes = txt.toUtf8();
@@ -217,15 +219,15 @@ void ChibiSequence::receiveTestMessage(const QString name,
     }
     else if (type == debugMessageType) {
         QString txt;
-        txt = "DEBUG [" + name + "]: " + QString::number(value) + message;
+        txt = "DEBUG [" + name + "]: " + QString::number(value) + message.toString();
         qDebug() << txt;
     }
     else if (type == testPassType)
         emit appendPass();
     else if (type == setHeaderType)
-        emit setHeader(message);
+        emit setHeader(message.toString());
     else
-        qDebug() << name << "????:" << type << value << message;
+        qDebug() << name << "????:" << type << value << message.toString();
 }
 
 void ChibiSequence::cleanupCurrentTest()
