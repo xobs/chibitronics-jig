@@ -9,21 +9,11 @@ QML_IMPORT_PATH =
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     chibisequence.cpp \
-    chibitest.cpp \
-    setpower.cpp \
-    setvoltage.cpp \
-    setmicrodrive.cpp \
-    unexportgpio.cpp \
-    setgpio.cpp \
+    chibitestregistry.cpp \
     delay.cpp \
     header.cpp \
-    finished.cpp \
-    programsticker.cpp \
-    verifysticker.cpp \
-    setstickerfuse.cpp \
-    testaudio.cpp \
-    testled.cpp \
-    teststicker.cpp
+    setpower.cpp \
+    chibitest.cpp
 
 # Installation path
 # target.path =
@@ -34,18 +24,7 @@ qtcAddDeployment()
 
 HEADERS += \
     chibisequence.h \
-    chibitest.h \
-    setpower.h \
-    setvoltage.h \
-    setmicrodrive.h \
-    unexportgpio.h \
-    setgpio.h \
-    delay.h \
-    header.h \
-    finished.h \
-    programsticker.h \
-    verifysticker.h \
-    setstickerfuse.h \
-    testaudio.h \
-    testled.h \
-    teststicker.h
+    chibitestregistry.h \
+    chibitest.h
+
+CONFIG += debug
