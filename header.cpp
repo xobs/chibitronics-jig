@@ -7,7 +7,7 @@ class Header {
 
 private:
     void *obj;
-    const char *str;
+    QString str;
     QString _name;
 
 public:
@@ -20,7 +20,7 @@ public:
 
     void runTest()
     {
-        mod_callbacks->test_message(obj, setHeaderType, 0, str);
+        mod_callbacks->test_message_qt(obj, setHeaderType, 0, &str);
     };
 
     const char *name()
@@ -73,13 +73,12 @@ void header__instance_run(TestInstance *instance) {
 }
 
 struct test_module header = {
+    TEST_MODULE_MAGIC,
     header__init,
     "Header",
     "Display a header",
     header__instance_init,
     header__instance_name,
     header__instance_run,
-    NULL,
-    NULL,
     NULL,
 };

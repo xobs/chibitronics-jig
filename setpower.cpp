@@ -88,18 +88,6 @@ void set_power_instance_run(TestInstance *instance) {
     sp->runTest();
 }
 
-const char * set_power_instance_status_str(TestInstance *instance) {
-
-    SetPower *sp = (SetPower *)instance;
-    return sp->getStatusStr();
-}
-
-int set_power_instance_status(TestInstance *instance) {
-
-    SetPower *sp = (SetPower *)instance;
-    return sp->getStatus();
-}
-
 void set_power_instance_free(TestInstance *instance) {
 
     SetPower *sp = (SetPower *)instance;
@@ -107,13 +95,12 @@ void set_power_instance_free(TestInstance *instance) {
 }
 
 struct test_module set_power = {
-  set_power_init,
-  "SetPower",
-  "Set stickers power",
-  set_power_instance_init,
-  NULL,
-  set_power_instance_run,
-  set_power_instance_status_str,
-  set_power_instance_status,
-  set_power_instance_free,
+    TEST_MODULE_MAGIC,
+    set_power_init,
+    "SetPower",
+    "Set stickers power",
+    set_power_instance_init,
+    NULL,
+    set_power_instance_run,
+    set_power_instance_free,
 };

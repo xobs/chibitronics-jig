@@ -71,13 +71,12 @@ void delay__instance_run(TestInstance *instance) {
 }
 
 struct test_module delay = {
+    TEST_MODULE_MAGIC,
     delay__init,
     "Delay",
     "Delay for a number of ms",
     delay__instance_init,
     delay__instance_name,
     delay__instance_run,
-    NULL,
-    NULL,
     NULL,
 };

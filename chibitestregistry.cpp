@@ -10,6 +10,15 @@ static void ct_test_message(void *testObj, TestMessageType messageType,
         message);
 }
 
+static void ct_test_message_qt(void *testObj, TestMessageType messageType,
+                               int value, const QString *message) {
+    static_cast<ChibiTest*>(testObj)->testData(
+        static_cast<ChibiTest*>(testObj)->testName(),
+        messageType,
+        value,
+        *message);
+}
+
 static void ct_msleep(void *testObj, int msecs) {
     static_cast<ChibiTest*>(testObj)->msleep(msecs);
 }
@@ -27,11 +36,12 @@ void ct_unexport_gpio(void *testObj, int gpio) {
 }
 
 static const FrameworkCallbacks frameworkCallbacks = {
-  /* test_message */  ct_test_message,
-  /* msleep */        ct_msleep,
-  /* set_gpio */      ct_set_gpio,
-  /* get_gpio */      ct_get_gpio,
-  /* unexport_gpio */ ct_unexport_gpio,
+  /* test_message */    ct_test_message,
+  /* test_message_qt */ ct_test_message_qt,
+  /* msleep */          ct_msleep,
+  /* set_gpio */        ct_set_gpio,
+  /* get_gpio */        ct_get_gpio,
+  /* unexport_gpio */   ct_unexport_gpio,
 };
 
 

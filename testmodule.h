@@ -18,25 +18,29 @@ typedef enum test_message_type {
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
+class QString;
 
 typedef struct framework_callbacks {
   void (*test_message)(void *testObj, TestMessageType messageType,
                        int value, const char *message);
+  void (*test_message_qt)(void *testObj, TestMessageType messageType,
+                          int value, const QString *message);
   void (*msleep)(void *testObj, int msecs);
   void (*set_gpio)(void *testObj, int gpio, int val);
   int  (*get_gpio)(void *testObj, int gpio);
   void (*unexport_gpio)(void *testObj, int gpio);
 } FrameworkCallbacks;
 
+#define TEST_MODULE_MAGIC 0x0592d523
+
 typedef struct test_module {
+  uint32_t          magic;
   void            (*module_init)(const FrameworkCallbacks *callbacks);
   const char *    module_name;
   const char *    module_description;
   TestInstance *  (*instance_init)(void *testObj, va_list ap);
   const char *    (*instance_name)(TestInstance *intsance);
   void            (*instance_run)(TestInstance *instance);
-  const char *    (*instance_status_str)(TestInstance *instance);
-  int             (*instance_status)(TestInstance *instance);
   void            (*instance_free)(TestInstance *instance);
 } TestModule;
 
