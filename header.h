@@ -6,7 +6,7 @@ class Header : public ChibiTest
 {
 	Q_OBJECT
 public:
-    Header(QString message);
+    Header(const QHash <QString, QVariant> &settings = QHash<QString, QVariant>());
     void runTest();
 
 private:

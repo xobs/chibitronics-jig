@@ -1,10 +1,10 @@
 #include "header.h"
 #include <QString>
 
-Header::Header(QString m)
-    : message(m)
+Header::Header(const QHash<QString, QVariant> &settings)
+    : ChibiTest(settings), message(settings["message"].toString())
 {
-    name = QString("Message: ") + m;
+    name = QString("Message: ") + message;
 }
 
 void Header::runTest()
