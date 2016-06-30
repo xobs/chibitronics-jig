@@ -8,17 +8,25 @@ class Header {
 private:
     void *obj;
     const char *str;
+    QString _name;
 
 public:
-	Header(void *new_obj, const char *new_str) :
-		obj(new_obj), str(new_str)
-	{
-	};
+    Header(void *new_obj, const char *new_str) :
+        obj(new_obj),
+        str(new_str),
+        _name(QString("Header with message: \"%1\"").arg(new_str))
+    {
+    };
 
     void runTest()
     {
         mod_callbacks->test_message(obj, setHeaderType, 0, str);
     };
+
+    const char *name()
+    {
+        return _name.toUtf8();
+    }
 };
 
 static void header__init(const FrameworkCallbacks *callbacks) {
@@ -52,6 +60,12 @@ static TestInstance *header__instance_init(void *testObj, va_list ap) {
     return (TestInstance *)h;
 }
 
+const char *header__instance_name(TestInstance *instance) {
+
+    Header *h = (Header *)instance;
+    return h->name();
+}
+
 void header__instance_run(TestInstance *instance) {
 
     Header *h = (Header *)instance;
@@ -59,10 +73,11 @@ void header__instance_run(TestInstance *instance) {
 }
 
 struct test_module header = {
+    header__init,
     "Header",
     "Display a header",
-    header__init,
     header__instance_init,
+    header__instance_name,
     header__instance_run,
     NULL,
     NULL,

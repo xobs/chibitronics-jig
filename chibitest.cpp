@@ -14,8 +14,7 @@ public:
 };
 
 ChibiTest::ChibiTest(const TestModule *new_module, ...) :
-    module(new_module),
-    name(new_module->name)
+    module(new_module)
 {
     va_list ap;
 
@@ -26,7 +25,9 @@ ChibiTest::ChibiTest(const TestModule *new_module, ...) :
 
 const QString ChibiTest::testName()
 {
-    return name;
+    if (module->instance_name)
+        return QString(module->instance_name(instance));
+    return QString(module->module_name);
 }
 
 void ChibiTest::runTest()

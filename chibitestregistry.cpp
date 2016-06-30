@@ -40,7 +40,8 @@ ChibiTestRegistry::ChibiTestRegistry() {
 
 void ChibiTestRegistry::addModule(const struct test_module *module) {
     module->module_init(&frameworkCallbacks);
-    registry.insert(module->name, QVariant::fromValue((void *)module));
+    registry.insert(module->module_name,
+                    QVariant::fromValue((void *)module));
 }
 
 const TestModule *ChibiTestRegistry::getModule(const QString &name) {

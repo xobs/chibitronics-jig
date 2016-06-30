@@ -29,10 +29,11 @@ typedef struct framework_callbacks {
 } FrameworkCallbacks;
 
 typedef struct test_module {
-  const char       *name;
-  const char       *description;
   void            (*module_init)(const FrameworkCallbacks *callbacks);
+  const char *    module_name;
+  const char *    module_description;
   TestInstance *  (*instance_init)(void *testObj, va_list ap);
+  const char *    (*instance_name)(TestInstance *intsance);
   void            (*instance_run)(TestInstance *instance);
   const char *    (*instance_status_str)(TestInstance *instance);
   int             (*instance_status)(TestInstance *instance);

@@ -20,7 +20,6 @@ class ChibiTest : public QObject
 private:
     const TestModule *module;
     TestInstance *instance;
-    QString name;
 
 public:
     ChibiTest(const TestModule *module, ...);
@@ -49,7 +48,7 @@ public slots:
 
 signals:
     void testMessage(const QString name, int testMessageType,
-                     int value, const QString message);
+                     int value, const QVariant message);
 };
 
 #endif // CHIBITEST_H

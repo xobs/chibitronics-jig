@@ -107,10 +107,11 @@ void set_power_instance_free(TestInstance *instance) {
 }
 
 struct test_module set_power = {
+  set_power_init,
   "SetPower",
   "Set stickers power",
-  set_power_init,
   set_power_instance_init,
+  NULL,
   set_power_instance_run,
   set_power_instance_status_str,
   set_power_instance_status,
