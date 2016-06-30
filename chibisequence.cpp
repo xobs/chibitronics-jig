@@ -1,20 +1,12 @@
 #include <unistd.h>
 #include <QDebug>
+#include <QThread>
 #include "chibisequence.h"
-#include "setpower.h"
-#include "setvoltage.h"
-#include "setmicrodrive.h"
-#include "unexportgpio.h"
-#include "setgpio.h"
-#include "delay.h"
-#include "header.h"
-#include "programsticker.h"
-#include "verifysticker.h"
-#include "setstickerfuse.h"
-#include "teststicker.h"
-#include "testaudio.h"
-#include "testled.h"
-#include "finished.h"
+#include "testmodule.h"
+
+extern struct test_module set_power;
+extern struct test_module delay;
+extern struct test_module header;
 
 class ChibiTest;
 class ChibiTestEngineThread : public QThread {
@@ -37,6 +29,10 @@ public:
 ChibiSequence::ChibiSequence(QObject *parent) :
     QObject(parent)
 {
+
+    testRegistry.addModule(&set_power);
+    testRegistry.addModule(&delay);
+    testRegistry.addModule(&header);
     /* LtC sticker:
        1)  Toggle power off
        2)  Wait 100ms
@@ -57,6 +53,30 @@ ChibiSequence::ChibiSequence(QObject *parent) :
        17) Verify red LED is not on
        18) Toggle power off
     */
+//    _effectsTests.append(new ChibiTest(testRegistry.getModule("SetPower"),
+//                "state", "on", NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+                "message", "Step 1",
+                NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Delay"),
+                "msecs", "1000",
+                NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+                "message", "Second Step",
+                NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Delay"),
+                "msecs", "1000",
+                NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+                "message", "Number three",
+                NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Delay"),
+                "msecs", "1000",
+                NULL));
+    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+                "message", "Finnish",
+                NULL));
+#if 0
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("message", "Reset Jig");
@@ -110,6 +130,7 @@ ChibiSequence::ChibiSequence(QObject *parent) :
         _effectsTests.append(new Header(testConfig));
     }
     _effectsTests.append(new Finished());
+#endif
 
     /* Wire up signals and slots for all tests */
     for (int i = 0; i < _effectsTests.count(); i++)
@@ -166,7 +187,7 @@ void ChibiSequence::receiveTestMessage(const QString name,
                                        int type,
                                        int value, const QString message)
 {
-    if (type == ChibiTest::infoMessage) {
+    if (type == infoMessageType) {
         QString txt;
         QByteArray txtBytes;
 
@@ -179,7 +200,7 @@ void ChibiSequence::receiveTestMessage(const QString name,
         // For some reason, log.write() doesn't work, and never calls write()
         write(log.handle(), txtBytes, txtBytes.size());
     }
-    else if (type == ChibiTest::errorMessage) {
+    else if (type == errorMessageType) {
         errorCount++;
         QString txt;
         QByteArray txtBytes;
@@ -194,17 +215,15 @@ void ChibiSequence::receiveTestMessage(const QString name,
         // For some reason, log.write() doesn't work, and never calls write()
         write(log.handle(), txtBytes, txtBytes.size());
     }
-    else if (type == ChibiTest::debugMessage) {
+    else if (type == debugMessageType) {
         QString txt;
         txt = "DEBUG [" + name + "]: " + QString::number(value) + message;
         qDebug() << txt;
     }
-    else if (type == ChibiTest::setHeader)
-        emit setHeader(message);
-    else if (type == ChibiTest::setStickerNum)
-        emit setStickerNum(value);
-    else if (type == ChibiTest::testPass)
+    else if (type == testPassType)
         emit appendPass();
+    else if (type == setHeaderType)
+        emit setHeader(message);
     else
         qDebug() << name << "????:" << type << value << message;
 }
