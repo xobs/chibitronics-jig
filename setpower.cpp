@@ -1,9 +1,13 @@
 #include "setpower.h"
 
-SetPower::SetPower(enum powerState onoff)
+SetPower::SetPower(const QHash<QString, QVariant> &settings)
+  : ChibiTest(settings)
 {
     name = "Set stickers power";
-    state = onoff;
+    if (settings["power"].toString() == "on")
+      state = powerOn;
+    else
+      state = powerOff;
 }
 
 void SetPower::runTest()

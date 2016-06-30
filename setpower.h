@@ -13,7 +13,8 @@ public:
         powerOn,
         powerOff,
     };
-    SetPower(enum powerState);
+
+    SetPower(const QHash<QString, QVariant> &settings = QHash<QString, QVariant>());
     void runTest();
 
 private:
