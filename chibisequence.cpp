@@ -63,7 +63,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
        22) Test output of sticker[4]
        23) Toggle power off
     */
-    _effectsTests.append(new Header("Reset Jig"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Reset Jig");
+        _effectsTests.append(new Header(testConfig));
+    }
     _effectsTests.append(new SetPower(SetPower::powerOff));
     _effectsTests.append(new Delay(100));
     _effectsTests.append(new SetVoltage(SetVoltage::fiveVolts));
@@ -76,7 +80,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _effectsTests.append(new Delay(100));
     _effectsTests.append(new SetPower(SetPower::powerOn));
 
-    _effectsTests.append(new Header("Programming"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Programming");
+        _effectsTests.append(new Header(testConfig));
+    }
     _effectsTests.append(new ProgramSticker(1, "chibi-pattern.hex"));
     _effectsTests.append(new ProgramSticker(2, "chibi-pattern.hex"));
     _effectsTests.append(new ProgramSticker(3, "chibi-pattern.hex"));
@@ -84,7 +92,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _effectsTests.append(new SetPower(SetPower::powerOff));
     _effectsTests.append(new Delay(100));
 
-    _effectsTests.append(new Header("Testing at 5V"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Testing at 5V");
+        _effectsTests.append(new Header(testConfig));
+    }
     _effectsTests.append(new SetPower(SetPower::powerOn));
     _effectsTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
     _effectsTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
@@ -93,7 +105,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _effectsTests.append(new SetPower(SetPower::powerOff));
     _effectsTests.append(new Delay(100));
 
-    _effectsTests.append(new Header("Test completed"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Test Completed");
+        _effectsTests.append(new Header(testConfig));
+    }
     _effectsTests.append(new Finished());
 
     /* Sensor sequence:
@@ -120,7 +136,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
        21) Program final microcontroller behavior
        22) Toggle power off
     */
-    _sensorTests.append(new Header("Reset Jig"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Reset Jig");
+        _effectsTests.append(new Header(testConfig));
+    }
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
@@ -143,13 +163,21 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetPower(SetPower::powerOn));
 
-    _sensorTests.append(new Header("Programming trigger"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Programming Trigger");
+        _effectsTests.append(new Header(testConfig));
+    }
     _sensorTests.append(new ProgramSticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new VerifySticker(8, "chibi-trigger.hex"));
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(500));
 
-    _sensorTests.append(new Header("Testing at 5V"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Testing at 5V");
+        _effectsTests.append(new Header(testConfig));
+    }
     _sensorTests.append(new SetVoltage(SetVoltage::fiveVolts));
     _sensorTests.append(new SetMicroDrive(SetMicroDrive::execute));
 
@@ -159,7 +187,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetPower(SetPower::powerOff));
     _sensorTests.append(new Delay(100));
 
-    _sensorTests.append(new Header("Testing at 3.3V"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Testing at 3.3V");
+        _effectsTests.append(new Header(testConfig));
+    }
     _sensorTests.append(new SetVoltage(SetVoltage::threeVolts));
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetPower(SetPower::powerOn));
@@ -190,7 +222,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new Delay(100));
     _sensorTests.append(new SetPower(SetPower::powerOn));
 
-    _sensorTests.append(new Header("Programming micro"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Programming Micro");
+        _effectsTests.append(new Header(testConfig));
+    }
     _sensorTests.append(new ProgramSticker(5, "stickers_byte_attiny85_memorize_optimized.cpp.hex",
                                             "chibi-micro.conf", "attiny85"));
     _sensorTests.append(new VerifySticker(5, "stickers_byte_attiny85_memorize_optimized.cpp.hex",
@@ -205,7 +241,11 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     _sensorTests.append(new SetStickerFuse(5, "lfuse", 0xE2,
                                            "chibi-micro.conf", "t85"));
 
-    _sensorTests.append(new Header("Test completed"));
+    {
+        QHash<QString, QVariant> testConfig;
+        testConfig.insert("message", "Test Completed");
+        _effectsTests.append(new Header(testConfig));
+    }
     _sensorTests.append(new Finished());
 
     /* Wire up signals and slots for all tests */
