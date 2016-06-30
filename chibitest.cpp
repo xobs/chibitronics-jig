@@ -11,8 +11,8 @@ public:
     }
 };
 
-ChibiTest::ChibiTest()
-    : lastString("")
+ChibiTest::ChibiTest(const QHash<QString, QVariant> &settings)
+    : lastString(""), _settings(settings)
 {
     testNumber = -1;
     lastResult = 0;

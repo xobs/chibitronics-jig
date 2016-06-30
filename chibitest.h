@@ -3,6 +3,8 @@
 
 #include <QString>
 #include <QObject>
+#include <QHash>
+#include <QVariant>
 
 class ChibiTestEngine;
 
@@ -20,6 +22,7 @@ private:
     QString lastString;
     int lastResult;
     ChibiTestEngine *engine;
+    const QHash<QString, QVariant> _settings;
 
 protected:
     QString name;
@@ -30,7 +33,7 @@ protected:
     void msleep(int msec);
 
 public:
-    ChibiTest();
+    ChibiTest(const QHash<QString, QVariant> &settings = QHash<QString, QVariant>());
     virtual void runTest() = 0;
 
     /* Called by the engine after a test has finished running */
