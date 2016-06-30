@@ -1,6 +1,8 @@
-#include "chibitest.h"
+#include <stdarg.h>
 #include <QProcess>
 #include <QThread>
+#include "chibitest.h"
+#include "testmodule.h"
 
 class SleeperThread : public QThread
 {
@@ -11,32 +13,15 @@ public:
     }
 };
 
-ChibiTest::ChibiTest(const QHash<QString, QVariant> &settings)
-    : lastString(""), _settings(settings)
+ChibiTest::ChibiTest(const TestModule *new_module, ...) :
+    module(new_module),
+    name(new_module->name)
 {
-    testNumber = -1;
-    lastResult = 0;
-    engine = NULL;
-}
+    va_list ap;
 
-const QString &ChibiTest::getStatusString()
-{
-    return lastString;
-}
-
-int ChibiTest::getStatusValue()
-{
-    return lastResult;
-}
-
-void ChibiTest::setTestNumber(int number)
-{
-    testNumber = number;
-}
-
-void ChibiTest::setEngine(ChibiTestEngine *engie)
-{
-    engine = engie;
+    va_start(ap, new_module);
+    instance = module->instance_init(this, ap);
+    va_end(ap);
 }
 
 const QString ChibiTest::testName()
@@ -44,19 +29,29 @@ const QString ChibiTest::testName()
     return name;
 }
 
-void ChibiTest::testInfo(const QString string)
+void ChibiTest::runTest()
 {
-    emit testMessage(testName(), infoMessage, 0, string);
+    module->instance_run(instance);
 }
 
-void ChibiTest::testError(const QString string)
+void ChibiTest::testInfo(const QString &string)
 {
-    emit testMessage(testName(), errorMessage, 0, string);
+    emit testMessage(testName(), infoMessageType, 0, string);
 }
 
-void ChibiTest::testDebug(const QString string)
+void ChibiTest::testError(const QString &string)
 {
-    emit testMessage(testName(), debugMessage, 0, string);
+    emit testMessage(testName(), errorMessageType, 0, string);
+}
+
+void ChibiTest::testDebug(const QString &string)
+{
+    emit testMessage(testName(), debugMessageType, 0, string);
+}
+
+void ChibiTest::testData(const QString name, int testMessageType,
+                         int value, const QString &message) {
+    emit testMessage(name, testMessageType, value, message);
 }
 
 void ChibiTest::setGpio(int gpio, int val)
@@ -123,30 +118,6 @@ int ChibiTest::unexportGpio(int gpio)
     if (unexport.exitCode())
         testError(QString("gpio_unexport failed: ") + unexport.readAll());
     return unexport.exitCode();
-}
-
-void ChibiTest::selectSticker(int stickerNum)
-{
-    QProcess s;
-
-    emit testMessage(testName(), setStickerNum, stickerNum, "");
-
-    if (stickerNum > 4)
-        return;
-
-    s.start("./select_sticker", QStringList() << QString::number(stickerNum));
-
-    if (!s.waitForStarted()) {
-        testError("Unable to select sticker");
-        return;
-    }
-
-    s.closeWriteChannel();
-    s.waitForFinished();
-    if (s.exitCode()) {
-        testError(QString("select_sticker returned an error: ") + s.readAll());
-        return;
-    }
 }
 
 void ChibiTest::msleep(int msecs)
