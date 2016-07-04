@@ -94,7 +94,7 @@ void set_power_instance_free(TestInstance *instance) {
     delete sp;
 }
 
-struct test_module set_power = {
+struct test_module Q_DECL_EXPORT test_module = {
     TEST_MODULE_MAGIC,
     set_power_init,
     "SetPower",

@@ -70,7 +70,7 @@ void delay__instance_run(TestInstance *instance) {
     d->runTest();
 }
 
-struct test_module delay = {
+struct test_module Q_DECL_EXPORT test_module = {
     /* .magic = */              TEST_MODULE_MAGIC,
     /* .module_init = */        delay__init,
     /* .module_name = */        "Delay",

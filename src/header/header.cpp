@@ -72,7 +72,7 @@ void header__instance_run(TestInstance *instance) {
     h->runTest();
 }
 
-struct test_module header = {
+struct test_module Q_DECL_EXPORT test_module = {
     TEST_MODULE_MAGIC,
     header__init,
     "Header",
