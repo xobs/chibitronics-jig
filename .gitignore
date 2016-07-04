@@ -13,3 +13,6 @@ qrc_*.cpp
 /gpio_unexport
 /select_sticker
 /chibitronics-jig
+
+# Output directory
+/build
