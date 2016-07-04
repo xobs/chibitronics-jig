@@ -1,39 +1,53 @@
-#include <QApplication>
-#include <QGraphicsObject>
-#include "qtquick1applicationviewer.h"
+//#include <QApplication>
+//#include <QGraphicsObject>
+//#include "qtquick1applicationviewer.h"
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 #include "chibisequence.h"
+
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    //QApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     ChibiSequence chibiSequence(&app);
 
-    app.setOverrideCursor(Qt::BlankCursor);
+    //app.setOverrideCursor(Qt::BlankCursor);
 
-    QtQuick1ApplicationViewer viewer;
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+    /*
     viewer.addImportPath(QLatin1String("modules"));
     viewer.setOrientation(QtQuick1ApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/chibitronics-jig/main.qml"));
     viewer.showExpanded();
+    */
 
-    QObject *rootObject = viewer.rootObject();
-    QObject::connect(rootObject, SIGNAL(startEffectsTests()),
+    QObject *rootObject = engine.rootObjects().first();
+    QObject *stickersTest = rootObject->findChild<QObject *>("stickersTest");
+
+    QObject::connect(stickersTest, SIGNAL(startEffectsTests()),
                      &chibiSequence, SLOT(runEffectsTests()));
-    QObject::connect(rootObject, SIGNAL(startSensorTests()),
+    QObject::connect(stickersTest, SIGNAL(startSensorTests()),
                      &chibiSequence, SLOT(runSensorTests()));
+
     QObject::connect(&chibiSequence, SIGNAL(testFinished()),
-                     rootObject, SLOT(nextStep()));
-    QObject::connect(&chibiSequence, SIGNAL(setHeader(const QString)),
-                     rootObject, SLOT(setHeader(const QString)));
-    QObject::connect(&chibiSequence, SIGNAL(setStickerNum(int)),
-                     rootObject, SLOT(setSticker(int)));
+                     stickersTest, SLOT(onNextStep()));
+    QObject::connect(&chibiSequence, SIGNAL(setHeader(const QVariant)),
+                     stickersTest, SLOT(onSetHeader(const QVariant)));
+    QObject::connect(&chibiSequence, SIGNAL(setStickerNum(const QVariant)),
+                     stickersTest, SLOT(onSetSticker(const QVariant)));
     QObject::connect(&chibiSequence, SIGNAL(testsFinished()),
-                     rootObject, SLOT(testsFinished()));
-    QObject::connect(&chibiSequence, SIGNAL(appendLog(const QString)),
-		     rootObject, SLOT(appendLog(const QString)));
-    QObject::connect(&chibiSequence, SIGNAL(appendError(const QString)),
-		     rootObject, SLOT(appendError(const QString)));
+                     stickersTest, SLOT(onTestsFinished()));
+    QObject::connect(&chibiSequence, SIGNAL(appendLog(const QVariant)),
+		     stickersTest, SLOT(onAppendLog(const QVariant)));
+    QObject::connect(&chibiSequence, SIGNAL(appendError(const QVariant)),
+		     stickersTest, SLOT(onAppendError(const QVariant)));
     QObject::connect(&chibiSequence, SIGNAL(appendPass()),
-		     rootObject, SLOT(appendPass()));
+		     stickersTest, SLOT(onAppendPass()));
+
     return app.exec();
 }

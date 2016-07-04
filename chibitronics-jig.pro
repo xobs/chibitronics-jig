@@ -1,7 +1,8 @@
-# Add more folders to ship with the application, here
-folder_01.source = qml/chibitronics-jig
-folder_01.target = qml
-DEPLOYMENTFOLDERS = folder_01
+TEMPLATE += app
+QT += gui qml quick widgets
+CONFIG += debug
+
+QMAKE_LFLAGS += -L/opt/etnaviv/lib
 
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
@@ -15,16 +16,10 @@ SOURCES += main.cpp \
     setpower.cpp \
     chibitest.cpp
 
-# Installation path
-# target.path =
-
-# Please do not modify the following two lines. Required for deployment.
-include(qtquick1applicationviewer/qtquick1applicationviewer.pri)
-qtcAddDeployment()
+RESOURCES += qml.qrc
 
 HEADERS += \
     chibisequence.h \
     chibitestregistry.h \
     chibitest.h
 
-CONFIG += debug

@@ -4,6 +4,7 @@ Makefile
 *.swp
 *.swo
 moc_*.cpp
+qrc_*.cpp
 
 # Executables
 /gpio_in

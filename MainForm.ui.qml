@@ -1,7 +1,8 @@
-import QtQuick 1.1
+import QtQuick 2.3
 
 Rectangle {
     id: stickersTest
+    objectName: "stickersTest"
     width: 1920
     height: 1080
     color: "white"
@@ -10,26 +11,19 @@ Rectangle {
     property int currentSticker
     property string mode: "effects"
 
-    signal buttonClick
     signal startEffectsTests
     signal startSensorTests
-    signal nextStep
-    signal testsFinished
-    signal setHeader(string header)
-    signal setSticker(int stickerNum)
-    signal appendLog(string txt)
-    signal appendError(string txt)
-    signal appendPass
 
-    onSetHeader: {
+    function onSetHeader(header) {
+        console.log("New header: " + header);
         titleText.text = header;
     }
 
-    onAppendLog: {
+    function onAppendLog(txt) {
         debugLog.text = txt + "\n" + debugLog.text;
     }
 
-    onAppendError: {
+    function onAppendError(txt) {
         errorText.opacity = 1;
         errorText.text = txt;
         errorCount++;
@@ -54,7 +48,7 @@ Rectangle {
             console.log("Unable to find a sticker to error");
     }
 
-    onAppendPass: {
+    function onAppendPass() {
         if (currentSticker == 1 && statusSticker1.state != "error")
             statusSticker1.state = "pass";
         else if (currentSticker == 2 && statusSticker2.state != "error")
@@ -75,7 +69,7 @@ Rectangle {
             console.log("Unable to find a sticker to pass");
     }
 
-    onTestsFinished: {
+    function onTestsFinished() {
         if (errorCount == 0)
             stickersTest.state = "finished";
         else
@@ -84,7 +78,7 @@ Rectangle {
         debugLog.text = "---\n" + debugLog.text;
     }
 
-    onSetSticker: {
+    function onSetSticker(stickerNum) {
         if (stickerNum == 1)
             downArrow.state = "sticker1";
         else if (stickerNum == 2)
@@ -106,7 +100,7 @@ Rectangle {
         currentSticker = stickerNum;
     }
 
-    onNextStep: {
+    function onNextStep() {
         if (stickersTest.state == "finished")
             ;
 
@@ -114,7 +108,7 @@ Rectangle {
             stickersTest.state = "burning";
     }
 
-    onButtonClick: {
+    function onButtonClick() {
         if(stickersTest.state == "finished" || stickersTest.state == "error") {
             errorText.text = "";
             stickersTest.state = "startScreen";
@@ -142,12 +136,12 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: buttonClick()
+        onClicked: onButtonClick()
     }
 
     focus: true
     Keys.onPressed: {
-        buttonClick()
+        onButtonClick()
     }
 
     Image {

@@ -51,10 +51,10 @@ public slots:
 signals:
     void testFinished();
     void testsFinished();
-    void setHeader(const QString header);
-    void setStickerNum(int stickerNum);
-    void appendLog(const QString message);
-    void appendError(const QString message);
+    void setHeader(const QVariant header);
+    void setStickerNum(const QVariant stickerNum);
+    void appendLog(const QVariant message);
+    void appendError(const QVariant message);
     void appendPass();
 };
 
