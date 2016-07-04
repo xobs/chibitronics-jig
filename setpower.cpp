@@ -101,6 +101,7 @@ struct test_module set_power = {
     "Set stickers power",
     set_power_instance_init,
     NULL,
+    NULL,
     set_power_instance_run,
     set_power_instance_free,
 };

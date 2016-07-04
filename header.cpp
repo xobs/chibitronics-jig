@@ -23,9 +23,9 @@ public:
         mod_callbacks->test_message_qt(obj, setHeaderType, 0, &str);
     };
 
-    const char *name()
+    const QString & name()
     {
-        return _name.toUtf8();
+        return _name;
     }
 };
 
@@ -60,7 +60,7 @@ static TestInstance *header__instance_init(void *testObj, va_list ap) {
     return (TestInstance *)h;
 }
 
-const char *header__instance_name(TestInstance *instance) {
+const QString &header__instance_name_qt(TestInstance *instance) {
 
     Header *h = (Header *)instance;
     return h->name();
@@ -78,7 +78,8 @@ struct test_module header = {
     "Header",
     "Display a header",
     header__instance_init,
-    header__instance_name,
+    NULL,
+    header__instance_name_qt,
     header__instance_run,
     NULL,
 };

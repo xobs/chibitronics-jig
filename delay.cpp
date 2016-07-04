@@ -23,8 +23,8 @@ public:
         mod_callbacks->msleep(obj, msecs);
     };
 
-    const char *name() {
-        return _name.toUtf8();
+    const QString & name() {
+        return _name;
     };
 };
 
@@ -59,7 +59,7 @@ static TestInstance *delay__instance_init(void *testObj, va_list ap) {
     return (TestInstance *)d;
 }
 
-const char *delay__instance_name(TestInstance *instance) {
+const QString & delay__instance_name_qt(TestInstance *instance) {
     Delay *d = (Delay *)instance;
     return d->name();
 }
@@ -71,12 +71,13 @@ void delay__instance_run(TestInstance *instance) {
 }
 
 struct test_module delay = {
-    TEST_MODULE_MAGIC,
-    delay__init,
-    "Delay",
-    "Delay for a number of ms",
-    delay__instance_init,
-    delay__instance_name,
-    delay__instance_run,
-    NULL,
+    /* .magic = */              TEST_MODULE_MAGIC,
+    /* .module_init = */        delay__init,
+    /* .module_name = */        "Delay",
+    /* .module_description = */ "Delay for a number of ms",
+    /* .instance_init = */      delay__instance_init,
+    /* .instance_name = */      NULL,
+    /* .instance_name_qt = */   delay__instance_name_qt,
+    /* .instance_run = */       delay__instance_run,
+    /* .instance_free = */      NULL,
 };

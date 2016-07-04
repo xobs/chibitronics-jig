@@ -25,9 +25,12 @@ ChibiTest::ChibiTest(const TestModule *new_module, ...) :
 
 const QString ChibiTest::testName()
 {
-    if (module->instance_name)
+    if (module->instance_name_qt)
+        return module->instance_name_qt(instance);
+    else if (module->instance_name)
         return QString(module->instance_name(instance));
-    return QString(module->module_name);
+    else
+        return QString(module->module_name);
 }
 
 void ChibiTest::runTest()

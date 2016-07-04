@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdarg.h>
 
+class QString;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -40,6 +42,7 @@ typedef struct test_module {
   const char *    module_description;
   TestInstance *  (*instance_init)(void *testObj, va_list ap);
   const char *    (*instance_name)(TestInstance *intsance);
+  const QString & (*instance_name_qt)(TestInstance *instance);
   void            (*instance_run)(TestInstance *instance);
   void            (*instance_free)(TestInstance *instance);
 } TestModule;
