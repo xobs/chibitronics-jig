@@ -4,9 +4,11 @@
 #include "chibisequence.h"
 #include "testmodule.h"
 
+/*
 extern struct test_module set_power;
 extern struct test_module delay;
 extern struct test_module header;
+*/
 
 class ChibiTest;
 class ChibiTestEngineThread : public QThread {
@@ -30,9 +32,9 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     QObject(parent)
 {
 
-    testRegistry.addModule(&set_power);
-    testRegistry.addModule(&delay);
-    testRegistry.addModule(&header);
+    //testRegistry.addModule(&set_power);
+    //testRegistry.addModule(&delay);
+    //testRegistry.addModule(&header);
     /* LtC sticker:
        1)  Toggle power off
        2)  Wait 100ms
