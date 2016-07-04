@@ -47,6 +47,7 @@ typedef struct test_module {
   void            (*instance_free)(TestInstance *instance);
 } TestModule;
 
+extern TestModule test_module;
 
 #ifdef __cplusplus
 };
