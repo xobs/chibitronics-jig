@@ -1,6 +1,12 @@
 #include "chibitest.h"
 #include "chibitestregistry.h"
 
+#include <QtGlobal>
+#include <QFileInfo>
+#include <QDir>
+#include <QCoreApplication>
+#include <QLibrary>
+
 static void ct_test_message(void *testObj, TestMessageType messageType,
                             int value, const char *message) {
     static_cast<ChibiTest*>(testObj)->testData(
@@ -46,14 +52,39 @@ static const FrameworkCallbacks frameworkCallbacks = {
 
 
 ChibiTestRegistry::ChibiTestRegistry() {
+    foreach (QFileInfo item, QDir(QCoreApplication::applicationDirPath()).entryInfoList()) {
+
+        if (!QLibrary::isLibrary(item.absoluteFilePath()))
+            continue;
+
+        QLibrary plugin(item.absoluteFilePath());
+
+        QFunctionPointer module_ptr = plugin.resolve("test_module");
+        if (!module_ptr)
+            continue;
+
+        if (!addModule((const struct test_module *)module_ptr))
+            plugin.unload();
+    }
 }
 
-void ChibiTestRegistry::addModule(const struct test_module *module) {
+bool ChibiTestRegistry::addModule(const struct test_module *module) {
+
+    /* Don't re-add duplicate modules */
+    if (registry.value(module->module_name).value<void *>() != NULL)
+        return false;
+
     module->module_init(&frameworkCallbacks);
     registry.insert(module->module_name,
                     QVariant::fromValue((void *)module));
+    return true;
 }
 
 const TestModule *ChibiTestRegistry::getModule(const QString &name) {
-    return (const TestModule *)registry.value(name).value<void *>();
+    void *module = registry.value(name).value<void *>();
+    if (!module) {
+        qFatal(QString("Unable to locate the module named \"%1\"").arg(name).toUtf8());
+        return (const TestModule *)NULL;
+    }
+    return (const TestModule *)module;
 }

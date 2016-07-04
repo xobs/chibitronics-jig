@@ -15,7 +15,7 @@ private:
 
 public:
     ChibiTestRegistry();
-    void addModule(const struct test_module *module);
+    bool addModule(const struct test_module *module);
     const TestModule *getModule(const QString &name);
 };
 
