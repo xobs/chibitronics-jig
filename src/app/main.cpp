@@ -3,6 +3,8 @@
 //#include "qtquick1applicationviewer.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlProperty>
+#include <QVariant>
 #include "chibisequence.h"
 
 #include <QDebug>
@@ -11,13 +13,13 @@ int main(int argc, char *argv[])
 {
     //QApplication app(argc, argv);
     QGuiApplication app(argc, argv);
-    ChibiSequence chibiSequence(&app);
 
     //app.setOverrideCursor(Qt::BlankCursor);
 
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine.load(QUrl(QStringLiteral("src/app/main.qml")));
 
     /*
     viewer.addImportPath(QLatin1String("modules"));
@@ -27,12 +29,13 @@ int main(int argc, char *argv[])
     */
 
     QObject *rootObject = engine.rootObjects().first();
+    QVariant tests = QQmlProperty::read(rootObject, "tests");
     QObject *stickersTest = rootObject->findChild<QObject *>("stickersTest");
 
-    QObject::connect(stickersTest, SIGNAL(startEffectsTests()),
-                     &chibiSequence, SLOT(runEffectsTests()));
-    QObject::connect(stickersTest, SIGNAL(startSensorTests()),
-                     &chibiSequence, SLOT(runSensorTests()));
+    ChibiSequence chibiSequence(&app, tests);
+
+    QObject::connect(stickersTest, SIGNAL(startTests()),
+                     &chibiSequence, SLOT(runTests()));
 
     QObject::connect(&chibiSequence, SIGNAL(testFinished()),
                      stickersTest, SLOT(onNextStep()));

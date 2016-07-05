@@ -19,23 +19,41 @@ ChibiTest::ChibiTest(const TestModule *new_module, ...) :
     va_list ap;
 
     va_start(ap, new_module);
-    instance = module->instance_init(this, ap);
+    instance = module->c.instance_init(this, ap);
     va_end(ap);
+}
+
+ChibiTest::ChibiTest(const TestModule *new_module,
+                     QMap<QString, QVariant> params) :
+    module(new_module)
+{
+    instance = module->qt.instance_init(this, params);
 }
 
 const QString ChibiTest::testName()
 {
-    if (module->instance_name_qt)
-        return module->instance_name_qt(instance);
-    else if (module->instance_name)
-        return QString(module->instance_name(instance));
+    if (module->c.magic == TEST_MODULE_MAGIC) {
+        if (module->c.instance_name)
+            return QString(module->c.instance_name(instance));
+        else
+            return QString(module->c.module_name);
+    }
+    else if (module->qt.magic == TEST_MODULE_MAGIC_QT) {
+        if (module->qt.instance_name)
+            return module->qt.instance_name(instance);
+        else
+            return module->qt.module_name;
+    }
     else
-        return QString(module->module_name);
+        return QString();
 }
 
 void ChibiTest::runTest()
 {
-    module->instance_run(instance);
+    if (module->c.magic == TEST_MODULE_MAGIC)
+        module->c.instance_run(instance);
+    else if (module->qt.magic == TEST_MODULE_MAGIC_QT)
+        module->qt.instance_run(instance);
 }
 
 void ChibiTest::testInfo(const QString &string)

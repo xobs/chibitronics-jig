@@ -17,12 +17,12 @@ static void ct_test_message(void *testObj, TestMessageType messageType,
 }
 
 static void ct_test_message_qt(void *testObj, TestMessageType messageType,
-                               int value, const QString *message) {
+                               int value, const QString & message) {
     static_cast<ChibiTest*>(testObj)->testData(
         static_cast<ChibiTest*>(testObj)->testName(),
         messageType,
         value,
-        *message);
+        message);
 }
 
 static void ct_msleep(void *testObj, int msecs) {
@@ -43,6 +43,13 @@ void ct_unexport_gpio(void *testObj, int gpio) {
 
 static const FrameworkCallbacks frameworkCallbacks = {
   /* test_message */    ct_test_message,
+  /* msleep */          ct_msleep,
+  /* set_gpio */        ct_set_gpio,
+  /* get_gpio */        ct_get_gpio,
+  /* unexport_gpio */   ct_unexport_gpio,
+};
+
+static const FrameworkCallbacksQt frameworkCallbacksQt = {
   /* test_message_qt */ ct_test_message_qt,
   /* msleep */          ct_msleep,
   /* set_gpio */        ct_set_gpio,
@@ -63,20 +70,35 @@ ChibiTestRegistry::ChibiTestRegistry() {
         if (!module_ptr)
             continue;
 
-        if (!addModule((const struct test_module *)module_ptr))
+        if (!addModule((const void *)module_ptr))
             plugin.unload();
     }
 }
 
-bool ChibiTestRegistry::addModule(const struct test_module *module) {
+bool ChibiTestRegistry::addModule(const void *module) {
 
-    /* Don't re-add duplicate modules */
-    if (registry.value(module->module_name).value<void *>() != NULL)
-        return false;
+    const TestModuleC *module_c = (const TestModuleC *)module;
+    const TestModuleQt *module_qt = (const TestModuleQt *)module;
 
-    module->module_init(&frameworkCallbacks);
-    registry.insert(module->module_name,
-                    QVariant::fromValue((void *)module));
+    if (module_c->magic == TEST_MODULE_MAGIC) {
+        /* Don't re-add duplicate modules */
+        if (registry.value(module_c->module_name).value<void *>() != NULL)
+            return false;
+        module_c->module_init(&frameworkCallbacks);
+
+        registry.insert(module_c->module_name,
+                        QVariant::fromValue((void *)module_c));
+    }
+
+    else if (module_qt->magic == TEST_MODULE_MAGIC_QT) {
+        /* Don't re-add duplicate modules */
+        if (registry.value(module_qt->module_name).value<void *>() != NULL)
+            return false;
+        module_qt->module_init(&frameworkCallbacksQt);
+
+        registry.insert(module_qt->module_name,
+                        QVariant::fromValue((void *)module_qt));
+    }
     return true;
 }
 

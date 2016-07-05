@@ -1,7 +1,7 @@
 #include "testmodule.h"
 #include <QString>
 
-static const FrameworkCallbacks *mod_callbacks;
+static const FrameworkCallbacksQt *mod_callbacks;
 enum powerState {
     powerOn,
     powerOff,
@@ -44,40 +44,14 @@ class SetPower
         int powerGpio;
 };
 
-static void set_power_init(const FrameworkCallbacks *callbacks) {
+static void set_power_init(const FrameworkCallbacksQt *callbacks) {
     mod_callbacks = callbacks;
 }
 
-static TestInstance *set_power_instance_init(void *testObj, va_list ap) {
+static TestInstance *set_power_instance_init(void *testObj,
+                                             QMap<QString, QVariant> params) {
 
-    const char *key;
-    const char *val;
-    enum powerState state = powerOn; 
-    int gpio = 0;
-
-    while (1) {
-        key = va_arg(ap, const char *);
-        if (!key)
-            break;
-        val = va_arg(ap, const char *);
-        if (!val)
-            break;
-
-        QString keyStr(key);
-        QString valStr(val);
-
-        if (keyStr == "state") {
-            if (valStr == "on")
-                state = powerOn;
-            else if (valStr == "off")
-                state = powerOff;
-        }
-        else if (keyStr == "gpio") {
-            gpio = valStr.toInt();
-        }
-    }
-
-    SetPower *sp = new SetPower(testObj, gpio, state);
+    SetPower *sp = new SetPower(testObj, params.value("gpio").value<uint32_t>(), params.value("state") == "on" ? powerOn : powerOff);
 
     return (TestInstance *)sp;
 }
@@ -94,13 +68,12 @@ void set_power_instance_free(TestInstance *instance) {
     delete sp;
 }
 
-struct test_module Q_DECL_EXPORT test_module = {
-    TEST_MODULE_MAGIC,
+struct test_module_qt Q_DECL_EXPORT test_module = {
+    TEST_MODULE_MAGIC_QT,
     set_power_init,
-    "SetPower",
-    "Set stickers power",
+    QString("SetPower"),
+    QString("Set stickers power"),
     set_power_instance_init,
-    NULL,
     NULL,
     set_power_instance_run,
     set_power_instance_free,

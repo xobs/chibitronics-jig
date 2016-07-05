@@ -1,6 +1,8 @@
 #include <unistd.h>
-#include <QDebug>
+#include <QtGlobal>
 #include <QThread>
+
+#include <QDebug>
 #include "chibisequence.h"
 #include "testmodule.h"
 
@@ -28,7 +30,7 @@ public:
     }
 };
 
-ChibiSequence::ChibiSequence(QObject *parent) :
+ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests) :
     QObject(parent)
 {
 
@@ -55,90 +57,102 @@ ChibiSequence::ChibiSequence(QObject *parent) :
        17) Verify red LED is not on
        18) Toggle power off
     */
-//    _effectsTests.append(new ChibiTest(testRegistry.getModule("SetPower"),
-//                "state", "on", NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+    foreach (const QVariant & var, tests.toList()) {
+        const QMap<QString, QVariant> plugin = var.toMap();
+        const TestModule *module = testRegistry.getModule(plugin["testName"].toString());
+
+        if (!module) {
+            qFatal(QString("Unable to locate module").toUtf8());
+        }
+
+        ChibiTest *test = new ChibiTest(module,
+                                        plugin["params"].toMap());
+        _tests.append(test);
+    }
+    /*
+    _tests.append(new ChibiTest(testRegistry.getModule("Header"),
                 "message", "Step 1",
                 NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Delay"),
+    _tests.append(new ChibiTest(testRegistry.getModule("Delay"),
                 "msecs", "1000",
                 NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+    _tests.append(new ChibiTest(testRegistry.getModule("Header"),
                 "message", "Second Step",
                 NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Delay"),
+    _tests.append(new ChibiTest(testRegistry.getModule("Delay"),
                 "msecs", "1000",
                 NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+    _tests.append(new ChibiTest(testRegistry.getModule("Header"),
                 "message", "Number three",
                 NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Delay"),
+    _tests.append(new ChibiTest(testRegistry.getModule("Delay"),
                 "msecs", "1000",
                 NULL));
-    _effectsTests.append(new ChibiTest(testRegistry.getModule("Header"),
+    _tests.append(new ChibiTest(testRegistry.getModule("Header"),
                 "message", "Finnish",
                 NULL));
+    */
 #if 0
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("message", "Reset Jig");
-        _effectsTests.append(new Header(testConfig));
+        _tests.append(new Header(testConfig));
     }
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("power", "on");
-        _effectsTests.append(new SetPower(testConfig));
+        _tests.append(new SetPower(testConfig));
     }
-    _effectsTests.append(new Delay(100));
-    _effectsTests.append(new SetVoltage(SetVoltage::fiveVolts));
-    _effectsTests.append(new UnexportGpio(ChibiTest::tpiSignalGpio));
-    _effectsTests.append(new UnexportGpio(ChibiTest::tpiDatGpio));
-    _effectsTests.append(new UnexportGpio(ChibiTest::spiResetGpio));
-    _effectsTests.append(new UnexportGpio(ChibiTest::spiSckGpio));
-    _effectsTests.append(new UnexportGpio(ChibiTest::spiMosiGpio));
-    _effectsTests.append(new UnexportGpio(ChibiTest::spiMisoGpio));
-    _effectsTests.append(new Delay(100));
+    _tests.append(new Delay(100));
+    _tests.append(new SetVoltage(SetVoltage::fiveVolts));
+    _tests.append(new UnexportGpio(ChibiTest::tpiSignalGpio));
+    _tests.append(new UnexportGpio(ChibiTest::tpiDatGpio));
+    _tests.append(new UnexportGpio(ChibiTest::spiResetGpio));
+    _tests.append(new UnexportGpio(ChibiTest::spiSckGpio));
+    _tests.append(new UnexportGpio(ChibiTest::spiMosiGpio));
+    _tests.append(new UnexportGpio(ChibiTest::spiMisoGpio));
+    _tests.append(new Delay(100));
 
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("message", "Programming");
-        _effectsTests.append(new Header(testConfig));
+        _tests.append(new Header(testConfig));
     }
-    _effectsTests.append(new ProgramSticker(1, "chibi-pattern.hex"));
-    _effectsTests.append(new ProgramSticker(2, "chibi-pattern.hex"));
-    _effectsTests.append(new ProgramSticker(3, "chibi-pattern.hex"));
-    _effectsTests.append(new ProgramSticker(4, "chibi-pattern.hex"));
-    _effectsTests.append(new Delay(100));
+    _tests.append(new ProgramSticker(1, "chibi-pattern.hex"));
+    _tests.append(new ProgramSticker(2, "chibi-pattern.hex"));
+    _tests.append(new ProgramSticker(3, "chibi-pattern.hex"));
+    _tests.append(new ProgramSticker(4, "chibi-pattern.hex"));
+    _tests.append(new Delay(100));
 
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("message", "Testing at 5V");
-        _effectsTests.append(new Header(testConfig));
+        _tests.append(new Header(testConfig));
     }
-    _effectsTests.append(new TestSticker(TestSticker::twinkleSticker, 1));
-    _effectsTests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
-    _effectsTests.append(new TestSticker(TestSticker::blinkSticker, 3));
-    _effectsTests.append(new TestSticker(TestSticker::fadeSticker, 4));
+    _tests.append(new TestSticker(TestSticker::twinkleSticker, 1));
+    _tests.append(new TestSticker(TestSticker::heartbeatSticker, 2));
+    _tests.append(new TestSticker(TestSticker::blinkSticker, 3));
+    _tests.append(new TestSticker(TestSticker::fadeSticker, 4));
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("power", "off");
-        _effectsTests.append(new SetPower(testConfig));
+        _tests.append(new SetPower(testConfig));
     }
-    _effectsTests.append(new Delay(100));
+    _tests.append(new Delay(100));
 
     {
         QHash<QString, QVariant> testConfig;
         testConfig.insert("message", "Test Completed");
-        _effectsTests.append(new Header(testConfig));
+        _tests.append(new Header(testConfig));
     }
-    _effectsTests.append(new Finished());
+    _tests.append(new Finished());
 #endif
 
     /* Wire up signals and slots for all tests */
-    for (int i = 0; i < _effectsTests.count(); i++) {
-        qDebug() << "Test " << i << ": " << _effectsTests.at(i)->testName();
+    for (int i = 0; i < _tests.count(); i++) {
+        qDebug() << "Test " << i << ": " << _tests.at(i)->testName();
         connect(
-            _effectsTests.at(i),
+            _tests.at(i),
             SIGNAL(testMessage(const QString,int,int,const QVariant)),
             this,
             SLOT(receiveTestMessage(const QString,int,int,const QVariant)));
@@ -151,33 +165,13 @@ ChibiSequence::ChibiSequence(QObject *parent) :
     }
 }
 
-const QList<ChibiTest *> & ChibiSequence::effectsTests()
-{
-    return _effectsTests;
-}
-
 /* Returns true if there are more tests to run */
-bool ChibiSequence::runEffectsTests()
+bool ChibiSequence::runTests()
 {
     currentTestNumber = -1;
     errorCount = 0;
     testsToRun.clear();
-    testsToRun = _effectsTests;
-
-    QString txt("---\n");
-    QByteArray txtBytes = txt.toUtf8();
-    // For some reason, log.write() doesn't work, and never calls write()
-    write(log.handle(), txtBytes, txtBytes.size());
-
-    return runNextTest();
-}
-
-bool ChibiSequence::runSensorTests()
-{
-    currentTestNumber = -1;
-    errorCount = 0;
-    testsToRun.clear();
-    testsToRun = _sensorTests;
+    testsToRun = _tests;
 
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();

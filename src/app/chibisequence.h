@@ -14,11 +14,10 @@ class ChibiSequence : public QObject
 {
 	Q_OBJECT
 public:
-	explicit ChibiSequence(QObject *parent = 0);
+	explicit ChibiSequence(QObject *parent, const QVariant & testList);
 
 private:
-    QList<ChibiTest *> _effectsTests;
-    QList<ChibiTest *> _sensorTests;
+    QList<ChibiTest *> _tests;
     QList<ChibiTest *> testsToRun;
     ChibiTestRegistry testRegistry;
 
@@ -30,7 +29,6 @@ private:
     bool debugMode;
 
     bool runSelectedTests(QList<ChibiTest *> &tests);
-    const QList<ChibiTest *> & effectsTests();
 
     bool runNextTest();
 
@@ -45,8 +43,7 @@ public slots:
                             int value,
                             const QVariant message);
     void cleanupCurrentTest(void);
-    bool runEffectsTests(void);
-    bool runSensorTests(void);
+    bool runTests(void);
 
 signals:
     void testFinished();

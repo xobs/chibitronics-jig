@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QObject>
-#include <QHash>
+#include <QMap>
 #include <QVariant>
 #include "testmodule.h"
 
@@ -23,6 +23,8 @@ private:
 
 public:
     ChibiTest(const TestModule *module, ...);
+    ChibiTest(const TestModule *new_module,
+              QMap<QString, QVariant> params);
     void runTest();
 
     const QString testName();

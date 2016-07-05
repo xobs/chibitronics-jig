@@ -1,7 +1,7 @@
 #include "testmodule.h"
 #include <QString>
 
-static const FrameworkCallbacks *mod_callbacks;
+static const FrameworkCallbacksQt *mod_callbacks;
 enum powerState {
     powerOn,
     powerOff,
@@ -42,17 +42,17 @@ class ProgramSticker
         const QString _name;
 };
 
-static void programsticker__init(const FrameworkCallbacks *callbacks) {
+static void programsticker__init(const FrameworkCallbacksQt *callbacks) {
     mod_callbacks = callbacks;
 }
 
-static TestInstance *programsticker__instance_init(void *testObj, va_list ap) {
+static TestInstance *programsticker__instance_init(void *testObj,
+                                                   QMap<QString, QVariant> params) {
 
-    const char *key;
-    const char *val;
     enum powerState state = powerOn; 
     int gpio = 0;
 
+    /*
     while (1) {
         key = va_arg(ap, const char *);
         if (!key)
@@ -74,13 +74,14 @@ static TestInstance *programsticker__instance_init(void *testObj, va_list ap) {
             gpio = valStr.toInt();
         }
     }
+    */
 
     ProgramSticker *ps = new ProgramSticker(testObj, gpio, state);
 
     return (TestInstance *)ps;
 }
 
-static const QString &programsticker__instance_name_qt(TestInstance *instance) {
+static const QString &programsticker__instance_name(TestInstance *instance) {
     ProgramSticker *ps = (ProgramSticker *)instance;
     return ps->name();
 }
@@ -97,14 +98,13 @@ static void programsticker__instance_free(TestInstance *instance) {
     delete ps;
 }
 
-struct test_module Q_DECL_EXPORT test_module = {
-    TEST_MODULE_MAGIC,
+struct test_module_qt Q_DECL_EXPORT test_module = {
+    TEST_MODULE_MAGIC_QT,
     programsticker__init,
-    "ProgramSticker",
-    "Program a sticker",
+    QString("ProgramSticker"),
+    QString("Program a sticker"),
     programsticker__instance_init,
-    NULL,
-    programsticker__instance_name_qt,
+    programsticker__instance_name,
     programsticker__instance_run,
     programsticker__instance_free,
 };

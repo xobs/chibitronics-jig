@@ -2,7 +2,7 @@
 #include <QString>
 #include "testmodule.h"
 
-static const FrameworkCallbacks *mod_callbacks;
+static const FrameworkCallbacksQt *mod_callbacks;
 
 class Delay {
 
@@ -28,33 +28,14 @@ public:
     };
 };
 
-static void delay__init(const FrameworkCallbacks *callbacks) {
+static void delay__init(const FrameworkCallbacksQt *callbacks) {
     mod_callbacks = callbacks;
 }
 
-static TestInstance *delay__instance_init(void *testObj, va_list ap) {
+static TestInstance *delay__instance_init(void *testObj,
+                                          QMap<QString, QVariant> params) {
 
-    unsigned int msecs = 0;
-    const char *key;
-    const char *val;
-
-    while (1) {
-        key = va_arg(ap, const char *);
-        if (!key)
-            break;
-        val = va_arg(ap, const char *);
-        if (!val)
-            break;
-
-        QString keyStr(key);
-        QString valStr(val);
-
-        if (keyStr == "msecs") {
-            msecs = valStr.toInt();
-        }
-    }
-
-    Delay *d = new Delay(testObj, msecs);
+    Delay *d = new Delay(testObj, params.value("msecs").value<uint32_t>());
 
     return (TestInstance *)d;
 }
@@ -70,14 +51,13 @@ void delay__instance_run(TestInstance *instance) {
     d->runTest();
 }
 
-struct test_module Q_DECL_EXPORT test_module = {
-    /* .magic = */              TEST_MODULE_MAGIC,
+struct test_module_qt Q_DECL_EXPORT test_module = {
+    /* .magic = */              TEST_MODULE_MAGIC_QT,
     /* .module_init = */        delay__init,
-    /* .module_name = */        "Delay",
-    /* .module_description = */ "Delay for a number of ms",
+    /* .module_name = */        QString("Delay"),
+    /* .module_description = */ QString("Delay for a number of ms"),
     /* .instance_init = */      delay__instance_init,
-    /* .instance_name = */      NULL,
-    /* .instance_name_qt = */   delay__instance_name_qt,
+    /* .instance_name = */      delay__instance_name_qt,
     /* .instance_run = */       delay__instance_run,
     /* .instance_free = */      NULL,
 };

@@ -1,7 +1,7 @@
 #include <QString>
 #include "testmodule.h"
 
-static const FrameworkCallbacks *mod_callbacks;
+static const FrameworkCallbacksQt *mod_callbacks;
 
 class Header {
 
@@ -11,7 +11,7 @@ private:
     QString _name;
 
 public:
-    Header(void *new_obj, const char *new_str) :
+    Header(void *new_obj, const QString &new_str) :
         obj(new_obj),
         str(new_str),
         _name(QString("Header with message: \"%1\"").arg(new_str))
@@ -20,7 +20,7 @@ public:
 
     void runTest()
     {
-        mod_callbacks->test_message_qt(obj, setHeaderType, 0, &str);
+        mod_callbacks->test_message(obj, setHeaderType, 0, str);
     };
 
     const QString & name()
@@ -29,38 +29,19 @@ public:
     }
 };
 
-static void header__init(const FrameworkCallbacks *callbacks) {
+static void header__init(const FrameworkCallbacksQt *callbacks) {
     mod_callbacks = callbacks;
 }
 
-static TestInstance *header__instance_init(void *testObj, va_list ap) {
+static TestInstance *header__instance_init(void *testObj,
+                                           QMap<QString, QVariant> params) {
 
-    const char *key;
-    const char *val;
-    const char *str = NULL;
-
-    while (1) {
-        key = va_arg(ap, const char *);
-        if (!key)
-            break;
-        val = va_arg(ap, const char *);
-        if (!val)
-            break;
-
-        QString keyStr(key);
-        QString valStr(val);
-
-        if (keyStr == "message") {
-            str = val;
-        }
-    }
-
-    Header *h = new Header(testObj, str);
+    Header *h = new Header(testObj, params["message"].toString());
 
     return (TestInstance *)h;
 }
 
-const QString &header__instance_name_qt(TestInstance *instance) {
+const QString &header__instance_name(TestInstance *instance) {
 
     Header *h = (Header *)instance;
     return h->name();
@@ -72,14 +53,13 @@ void header__instance_run(TestInstance *instance) {
     h->runTest();
 }
 
-struct test_module Q_DECL_EXPORT test_module = {
-    TEST_MODULE_MAGIC,
+struct test_module_qt Q_DECL_EXPORT test_module = {
+    TEST_MODULE_MAGIC_QT,
     header__init,
-    "Header",
-    "Display a header",
+    QString("Header"),
+    QString("Display a header"),
     header__instance_init,
-    NULL,
-    header__instance_name_qt,
+    header__instance_name,
     header__instance_run,
     NULL,
 };

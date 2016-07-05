@@ -11,8 +11,7 @@ Rectangle {
     property int currentSticker
     property string mode: "effects"
 
-    signal startEffectsTests
-    signal startSensorTests
+    signal startTests
 
     function onSetHeader(header) {
         console.log("New header: " + header);
@@ -123,14 +122,8 @@ Rectangle {
         }
         else if (stickersTest.state == "startScreen") {
             stickersTest.state = "burning";
-            if (mode == "sensor") {
-                testEffectsImage.source = "test-sensors.png";
-                startSensorTests();
-            }
-            else {
-                testEffectsImage.source = "test-effects.jpg";
-                startEffectsTests();
-            }
+            testImage.source = "test-sensors.png";
+            startTests();
         }
     }
 
@@ -145,7 +138,7 @@ Rectangle {
     }
 
     Image {
-        id: testEffectsImage
+        id: testImage
         x: -1
         y: -1
         anchors.centerIn: parent
@@ -154,8 +147,8 @@ Rectangle {
 
     Image {
         id: statusSticker1
-        anchors.top: testEffectsImage.bottom
-        anchors.left: testEffectsImage.left
+        anchors.top: testImage.bottom
+        anchors.left: testImage.left
         anchors.leftMargin: 43
         opacity: 0
         states: [
@@ -195,8 +188,8 @@ Rectangle {
 
     Image {
         id: statusSticker2
-        anchors.top: testEffectsImage.bottom
-        anchors.left: testEffectsImage.left
+        anchors.top: testImage.bottom
+        anchors.left: testImage.left
         anchors.leftMargin: 140
         opacity: 0
         states: [
@@ -236,8 +229,8 @@ Rectangle {
 
     Image {
         id: statusSticker3
-        anchors.top: testEffectsImage.bottom
-        anchors.left: testEffectsImage.left
+        anchors.top: testImage.bottom
+        anchors.left: testImage.left
         anchors.leftMargin: 238
         opacity: 0
         states: [
@@ -277,8 +270,8 @@ Rectangle {
 
     Image {
         id: statusSticker4
-        anchors.top: testEffectsImage.bottom
-        anchors.left: testEffectsImage.left
+        anchors.top: testImage.bottom
+        anchors.left: testImage.left
         anchors.leftMargin: 335
         opacity: 0
         states: [
@@ -318,8 +311,8 @@ Rectangle {
 
     Image {
         id: statusSticker5
-        anchors.bottom: testEffectsImage.top
-        anchors.left: testEffectsImage.left
+        anchors.bottom: testImage.top
+        anchors.left: testImage.left
         rotation: 90
         anchors.leftMargin: -120
         anchors.bottomMargin: -200
@@ -361,8 +354,8 @@ Rectangle {
 
     Image {
         id: statusSticker6
-        anchors.bottom: testEffectsImage.top
-        anchors.left: testEffectsImage.left
+        anchors.bottom: testImage.top
+        anchors.left: testImage.left
         anchors.leftMargin: 180
         anchors.bottomMargin: 60
         rotation: 180
@@ -404,8 +397,8 @@ Rectangle {
 
     Image {
         id: statusSticker7
-        anchors.bottom: testEffectsImage.top
-        anchors.left: testEffectsImage.left
+        anchors.bottom: testImage.top
+        anchors.left: testImage.left
         anchors.leftMargin: 32
         anchors.bottomMargin: 60
         rotation: 180
@@ -447,8 +440,8 @@ Rectangle {
 
     Image {
         id: statusSticker8
-        anchors.bottom: testEffectsImage.top
-        anchors.left: testEffectsImage.left
+        anchors.bottom: testImage.top
+        anchors.left: testImage.left
         anchors.leftMargin: 340
         anchors.bottomMargin: -200
         rotation: 270
@@ -492,8 +485,8 @@ Rectangle {
         id: downArrow
         y: -1
         opacity: 0
-        anchors.bottom: testEffectsImage.top
-        anchors.left: testEffectsImage.left
+        anchors.bottom: testImage.top
+        anchors.left: testImage.left
         anchors.leftMargin: 43
         source: "downarrow.png"
         states: [
@@ -650,7 +643,7 @@ Rectangle {
                 opacity: 0
             }
             PropertyChanges {
-                target: testEffectsImage
+                target: testImage
                 opacity: 0
             }
             PropertyChanges {
@@ -696,7 +689,7 @@ Rectangle {
             to: "burning"
             SequentialAnimation {
                 ParallelAnimation {
-                    NumberAnimation { target: testEffectsImage; property: "opacity"; duration: 500 }
+                    NumberAnimation { target: testImage; property: "opacity"; duration: 500 }
                     NumberAnimation { target: statusText; property: "opacity"; duration: 250 }
                 }
             }
@@ -705,14 +698,14 @@ Rectangle {
             to: "finished"
             ParallelAnimation {
                 NumberAnimation { target: downArrow; property: "opacity"; duration: 500 }
-                NumberAnimation { target: testEffectsImage; property: "opacity"; duration: 500 }
+                NumberAnimation { target: testImage; property: "opacity"; duration: 500 }
             }
         },
         Transition {
             to: "startScreen"
             ParallelAnimation {
                 NumberAnimation { target: downArrow; property: "opacity"; duration: 500 }
-                NumberAnimation { target: testEffectsImage; property: "opacity"; duration: 500 }
+                NumberAnimation { target: testImage; property: "opacity"; duration: 500 }
             }
         }
     ]
