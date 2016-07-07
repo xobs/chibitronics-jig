@@ -1,11 +1,10 @@
 #include <QCoreApplication>
 #include <QVariant>
 #include <QThread>
+#include <QDebug>
 
 #include "chibitest.h"
 #include "chibitestregistry.h"
-
-#include <QDebug>
 
 class TestRunner : public QObject
 {
@@ -28,7 +27,7 @@ public slots:
             QByteArray txtBytes;
 
             txt = "INFO [" + name + "]: " + QString::number(value) + " " + message.toString();
-            qDebug() << txt;
+            qInfo() << txt;
         }
         else if (type == errorMessageType) {
             errorCount++;
@@ -36,24 +35,24 @@ public slots:
             QByteArray txtBytes;
 
             txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message.toString();
-            qDebug() << txt;
+            qInfo() << txt;
         }
         else if (type == debugMessageType) {
             QString txt;
             txt = "DEBUG [" + name + "]: " + QString::number(value) + message.toString();
-            qDebug() << txt;
+            qInfo() << txt;
         }
         else if (type == testPassType)
-            qDebug() << "Test passed";
+            qInfo() << "Test passed";
         else if (type == setHeaderType)
-            qDebug() << "Setting header to:" << message.toString();
+            qInfo() << "Setting header to:" << message.toString();
         else
-            qDebug() << name << "????:" << type << value << message.toString();
+            qInfo() << name << "????:" << type << value << message.toString();
     };
 
 	void testFinished(void)
 	{
-		qDebug() << "Test finished with" << errorCount << "errors";
+		qInfo() << "Test finished with" << errorCount << "errors";
 	}
 };
 
@@ -88,22 +87,20 @@ int main(int argc, char *argv[])
     TestRunner testRunner;
 	ChibiTestEngineThread *currentThread;
 
-    qDebug() << "Program name:" << args.takeFirst();
+    args.takeFirst();
 
     if (args.isEmpty()) {
         qFatal("Error: must specify a test name");
     }
 
     QString testName = args.takeFirst();
-    qDebug() << "Test name:" << testName;
+    qInfo() << "Test name:" << testName;
 
     while (!args.isEmpty()) {
         QString key = args.takeFirst();
-        qDebug() << "Key: " << key;
         if (args.isEmpty())
             break;
         QString val = args.takeFirst();
-        qDebug() << "Val: " << val;
 
         params.insert(key, val);
     }
@@ -111,15 +108,15 @@ int main(int argc, char *argv[])
     const TestModule *module = testRegistry.getModule(testName);
 
     if (!module) {
-        qDebug() << "Available modules:";
+        qInfo() << "Available modules:";
         foreach (const QString name, testRegistry.moduleNames()) {
-            qDebug() << name;
+            qInfo() << name;
         }
         qFatal(QString("Unable to locate module").toUtf8());
     }
 
     ChibiTest *test = new ChibiTest(module, params);
-    qDebug() << "Running test:" << test->testName();
+    qInfo() << "Running test:" << test->testName();
     QObject::connect(test,
                      SIGNAL(testMessage(const QString,int,int,const QVariant)),
                      &testRunner,
