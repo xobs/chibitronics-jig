@@ -35,7 +35,7 @@ static void delay__init(const FrameworkCallbacksQt *callbacks) {
 static TestInstance *delay__instance_init(void *testObj,
                                           QMap<QString, QVariant> params) {
 
-    Delay *d = new Delay(testObj, params.value("msecs").value<uint32_t>());
+    Delay *d = new Delay(testObj, params["msecs"].toInt());
 
     return (TestInstance *)d;
 }

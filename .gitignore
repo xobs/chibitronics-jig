@@ -3,6 +3,7 @@ Makefile
 *.app
 *.swp
 *.swo
+*.moc
 moc_*.cpp
 qrc_*.cpp
 

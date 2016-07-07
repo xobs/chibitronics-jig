@@ -12,13 +12,13 @@ QML_IMPORT_PATH =
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     chibisequence.cpp \
-    chibitestregistry.cpp \
-    chibitest.cpp
+    ../common/chibitestregistry.cpp \
+    ../common/chibitest.cpp
 
 RESOURCES += qml.qrc
 
 HEADERS += \
     chibisequence.h \
-    chibitestregistry.h \
-    chibitest.h
+    ../common/chibitestregistry.h \
+    ../common/chibitest.h
 

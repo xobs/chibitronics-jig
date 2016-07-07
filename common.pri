@@ -1,2 +1,2 @@
-INCLUDEPATH += ../../include
+INCLUDEPATH += ../common
 DESTDIR = ../../build

@@ -59,7 +59,12 @@ static const FrameworkCallbacksQt frameworkCallbacksQt = {
 
 
 ChibiTestRegistry::ChibiTestRegistry() {
-    foreach (QFileInfo item, QDir(QCoreApplication::applicationDirPath()).entryInfoList()) {
+    addDirectory(QDir(QCoreApplication::applicationDirPath()));
+}
+
+bool ChibiTestRegistry::addDirectory(const QDir & dir) {
+
+    foreach (QFileInfo item, dir.entryInfoList()) {
 
         if (!QLibrary::isLibrary(item.absoluteFilePath()))
             continue;
@@ -73,6 +78,7 @@ ChibiTestRegistry::ChibiTestRegistry() {
         if (!addModule((const void *)module_ptr))
             plugin.unload();
     }
+    return true;
 }
 
 bool ChibiTestRegistry::addModule(const void *module) {
@@ -105,8 +111,14 @@ bool ChibiTestRegistry::addModule(const void *module) {
 const TestModule *ChibiTestRegistry::getModule(const QString &name) {
     void *module = registry.value(name).value<void *>();
     if (!module) {
-        qFatal(QString("Unable to locate the module named \"%1\"").arg(name).toUtf8());
+        qWarning(QString("Unable to locate the module named \"%1\"").arg(name).toUtf8());
         return (const TestModule *)NULL;
     }
     return (const TestModule *)module;
 }
+
+const QStringList ChibiTestRegistry::moduleNames() {
+
+    return registry.keys();
+}
+

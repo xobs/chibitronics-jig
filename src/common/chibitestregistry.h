@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QHash>
 #include <QVariant>
+#include <QDir>
 #include "testmodule.h"
 
 class ChibiTestRegistry : public QObject
@@ -15,7 +16,9 @@ private:
 
 public:
     ChibiTestRegistry();
+    bool addDirectory(const QDir & dir);
     bool addModule(const void *module);
+    const QStringList moduleNames();
     const TestModule *getModule(const QString &name);
 };
 
