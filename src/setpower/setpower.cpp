@@ -68,7 +68,7 @@ void set_power_instance_free(TestInstance *instance) {
     delete sp;
 }
 
-struct test_module_qt Q_DECL_EXPORT test_module = {
+extern "C" struct test_module_qt Q_DECL_EXPORT test_module = {
     TEST_MODULE_MAGIC_QT,
     set_power_init,
     QString("SetPower"),

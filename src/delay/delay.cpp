@@ -51,7 +51,7 @@ void delay__instance_run(TestInstance *instance) {
     d->runTest();
 }
 
-struct test_module_qt Q_DECL_EXPORT test_module = {
+extern "C" struct test_module_qt Q_DECL_EXPORT test_module = {
     /* .magic = */              TEST_MODULE_MAGIC_QT,
     /* .module_init = */        delay__init,
     /* .module_name = */        QString("Delay"),
