@@ -4,4 +4,4 @@
 
 TEMPLATE = lib
 CONFIG += debug
-SOURCES += programsticker.cpp
+SOURCES += shellcmd.cpp

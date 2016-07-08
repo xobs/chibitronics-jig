@@ -90,7 +90,12 @@ int main(int argc, char *argv[])
     args.takeFirst();
 
     if (args.isEmpty()) {
-        qFatal("Error: must specify a test name");
+        qInfo("Error: must specify a test name");
+        qInfo("Available modules:");
+        foreach(const QString moduleName, testRegistry.moduleNames()) {
+            qInfo(QString("    %1").arg(moduleName).toUtf8());
+        }
+        qFatal("No test specified");
     }
 
     QString testName = args.takeFirst();

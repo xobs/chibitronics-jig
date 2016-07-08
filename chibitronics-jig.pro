@@ -5,5 +5,5 @@ SUBDIRS = \
           src/delay \
           src/setpower \
           src/header \
-          src/programsticker
+          src/shellcmd
 TARGET = chibitronics-jig
