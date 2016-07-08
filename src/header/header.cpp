@@ -53,7 +53,7 @@ void header__instance_run(TestInstance *instance) {
     h->runTest();
 }
 
-struct test_module_qt Q_DECL_EXPORT test_module = {
+extern "C" struct test_module_qt Q_DECL_EXPORT test_module = {
     TEST_MODULE_MAGIC_QT,
     header__init,
     QString("Header"),

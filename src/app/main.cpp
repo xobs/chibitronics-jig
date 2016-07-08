@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 
 
     QQmlApplicationEngine engine;
-    //engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    engine.load(QUrl(QStringLiteral("src/app/main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    //engine.load(QUrl(QStringLiteral("src/app/main.qml")));
 
     /*
     viewer.addImportPath(QLatin1String("modules"));

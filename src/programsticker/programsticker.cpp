@@ -98,7 +98,7 @@ static void programsticker__instance_free(TestInstance *instance) {
     delete ps;
 }
 
-struct test_module_qt Q_DECL_EXPORT test_module = {
+extern "C" struct test_module_qt Q_DECL_EXPORT test_module = {
     TEST_MODULE_MAGIC_QT,
     programsticker__init,
     QString("ProgramSticker"),

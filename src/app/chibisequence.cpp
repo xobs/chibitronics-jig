@@ -1,4 +1,3 @@
-#include <unistd.h>
 #include <QtGlobal>
 #include <QThread>
 
@@ -97,8 +96,7 @@ bool ChibiSequence::runTests()
 
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();
-    // For some reason, log.write() doesn't work, and never calls write()
-    write(log.handle(), txtBytes, txtBytes.size());
+    log.write(txtBytes);
 
     return runNextTest();
 }
@@ -117,8 +115,7 @@ void ChibiSequence::receiveTestMessage(const QString name,
 
         txt += "\n";
         txtBytes = txt.toUtf8();
-        // For some reason, log.write() doesn't work, and never calls write()
-        write(log.handle(), txtBytes, txtBytes.size());
+        log.write(txtBytes);
     }
     else if (type == errorMessageType) {
         errorCount++;
@@ -132,8 +129,7 @@ void ChibiSequence::receiveTestMessage(const QString name,
 
         txt += "\n";
         txtBytes = txt.toUtf8();
-        // For some reason, log.write() doesn't work, and never calls write()
-        write(log.handle(), txtBytes, txtBytes.size());
+        log.write(txtBytes);
     }
     else if (type == debugMessageType) {
         QString txt;

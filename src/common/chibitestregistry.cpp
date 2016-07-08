@@ -7,6 +7,8 @@
 #include <QCoreApplication>
 #include <QLibrary>
 
+extern struct test_module_qt Q_DECL_IMPORT test_module;
+
 static void ct_test_message(void *testObj, TestMessageType messageType,
                             int value, const char *message) {
     static_cast<ChibiTest*>(testObj)->testData(
