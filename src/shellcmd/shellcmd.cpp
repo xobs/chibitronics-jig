@@ -23,22 +23,12 @@ class ShellCmd
               args(new_args),
               timeout(timeout_msecs),
               success_str(success_msg),
-              _name(QString("Run command: %1").arg(cmd))
+              _name(QString("Run command: %1  Args: %2  Looking for: \"%3\"  Waiting up to %4 msecs").arg(cmd).arg(args.join(", ")).arg(success_str).arg(timeout))
         {
         };
 
         void runTest(void)
         {
-            /*
-            if (state == powerOn) {
-                mod_callbacks->test_message(key, infoMessageType, 0, "Turning power on");
-                mod_callbacks->set_gpio(key, powerGpio, 1);
-            }
-            else {
-                mod_callbacks->test_message(key, infoMessageType, 0, "Turning power off");
-                mod_callbacks->set_gpio(key, powerGpio, 0);
-            }
-            */
         };
 
         const QString & name() {
