@@ -107,7 +107,19 @@ int main(int argc, char *argv[])
             break;
         QString val = args.takeFirst();
 
-        params.insert(key, val);
+        /* Begin reading of QStringList */
+        if (val == "[") {
+            QStringList stringList;
+            while (!args.isEmpty() && val != "]") {
+                val = args.takeFirst();
+                if (val == "]")
+                    break;
+                stringList.append(val);
+            }
+            params.insert(key, stringList);
+        }
+        else
+            params.insert(key, val);
     }
 
     const TestModule *module = testRegistry.getModule(testName);
