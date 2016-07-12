@@ -8,7 +8,9 @@ Window {
     height: 1080
     title: qsTr("Chibitronics Test")
 
-    MainForm {
+    TestWindow {
+        id: stickersTest
+        objectName: "stickersTest"
         anchors.fill: parent
     }
 

@@ -2,7 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
-        <file alias="downarrow.png">images/downarrow.png</file>
         <file alias="test-effects.jpg">images/test-effects.jpg</file>
+        <file>TestWindow.qml</file>
+        <file>../images/ltcsticker.png</file>
+        <file>../images/downarrow.png</file>
     </qresource>
 </RCC>

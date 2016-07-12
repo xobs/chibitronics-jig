@@ -94,6 +94,8 @@ bool ChibiSequence::runTests()
     testsToRun.clear();
     testsToRun = _tests;
 
+    qDebug() << "Starting test run sequence";
+
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();
     log.write(txtBytes);
@@ -163,6 +165,7 @@ bool ChibiSequence::runNextTest()
     }
 
     currentTest = testsToRun[currentTestNumber];
+    qDebug() << "Starting up next test" << currentTest->testName();
 
     currentThread = new ChibiTestEngineThread(currentTest);
     QObject::connect(currentThread, SIGNAL(finished()),

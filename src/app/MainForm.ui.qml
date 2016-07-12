@@ -13,6 +13,7 @@ Rectangle {
 
     signal startTests
 
+    /*
     function onSetHeader(header) {
         console.log("New header: " + header);
         titleText.text = header;
@@ -126,16 +127,19 @@ Rectangle {
             startTests();
         }
     }
+    */
 
     MouseArea {
         anchors.fill: parent
-        onClicked: onButtonClick()
+        //onClicked: onButtonClick()
     }
 
     focus: true
+    /*
     Keys.onPressed: {
         onButtonClick()
     }
+    */
 
     Image {
         id: testImage
@@ -146,342 +150,6 @@ Rectangle {
     }
 
     Image {
-        id: statusSticker1
-        anchors.top: testImage.bottom
-        anchors.left: testImage.left
-        anchors.leftMargin: 43
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker1
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker1
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker1
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker1; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker2
-        anchors.top: testImage.bottom
-        anchors.left: testImage.left
-        anchors.leftMargin: 140
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker2
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker2
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker2
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker2; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker3
-        anchors.top: testImage.bottom
-        anchors.left: testImage.left
-        anchors.leftMargin: 238
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker3
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker3
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker3
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker3; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker4
-        anchors.top: testImage.bottom
-        anchors.left: testImage.left
-        anchors.leftMargin: 335
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker4
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker4
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker4
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker4; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker5
-        anchors.bottom: testImage.top
-        anchors.left: testImage.left
-        rotation: 90
-        anchors.leftMargin: -120
-        anchors.bottomMargin: -200
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker5
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker5
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker5
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker5; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker6
-        anchors.bottom: testImage.top
-        anchors.left: testImage.left
-        anchors.leftMargin: 180
-        anchors.bottomMargin: 60
-        rotation: 180
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker6
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker6
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker6
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker6; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker7
-        anchors.bottom: testImage.top
-        anchors.left: testImage.left
-        anchors.leftMargin: 32
-        anchors.bottomMargin: 60
-        rotation: 180
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker7
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker7
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker7
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker7; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
-        id: statusSticker8
-        anchors.bottom: testImage.top
-        anchors.left: testImage.left
-        anchors.leftMargin: 340
-        anchors.bottomMargin: -200
-        rotation: 270
-        opacity: 0
-        states: [
-            State {
-                name: "parked"
-                PropertyChanges {
-                    target: statusSticker8
-                    opacity: 0
-                    source: ""
-                }
-            },
-            State {
-                name: "error"
-                PropertyChanges {
-                    target: statusSticker8
-                    opacity: 1
-                    source: "arrow-error.png"
-                }
-            },
-            State {
-                name: "pass"
-                PropertyChanges {
-                    target: statusSticker8
-                    opacity: 1
-                    source: "arrow-pass.png"
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                SequentialAnimation {
-                    NumberAnimation { target: statusSticker8; property: "opacity"; duration: 250; }
-                }
-            }
-        ]
-    }
-
-    Image {
         id: downArrow
         y: -1
         opacity: 0
@@ -489,6 +157,7 @@ Rectangle {
         anchors.left: testImage.left
         anchors.leftMargin: 43
         source: "downarrow.png"
+        /*
         states: [
             State {
                 name: "parked"
@@ -591,11 +260,13 @@ Rectangle {
                 }
             }
         ]
+        */
     }
 
     Text {
         id: statusText
         text: qsTr("Click to begin test")
+        visible: true
         anchors.centerIn: parent
         opacity: 0
         y: 200
@@ -603,13 +274,18 @@ Rectangle {
 
     Text {
         id: debugLog
+        y: 94
         text: "Log initialized"
+        anchors.horizontalCenterOffset: 128
+        anchors.bottomMargin: 14
         opacity: 1
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         font.pointSize: 12
         width: parent.width * 0.80 // 80%
-        height: parent.height * 0.90 // 100%
+        height: parent.height * 0.90
+
+        // 100%
     }
 
     Text {
@@ -629,6 +305,17 @@ Rectangle {
         opacity: 0
         anchors.topMargin: 43
         font.pointSize: 48
+    }
+
+    Image {
+        id: boardImage
+        x: 750
+        y: 180
+        width: 400
+        height: 800
+        rotation: 270
+        fillMode: Image.PreserveAspectFit
+        source: "../images/ltcsticker.png"
     }
 
     states: [
@@ -683,6 +370,7 @@ Rectangle {
         }
     ]
 
+    /*
     transitions: [
         Transition {
             from: "startScreen"
@@ -709,5 +397,6 @@ Rectangle {
             }
         }
     ]
+    */
 
 } // stickersTest

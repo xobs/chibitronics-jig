@@ -16,4 +16,11 @@ qrc_*.cpp
 /chibitronics-jig
 
 # Output directory
-/build
+build
+
+# Windows thumbnail database
+Thumbs.db
+
+# Qt local files
+*.pro.user
+*.autosave
