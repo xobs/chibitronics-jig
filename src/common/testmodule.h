@@ -4,16 +4,20 @@
 #include <stdint.h>
 #include <stdarg.h>
 
-#define TEST_MODULE_MAGIC       0x0592d523
+#define TEST_MODULE_MAGIC_C     0x0592d523
 #define TEST_MODULE_MAGIC_QT    0x0592d524
 
+#define FRAMEWORK_MAGIC_QT 0x8f24b842
+#define FRAMEWORK_MAGIC_C 0x8f24b843
+
 typedef enum test_message_type {
-  infoMessageType,
-  errorMessageType,
-  debugMessageType,
+  infoMessageType,      // Non-error informational message.
+  errorMessageType,     // Error message.  Also indicates an error occurred.
+  debugMessageType,     // Debug message, may be hidden
   setHeaderType,
   setStickerNumType,
-  testPassType,
+  testPassType,         // Indicate that the test passed
+  startTestsType,       // Used to start the tests from the beginning
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
@@ -25,7 +29,8 @@ typedef struct test_instance TestInstance;
 #include <QMap>
 
 typedef struct framework_callbacks_qt {
-  void (*test_message)(void *testObj, TestMessageType messageType,
+  uint32_t magic;
+  void (*send_message)(void *testObj, TestMessageType messageType,
                           int value, const QString &message);
   void (*msleep)(void *testObj, int msecs);
   void (*set_gpio)(void *testObj, int gpio, int val);
@@ -48,7 +53,8 @@ extern "C" {
 #endif
 
 typedef struct framework_callbacks {
-  void (*test_message)(void *testObj, TestMessageType messageType,
+  uint32_t magic;
+  void (*send_message)(void *testObj, TestMessageType messageType,
                        int value, const char *message);
   void (*msleep)(void *testObj, int msecs);
   void (*set_gpio)(void *testObj, int gpio, int val);
