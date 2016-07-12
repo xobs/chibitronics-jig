@@ -5,6 +5,7 @@ Item {
     objectName: "stickersTest"
 
     signal startTests
+    property var errorCount;
 
     function userInteraction() {
         if (stickersTest.state == "testing") {
@@ -13,6 +14,8 @@ Item {
         else {
             console.log("No test running, so starting one now.");
             stickersTest.state = "testing";
+            logOutput.text = "";
+            errorCount = 0;
             startTests();
         }
     }
@@ -31,13 +34,14 @@ Item {
     }
 
     function onTestsFinished() {
-        console.log("Tests finished");
-        console.log("Possible states: " + stickersTest.states);
-        stickersTest.state = "";
+        if (errorCount)
+            stickersTest.state = "fail";
+        else
+            stickersTest.state = "pass";
     }
 
     function onAppendLog(msg) {
-        logOutput.text = logOutput.text + msg;
+        logOutput.text = logOutput.text + "\n" + msg;
     }
 
     function onAppendPass() {
@@ -46,54 +50,49 @@ Item {
 
     function onAppendError(msg) {
         console.log("Appending error: " + msg);
+        errorCount++;
     }
 
     Text {
         id: statusText
-        x: 38
-        y: 40
-        width: 566
-        height: 68
+        height: 44
         text: qsTr("Click to begin")
+        anchors.right: parent.right
+        anchors.rightMargin: 37
+        anchors.left: parent.left
+        anchors.leftMargin: 37
+        anchors.top: parent.top
+        anchors.topMargin: 32
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 32
     }
 
     Image {
         id: boardImage
-        x: 31
-        y: 157
-        width: 393
-        height: 203
+        anchors.right: parent.right
+        anchors.rightMargin: 216
+        anchors.left: parent.left
+        anchors.leftMargin: 31
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 177
+        anchors.top: parent.top
+        anchors.topMargin: 100
         fillMode: Image.PreserveAspectFit
         source: "../images/ltcsticker.png"
     }
 
     MouseArea {
         id: activationArea
-        x: -1
-        y: 8
-        width: 639
-        height: 463
-
-        Text {
-            id: logOutput
-            x: 441
-            y: 98
-            width: 190
-            height: 357
-            font.pixelSize: 12
-        }
+        anchors.fill: parent
     }
 
-    Image {
-        id: statusArrow
-        x: 487
-        y: 216
-        width: 73
-        height: 77
-        fillMode: Image.PreserveAspectFit
-        source: "../images/downarrow.png"
+    Text {
+        id: logOutput
+        x: 440
+        y: 106
+        width: 190
+        height: 357
+        font.pixelSize: 12
     }
 
     Connections {
@@ -101,10 +100,52 @@ Item {
         onClicked: userInteraction()
     }
 
+    Text {
+        id: passText
+        x: 68
+        y: 369
+        text: qsTr("Text")
+        opacity: 0
+        font.pixelSize: 12
+    }
+
+    Text {
+        id: failText
+        x: 25
+        y: 336
+        text: qsTr("Text")
+        opacity: 0
+        font.pixelSize: 12
+    }
+
 
     states: [
         State {
             name: "testing"
+        },
+        State {
+            name: "pass"
+
+            PropertyChanges {
+                target: passText
+                x: 54
+                y: 344
+                text: qsTr("Pass")
+                font.pixelSize: 48
+                opacity: 1
+            }
+        },
+        State {
+            name: "fail"
+
+            PropertyChanges {
+                target: failText
+                x: 58
+                y: 341
+                text: qsTr("Fail")
+                font.pixelSize: 48
+                opacity: 1
+            }
         }
     ]
 
