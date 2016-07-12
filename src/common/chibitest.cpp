@@ -32,7 +32,7 @@ ChibiTest::ChibiTest(const TestModule *new_module,
 
 const QString ChibiTest::testName()
 {
-    if (module->c.magic == TEST_MODULE_MAGIC) {
+    if (module->c.magic == TEST_MODULE_MAGIC_C) {
         if (module->c.instance_name)
             return QString(module->c.instance_name(instance));
         else
@@ -50,7 +50,7 @@ const QString ChibiTest::testName()
 
 void ChibiTest::runTest()
 {
-    if (module->c.magic == TEST_MODULE_MAGIC)
+    if (module->c.magic == TEST_MODULE_MAGIC_C)
         module->c.instance_run(instance);
     else if (module->qt.magic == TEST_MODULE_MAGIC_QT)
         module->qt.instance_run(instance);
