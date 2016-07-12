@@ -21,11 +21,11 @@ class SetPower
         void runTest(void)
         {
             if (state == powerOn) {
-                mod_callbacks->test_message(key, infoMessageType, 0, "Turning power on");
+                mod_callbacks->send_message(key, infoMessageType, 0, "Turning power on");
                 mod_callbacks->set_gpio(key, powerGpio, 1);
             }
             else {
-                mod_callbacks->test_message(key, infoMessageType, 0, "Turning power off");
+                mod_callbacks->send_message(key, infoMessageType, 0, "Turning power off");
                 mod_callbacks->set_gpio(key, powerGpio, 0);
             }
         };
