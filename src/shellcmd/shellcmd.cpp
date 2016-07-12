@@ -29,6 +29,24 @@ class ShellCmd
 
         void runTest(void)
         {
+            QProcess process;
+            process.setProgram(cmd);
+            process.setArguments(args);
+            process.setProcessChannelMode(QProcess::MergedChannels);
+            process.start();
+            if (!process.waitForFinished(timeout)) {
+                process.terminate();
+                mod_callbacks->send_message(key, errorMessageType, 0, QString("Process timed out"));
+                return;
+            }
+
+            QByteArray output = process.readAll();
+            if (success_str.length() && !output.contains(success_str.toUtf8())) {
+                mod_callbacks->send_message(key, errorMessageType, 0, QString("Unable to find search string"));
+                return;
+            }
+
+            mod_callbacks->send_message(key, testPassType, 0, "");
         };
 
         const QString & name() {
