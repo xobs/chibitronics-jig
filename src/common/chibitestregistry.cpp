@@ -44,6 +44,7 @@ void ct_unexport_gpio(void *testObj, int gpio) {
 }
 
 static const FrameworkCallbacks frameworkCallbacks = {
+  /* magic */           FRAMEWORK_MAGIC_C,
   /* test_message */    ct_test_message,
   /* msleep */          ct_msleep,
   /* set_gpio */        ct_set_gpio,
@@ -52,6 +53,7 @@ static const FrameworkCallbacks frameworkCallbacks = {
 };
 
 static const FrameworkCallbacksQt frameworkCallbacksQt = {
+  /* magic */           FRAMEWORK_MAGIC_QT,
   /* test_message_qt */ ct_test_message_qt,
   /* msleep */          ct_msleep,
   /* set_gpio */        ct_set_gpio,
@@ -88,7 +90,7 @@ bool ChibiTestRegistry::addModule(const void *module) {
     const TestModuleC *module_c = (const TestModuleC *)module;
     const TestModuleQt *module_qt = (const TestModuleQt *)module;
 
-    if (module_c->magic == TEST_MODULE_MAGIC) {
+    if (module_c->magic == TEST_MODULE_MAGIC_C) {
         /* Don't re-add duplicate modules */
         if (registry.value(module_c->module_name).value<void *>() != NULL)
             return false;
