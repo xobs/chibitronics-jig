@@ -41,8 +41,6 @@ int main(int argc, char *argv[])
                      stickersTest, SLOT(onNextStep()));
     QObject::connect(&chibiSequence, SIGNAL(setHeader(const QVariant)),
                      stickersTest, SLOT(onSetHeader(const QVariant)));
-    QObject::connect(&chibiSequence, SIGNAL(setStickerNum(const QVariant)),
-                     stickersTest, SLOT(onSetSticker(const QVariant)));
     QObject::connect(&chibiSequence, SIGNAL(testsFinished()),
                      stickersTest, SLOT(onTestsFinished()));
     QObject::connect(&chibiSequence, SIGNAL(appendLog(const QVariant)),
