@@ -69,6 +69,7 @@ bool ChibiSequence::runTests()
     QByteArray txtBytes = txt.toUtf8();
     log.write(txtBytes);
 
+    emit testsStarted();
     return runNextTest();
 }
 
@@ -113,6 +114,12 @@ void ChibiSequence::receiveTestMessage(const QString & name,
         emit setHeader(message.toString());
     else if (type == StartTests)
         runTests();
+    else if (type == TestingPoint)
+        emit addPoint(message, 0);
+    else if (type == PassPoint)
+        emit addPoint(message, 1);
+    else if (type == FailPoint)
+        emit addPoint(message, 2);
     else
         qDebug() << name << "????:" << type << message.toString();
 }

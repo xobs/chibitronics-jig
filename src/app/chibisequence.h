@@ -48,6 +48,8 @@ public slots:
 signals:
     void testFinished();
     void testsFinished();
+    void testsStarted();
+    void addPoint(const QVariant & pt, const QVariant & state);
     void setHeader(const QVariant & header);
     void appendLog(const QVariant & message);
     void appendError(const QVariant & message);
