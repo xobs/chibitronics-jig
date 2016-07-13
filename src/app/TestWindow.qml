@@ -61,6 +61,11 @@ Item {
         dotFill.requestPaint()
     }
 
+    function testFinished() {
+        dotFill.currentPoint = null;
+        dotFill.requestPaint()
+    }
+
     function addPoint(pt, typ) {
         if (typ == 0) {
             dotFill.currentPoint = pt;
@@ -129,6 +134,20 @@ Item {
         font.pixelSize: 48
     }
 
+    Timer {
+        running: true
+        interval: 500
+        repeat: true
+        onTriggered: {
+            if (dotFill.currentPoint) {
+                if (!dotFill.frame)
+                    dotFill.frame = 0;
+                dotFill.frame++;
+                dotFill.requestPaint()
+            }
+        }
+    }
+
     Canvas {
         id: dotFill
         objectName: "dotFill"
@@ -136,6 +155,7 @@ Item {
         property var testedPoints
         property var failurePoints
         property var currentPoint;
+        property var frame;
         onPaint: {
             var ctx = getContext("2d");
             var ptIdx;
@@ -150,7 +170,7 @@ Item {
                 for (ptIdx = 0; ptIdx < testedPoints.length; ptIdx++) {
                     x = testedPoints[ptIdx].x;
                     y = testedPoints[ptIdx].y;
-                    ctx.fillRect(x - 3, y - 3, x + 3, y + 3);
+                    ctx.fillRect(x - 3, y - 3, 6, 6);
                 }
             }
 
@@ -160,16 +180,19 @@ Item {
                 for (ptIdx = 0; ptIdx < failurePoints.length; ptIdx++) {
                     x = failurePoints[ptIdx].x;
                     y = failurePoints[ptIdx].y;
-                    ctx.fillRect(x - 3, y - 3, x + 3, y + 3);
+                    ctx.fillRect(x - 3, y - 3, 6, 6);
                 }
             }
 
             // Draw current point
             if (currentPoint) {
-                ctx.fillStyle = Qt.rgba(0, 1, 1, 1);
+                if (frame & 1)
+                    ctx.fillStyle = Qt.rgba(0, 1, 1, 1);
+                else
+                    ctx.fillStyle = Qt.rgba(1, 0, 1, 1);
                 x = currentPoint.x;
                 y = currentPoint.y;
-                ctx.fillRect(0, 0, currentPoint.x, currentPoint.y);
+                ctx.fillRect(x - 3, y - 3, 6, 6);
             }
         }
     }
