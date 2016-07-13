@@ -5,12 +5,6 @@
 #include "chibisequence.h"
 #include "testmodule.h"
 
-/*
-extern struct test_module set_power;
-extern struct test_module delay;
-extern struct test_module header;
-*/
-
 class ChibiTest;
 class ChibiTestEngineThread : public QThread {
     ChibiTest *tst;
@@ -29,33 +23,11 @@ public:
     }
 };
 
-ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests) :
-    QObject(parent)
+ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QString & logfile) :
+    QObject(parent),
+    isRunning(false)
 {
-
-    //testRegistry.addModule(&set_power);
-    //testRegistry.addModule(&delay);
-    //testRegistry.addModule(&header);
-    /* LtC sticker:
-       1)  Toggle power off
-       2)  Wait 100ms
-       3)  Toggle power on
-       4)  Program LtC sticker
-       5)  Prompt operator to press/hold "reset button"
-       6)  Program test .ino sketch via audio port
-       7)  Toggle A0
-       8)  Toggle A1
-       9)  Toggle A3
-       10) Toggle D0
-       11) Toggle D1
-       12) Check for A2 being "High"
-       13) Prompt operator to press/hold Reset button
-       14) Load physical programming .ino file
-       15) Check that Program Fail LED is not lit
-       16) Toggle power to sticker
-       17) Verify red LED is not on
-       18) Toggle power off
-    */
+    /* For each test present, resolve the test to a plugun module and wire it up. */
     foreach (const QVariant & var, tests.toList()) {
         const QMap<QString, QVariant> plugin = var.toMap();
         const TestModule *module = testRegistry.getModule(plugin["testName"].toString());
@@ -66,35 +38,34 @@ ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests) :
 
         ChibiTest *test = new ChibiTest(module,
                                         plugin["params"].toMap());
-        _tests.append(test);
-    }
-
-    /* Wire up signals and slots for all tests */
-    for (int i = 0; i < _tests.count(); i++) {
-        qDebug() << "Test " << i << ": " << _tests.at(i)->testName();
         connect(
-            _tests.at(i),
+            test,
             SIGNAL(testMessage(const QString,int,int,const QVariant)),
             this,
             SLOT(receiveTestMessage(const QString,int,int,const QVariant)));
+        _tests.append(test);
     }
 
-    log.setFileName("/home/aqs/stickers.log");
-    if (!log.open(QFile::ReadWrite | QFile::Append)) {
-        emit appendError("Unable to open logfile");
-        qDebug() << "Unable to open logfile: " << log.errorString();
+    /* Open the resulting logfile */
+    if (logfile != "") {
+        log.setFileName(logfile);
+        if (!log.open(QFile::ReadWrite | QFile::Append)) {
+            emit appendError("Unable to open logfile");
+            qDebug() << "Unable to open logfile: " << log.errorString();
+        }
     }
 }
 
 /* Returns true if there are more tests to run */
 bool ChibiSequence::runTests()
 {
+    if (isRunning)
+        return true;
+    isRunning = true;
     currentTestNumber = -1;
     errorCount = 0;
     testsToRun.clear();
     testsToRun = _tests;
-
-    qDebug() << "Starting test run sequence";
 
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();
@@ -142,6 +113,8 @@ void ChibiSequence::receiveTestMessage(const QString name,
         emit appendPass();
     else if (type == setHeaderType)
         emit setHeader(message.toString());
+    else if (type == startTestsType)
+        runTests();
     else
         qDebug() << name << "????:" << type << value << message.toString();
 }
@@ -160,6 +133,7 @@ bool ChibiSequence::runNextTest()
     // Increment the test number, and return if we've run out of tests.
     currentTestNumber++;
     if (currentTestNumber >= testsToRun.count()) {
+        isRunning = false;
         emit testsFinished();
         return false;
     }
