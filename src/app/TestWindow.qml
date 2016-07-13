@@ -81,10 +81,6 @@ Item {
         source: "../images/ltcsticker.png"
     }
 
-    MouseArea {
-        id: activationArea
-        anchors.fill: parent
-    }
 
     Text {
         id: logOutput
@@ -101,22 +97,23 @@ Item {
     }
 
     Text {
-        id: passText
+        id: resultsText
         x: 68
         y: 369
-        text: qsTr("Text")
         opacity: 0
-        font.pixelSize: 12
+        font.pixelSize: 48
     }
 
-    Text {
-        id: failText
-        x: 25
-        y: 336
-        text: qsTr("Text")
-        opacity: 0
-        font.pixelSize: 12
+    Canvas {
+        id: dotFill
+        anchors.fill: parent
+        onPaint: {
+            var ctx = getContext("2d");
+            ctx.fillStyle = Qt.rgba(1, 0, 0, 1);
+            ctx.fillRect(0, 0, 5, 10);
+        }
     }
+
 
 
     states: [
@@ -127,11 +124,8 @@ Item {
             name: "pass"
 
             PropertyChanges {
-                target: passText
-                x: 54
-                y: 344
+                target: resultsText
                 text: qsTr("Pass")
-                font.pixelSize: 48
                 opacity: 1
             }
         },
@@ -139,14 +133,16 @@ Item {
             name: "fail"
 
             PropertyChanges {
-                target: failText
-                x: 58
-                y: 341
+                target: resultsText
                 text: qsTr("Fail")
-                font.pixelSize: 48
                 opacity: 1
             }
         }
     ]
+
+    MouseArea {
+        id: activationArea
+        anchors.fill: parent
+    }
 
 }
