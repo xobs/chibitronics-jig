@@ -44,11 +44,15 @@ int main(int argc, char *argv[])
     QObject::connect(&chibiSequence, SIGNAL(testsFinished()),
                      stickersTest, SLOT(onTestsFinished()));
     QObject::connect(&chibiSequence, SIGNAL(appendLog(const QVariant)),
-		     stickersTest, SLOT(onAppendLog(const QVariant)));
+                    stickersTest, SLOT(onAppendLog(const QVariant)));
     QObject::connect(&chibiSequence, SIGNAL(appendError(const QVariant)),
-		     stickersTest, SLOT(onAppendError(const QVariant)));
+                    stickersTest, SLOT(onAppendError(const QVariant)));
     QObject::connect(&chibiSequence, SIGNAL(appendPass()),
-		     stickersTest, SLOT(onAppendPass()));
+                    stickersTest, SLOT(onAppendPass()));
+    QObject::connect(&chibiSequence, SIGNAL(addPoint(const QVariant, const QVariant)),
+                     stickersTest, SLOT(addPoint(const QVariant, const QVariant)));
+    QObject::connect(&chibiSequence, SIGNAL(testsStarted()),
+                     stickersTest, SLOT(testsStarted()));
 
     return app.exec();
 }
