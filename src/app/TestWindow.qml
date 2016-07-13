@@ -53,6 +53,31 @@ Item {
         errorCount++;
     }
 
+    function testsStarted() {
+        console.log("Tests starting");
+        dotFill.testedPoints = [];
+        dotFill.failurePoints = [];
+        dotFill.currentPoint = null;
+        dotFill.requestPaint()
+    }
+
+    function addPoint(pt, typ) {
+        if (typ == 0) {
+            dotFill.currentPoint = pt;
+        }
+        else if (typ == 1) {
+            if (!dotFill.testedPoints)
+                dotFill.testedPoints = [];
+            dotFill.testedPoints.push(pt);
+        }
+        else if (typ == 2) {
+            if (!dotFill.failurePoints)
+                dotFill.failurePoints = [];
+            dotFill.failurePoints.push(pt);
+        }
+        dotFill.requestPaint()
+    }
+
     Text {
         id: statusText
         height: 44
@@ -107,11 +132,45 @@ Item {
     Canvas {
         id: dotFill
         objectName: "dotFill"
-        anchors.fill: parent
+        anchors.fill: parent;
+        property var testedPoints
+        property var failurePoints
+        property var currentPoint;
         onPaint: {
             var ctx = getContext("2d");
+            var ptIdx;
+            var x;
+            var y;
+
+            ctx.reset();
+
+            // Draw "success" points
+            ctx.fillStyle = Qt.rgba(0, 1, 0, 1);
+            if (testedPoints) {
+                for (ptIdx = 0; ptIdx < testedPoints.length; ptIdx++) {
+                    x = testedPoints[ptIdx].x;
+                    y = testedPoints[ptIdx].y;
+                    ctx.fillRect(x - 3, y - 3, x + 3, y + 3);
+                }
+            }
+
+            // Draw "failure" points
             ctx.fillStyle = Qt.rgba(1, 0, 0, 1);
-            ctx.fillRect(0, 0, 5, 10);
+            if (failurePoints) {
+                for (ptIdx = 0; ptIdx < failurePoints.length; ptIdx++) {
+                    x = failurePoints[ptIdx].x;
+                    y = failurePoints[ptIdx].y;
+                    ctx.fillRect(x - 3, y - 3, x + 3, y + 3);
+                }
+            }
+
+            // Draw current point
+            if (currentPoint) {
+                ctx.fillStyle = Qt.rgba(0, 1, 1, 1);
+                x = currentPoint.x;
+                y = currentPoint.y;
+                ctx.fillRect(0, 0, currentPoint.x, currentPoint.y);
+            }
         }
     }
 
