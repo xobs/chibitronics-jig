@@ -10,20 +10,18 @@
 extern struct test_module_qt Q_DECL_IMPORT test_module;
 
 static void ct_test_message(void *testObj, TestMessageType messageType,
-                            int value, const char *message) {
+                            const void *message) {
     static_cast<ChibiTest*>(testObj)->testData(
         static_cast<ChibiTest*>(testObj)->testName(),
         messageType,
-        value,
         message);
 }
 
 static void ct_test_message_qt(void *testObj, TestMessageType messageType,
-                               int value, const QString & message) {
+                               const QVariant & message) {
     static_cast<ChibiTest*>(testObj)->testData(
         static_cast<ChibiTest*>(testObj)->testName(),
         messageType,
-        value,
         message);
 }
 
@@ -47,18 +45,14 @@ static const FrameworkCallbacks frameworkCallbacks = {
   /* magic */           FRAMEWORK_MAGIC_C,
   /* test_message */    ct_test_message,
   /* msleep */          ct_msleep,
-  /* set_gpio */        ct_set_gpio,
   /* get_gpio */        ct_get_gpio,
-  /* unexport_gpio */   ct_unexport_gpio,
 };
 
 static const FrameworkCallbacksQt frameworkCallbacksQt = {
   /* magic */           FRAMEWORK_MAGIC_QT,
   /* test_message_qt */ ct_test_message_qt,
   /* msleep */          ct_msleep,
-  /* set_gpio */        ct_set_gpio,
   /* get_gpio */        ct_get_gpio,
-  /* unexport_gpio */   ct_unexport_gpio,
 };
 
 

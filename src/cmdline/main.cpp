@@ -22,14 +22,14 @@ public slots:
                             int value,
                             const QVariant message)
     {
-        if (type == infoMessageType) {
+        if (type == InfoMessage) {
             QString txt;
             QByteArray txtBytes;
 
             txt = "INFO [" + name + "]: " + QString::number(value) + " " + message.toString();
             qInfo() << txt;
         }
-        else if (type == errorMessageType) {
+        else if (type == ErrorMessage) {
             errorCount++;
             QString txt;
             QByteArray txtBytes;
@@ -37,14 +37,14 @@ public slots:
             txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message.toString();
             qInfo() << txt;
         }
-        else if (type == debugMessageType) {
+        else if (type == DebugMessage) {
             QString txt;
             txt = "DEBUG [" + name + "]: " + QString::number(value) + message.toString();
             qInfo() << txt;
         }
-        else if (type == testPassType)
+        else if (type == TestPass)
             qInfo() << "Test passed";
-        else if (type == setHeaderType)
+        else if (type == SetHeader)
             qInfo() << "Setting header to:" << message.toString();
         else
             qInfo() << name << "????:" << type << value << message.toString();

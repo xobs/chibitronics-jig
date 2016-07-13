@@ -39,20 +39,19 @@ public slots:
      @param value - An error code.  0 for success.
      @param message - An informative message to put up.
     */
-    void receiveTestMessage(const QString name,
+    void receiveTestMessage(const QString & name,
                             int testMessageType,
-                            int value,
-                            const QVariant message);
+                            const QVariant & message);
     void cleanupCurrentTest(void);
     bool runTests(void);
 
 signals:
     void testFinished();
     void testsFinished();
-    void setHeader(const QVariant header);
-    void setStickerNum(const QVariant stickerNum);
-    void appendLog(const QVariant message);
-    void appendError(const QVariant message);
+    void setHeader(const QVariant & header);
+    void setStickerNum(const QVariant & stickerNum);
+    void appendLog(const QVariant & message);
+    void appendError(const QVariant & message);
     void appendPass();
 };
 

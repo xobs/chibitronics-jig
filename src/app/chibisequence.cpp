@@ -40,9 +40,9 @@ ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QStr
                                         plugin["params"].toMap());
         connect(
             test,
-            SIGNAL(testMessage(const QString,int,int,const QVariant)),
+            SIGNAL(testMessage(const QString,int,const QVariant)),
             this,
-            SLOT(receiveTestMessage(const QString,int,int,const QVariant)));
+            SLOT(receiveTestMessage(const QString,int,const QVariant)));
         _tests.append(test);
     }
 
@@ -74,15 +74,15 @@ bool ChibiSequence::runTests()
     return runNextTest();
 }
 
-void ChibiSequence::receiveTestMessage(const QString name,
+void ChibiSequence::receiveTestMessage(const QString & name,
                                        int type,
-                                       int value, const QVariant message)
+                                       const QVariant & message)
 {
-    if (type == infoMessageType) {
+    if (type == InfoMessage) {
         QString txt;
         QByteArray txtBytes;
 
-        txt = "INFO [" + name + "]: " + QString::number(value) + " " + message.toString();
+        txt = "INFO [" + name + "]: " + message.toString();
         qDebug() << txt;
         emit appendLog(txt);
 
@@ -90,12 +90,12 @@ void ChibiSequence::receiveTestMessage(const QString name,
         txtBytes = txt.toUtf8();
         log.write(txtBytes);
     }
-    else if (type == errorMessageType) {
+    else if (type == ErrorMessage) {
         errorCount++;
         QString txt;
         QByteArray txtBytes;
 
-        txt = "ERROR [" + name + "]: " + QString::number(value) + " " + message.toString();
+        txt = "ERROR [" + name + "]: " + message.toString();
         qDebug() << txt;
         emit appendLog(txt);
         emit appendError(message.toString());
@@ -104,19 +104,19 @@ void ChibiSequence::receiveTestMessage(const QString name,
         txtBytes = txt.toUtf8();
         log.write(txtBytes);
     }
-    else if (type == debugMessageType) {
+    else if (type == DebugMessage) {
         QString txt;
-        txt = "DEBUG [" + name + "]: " + QString::number(value) + message.toString();
+        txt = "DEBUG [" + name + "]: " + message.toString();
         qDebug() << txt;
     }
-    else if (type == testPassType)
+    else if (type == TestPass)
         emit appendPass();
-    else if (type == setHeaderType)
+    else if (type == SetHeader)
         emit setHeader(message.toString());
-    else if (type == startTestsType)
+    else if (type == StartTests)
         runTests();
     else
-        qDebug() << name << "????:" << type << value << message.toString();
+        qDebug() << name << "????:" << type << message.toString();
 }
 
 void ChibiSequence::cleanupCurrentTest()

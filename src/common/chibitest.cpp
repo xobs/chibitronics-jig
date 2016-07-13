@@ -58,22 +58,22 @@ void ChibiTest::runTest()
 
 void ChibiTest::testInfo(const QString &string)
 {
-    emit testMessage(testName(), infoMessageType, 0, string);
+    emit testMessage(testName(), InfoMessage, string);
 }
 
 void ChibiTest::testError(const QString &string)
 {
-    emit testMessage(testName(), errorMessageType, 0, string);
+    emit testMessage(testName(), ErrorMessage, string);
 }
 
 void ChibiTest::testDebug(const QString &string)
 {
-    emit testMessage(testName(), debugMessageType, 0, string);
+    emit testMessage(testName(), DebugMessage, string);
 }
 
-void ChibiTest::testData(const QString name, int testMessageType,
-                         int value, const QString &message) {
-    emit testMessage(name, testMessageType, value, message);
+void ChibiTest::testData(const QString & name, int testMessageType,
+                         const QVariant & message) {
+    emit testMessage(name, testMessageType, message);
 }
 
 void ChibiTest::setGpio(int gpio, int val)

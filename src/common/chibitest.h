@@ -45,12 +45,12 @@ public slots:
     void testInfo(const QString &string);
     void testError(const QString &string);
     void testDebug(const QString &string);
-    void testData(const QString name, int testMessageType,
-                  int value, const QString &message);
+    void testData(const QString & name, int testMessageType,
+                  const QVariant & message);
 
 signals:
-    void testMessage(const QString name, int testMessageType,
-                     int value, const QVariant message);
+    void testMessage(const QString & name, int testMessageType,
+                     const QVariant & message);
 };
 
 #endif // CHIBITEST_H

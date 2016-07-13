@@ -36,17 +36,17 @@ class ShellCmd
             process.start();
             if (!process.waitForFinished(timeout)) {
                 process.terminate();
-                mod_callbacks->send_message(key, errorMessageType, 0, QString("Process timed out"));
+                mod_callbacks->send_message(key, ErrorMessage, QString("Process timed out"));
                 return;
             }
 
             QByteArray output = process.readAll();
             if (success_str.length() && !output.contains(success_str.toUtf8())) {
-                mod_callbacks->send_message(key, errorMessageType, 0, QString("Unable to find search string"));
+                mod_callbacks->send_message(key, ErrorMessage, QString("Unable to find search string"));
                 return;
             }
 
-            mod_callbacks->send_message(key, testPassType, 0, "");
+            mod_callbacks->send_message(key, TestPass, "");
         };
 
         const QString & name() {

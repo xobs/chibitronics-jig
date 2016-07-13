@@ -11,13 +11,15 @@
 #define FRAMEWORK_MAGIC_C 0x8f24b843
 
 typedef enum test_message_type {
-  infoMessageType,      // Non-error informational message.
-  errorMessageType,     // Error message.  Also indicates an error occurred.
-  debugMessageType,     // Debug message, may be hidden
-  setHeaderType,
-  setStickerNumType,
-  testPassType,         // Indicate that the test passed
-  startTestsType,       // Used to start the tests from the beginning
+    InfoMessage,    // Non-error informational message.
+    ErrorMessage,   // Error message.  Also indicates an error occurred.
+    DebugMessage,   // Debug message, may be hidden
+    SetHeader,      // Set the window header / banner message
+    TestPass,       // Indicate that the test passed
+    StartTests,     // Used to start the tests from the beginning
+    SetGpio,        // Sets a GPIO to "export", and sets its value to 1
+    ClearGpio,      // Exports a GPIO and sets its value to 0
+    UnexportGpio,   // Undoes the result of an "export"
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
@@ -30,12 +32,9 @@ typedef struct test_instance TestInstance;
 
 typedef struct framework_callbacks_qt {
   uint32_t magic;
-  void (*send_message)(void *testObj, TestMessageType messageType,
-                          int value, const QString &message);
+  void (*send_message)(void *testObj, TestMessageType messageType, const QVariant & message);
   void (*msleep)(void *testObj, int msecs);
-  void (*set_gpio)(void *testObj, int gpio, int val);
   int  (*get_gpio)(void *testObj, int gpio);
-  void (*unexport_gpio)(void *testObj, int gpio);
 } FrameworkCallbacksQt;
 
 typedef struct test_module_qt {
@@ -54,12 +53,9 @@ extern "C" {
 
 typedef struct framework_callbacks {
   uint32_t magic;
-  void (*send_message)(void *testObj, TestMessageType messageType,
-                       int value, const char *message);
+  void (*send_message)(void *testObj, TestMessageType messageType, const void *message);
   void (*msleep)(void *testObj, int msecs);
-  void (*set_gpio)(void *testObj, int gpio, int val);
   int  (*get_gpio)(void *testObj, int gpio);
-  void (*unexport_gpio)(void *testObj, int gpio);
 } FrameworkCallbacks;
 
 typedef struct test_module_c {
