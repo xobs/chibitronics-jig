@@ -49,7 +49,6 @@ signals:
     void testFinished();
     void testsFinished();
     void setHeader(const QVariant & header);
-    void setStickerNum(const QVariant & stickerNum);
     void appendLog(const QVariant & message);
     void appendError(const QVariant & message);
     void appendPass();
