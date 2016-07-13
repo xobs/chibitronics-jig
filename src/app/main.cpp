@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
                      stickersTest, SLOT(addPoint(const QVariant, const QVariant)));
     QObject::connect(&chibiSequence, SIGNAL(testsStarted()),
                      stickersTest, SLOT(testsStarted()));
+    QObject::connect(&chibiSequence, SIGNAL(testFinished()),
+                     stickersTest, SLOT(testFinished()));
 
     return app.exec();
 }
