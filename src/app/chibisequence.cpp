@@ -27,17 +27,15 @@ ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QStr
     QObject(parent),
     isRunning(false)
 {
-    /* For each test present, resolve the test to a plugun module and wire it up. */
+    /* For each test present, resolve the test to a plugin module and wire it up. */
     foreach (const QVariant & var, tests.toList()) {
         const QMap<QString, QVariant> plugin = var.toMap();
         const TestModule *module = testRegistry.getModule(plugin["testName"].toString());
 
-        if (!module) {
+        if (!module)
             qFatal(QString("Unable to locate module").toUtf8());
-        }
 
-        ChibiTest *test = new ChibiTest(module,
-                                        plugin["params"].toMap());
+        ChibiTest *test = new ChibiTest(module, plugin["params"].toMap());
         connect(
             test,
             SIGNAL(testMessage(const QString,int,const QVariant)),
