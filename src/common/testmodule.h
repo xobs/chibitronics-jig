@@ -20,6 +20,9 @@ typedef enum test_message_type {
     SetGpio,        // Sets a GPIO to "export", and sets its value to 1
     ClearGpio,      // Exports a GPIO and sets its value to 0
     UnexportGpio,   // Undoes the result of an "export"
+    TestingPoint,   // Indes of the current (x, y) under test
+    PassPoint,      // Indicates a specific (x, y) passed
+    FailPoint,      // Indicates a specific (x, y) failed
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
