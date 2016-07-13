@@ -106,6 +106,7 @@ Item {
 
     Canvas {
         id: dotFill
+        objectName: "dotFill"
         anchors.fill: parent
         onPaint: {
             var ctx = getContext("2d");
