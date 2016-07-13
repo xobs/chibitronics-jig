@@ -15,6 +15,14 @@ SOURCES += main.cpp \
     ../common/chibitestregistry.cpp \
     ../common/chibitest.cpp
 
+# Include QML files when we run translation tools
+lupdate_only{
+SOURCES += TestWindow.qml \
+           main.qml
+}
+
+TRANSLATIONS = app.ts
+
 RESOURCES += qml.qrc
 
 HEADERS += \
