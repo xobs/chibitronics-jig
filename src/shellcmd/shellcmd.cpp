@@ -23,7 +23,7 @@ class ShellCmd
               args(new_args),
               timeout(timeout_msecs),
               success_str(success_msg),
-              _name(QString("Run command: %1  Args: %2  Looking for: \"%3\"  Waiting up to %4 msecs").arg(cmd).arg(args.join(", ")).arg(success_str).arg(timeout))
+              _name(QString("Run command: %1  Looking for: \"%2\"  Waiting up to %3 msecs").arg(cmd).arg(success_str).arg(timeout))
         {
         };
 
@@ -32,17 +32,42 @@ class ShellCmd
             QProcess process;
             process.setProgram(cmd);
             process.setArguments(args);
+
+            // Combine stdout and stderr into one stream.
             process.setProcessChannelMode(QProcess::MergedChannels);
+
             process.start();
-            if (!process.waitForFinished(timeout)) {
-                process.terminate();
+
+            // Wait for the process to end.
+            process.waitForFinished(timeout);
+
+            // If it's still running, that's a problem.
+            if (process.state() != QProcess::NotRunning) {
                 mod_callbacks->send_message(key, ErrorMessage, QString("Process timed out"));
+                process.terminate();
                 return;
             }
 
             QByteArray output = process.readAll();
+
+            // Make sure the process didn't crash.
+            if (process.exitStatus() != QProcess::NormalExit) {
+                mod_callbacks->send_message(key, ErrorMessage, QString("Process did not have a normal exit"));
+                mod_callbacks->send_message(key, DebugMessage, output);
+                return;
+            }
+
+            // Make sure the exit code is good.
+            if (process.exitCode() != 0) {
+                mod_callbacks->send_message(key, ErrorMessage, QString("Process exited with code %1").arg(process.exitCode()));
+                mod_callbacks->send_message(key, DebugMessage, output);
+                return;
+            }
+
+            // Look for our search string.
             if (success_str.length() && !output.contains(success_str.toUtf8())) {
                 mod_callbacks->send_message(key, ErrorMessage, QString("Unable to find search string"));
+                mod_callbacks->send_message(key, DebugMessage, output);
                 return;
             }
 
