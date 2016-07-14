@@ -21,11 +21,10 @@ Item {
     }
 
     function onNextStep() {
-        console.log("Advancing to next step");
+        ;
     }
 
     function onSetHeader(msg) {
-        console.log("Setting header to: " + msg);
         statusText.text = msg;
     }
 
