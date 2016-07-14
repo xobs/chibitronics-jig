@@ -24,8 +24,10 @@ ChibiTest::ChibiTest(const TestModule *new_module, ...) :
 }
 
 ChibiTest::ChibiTest(const TestModule *new_module,
-                     QMap<QString, QVariant> params) :
-    module(new_module)
+                     const QMap<QString, QVariant> & params,
+                     const QString & new_header) :
+    module(new_module),
+    header(new_header)
 {
     instance = module->qt.instance_init(this, params);
 }
@@ -46,6 +48,11 @@ const QString ChibiTest::testName()
     }
     else
         return QString();
+}
+
+const QString ChibiTest::testHeader()
+{
+    return header;
 }
 
 void ChibiTest::runTest()

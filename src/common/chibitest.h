@@ -20,14 +20,17 @@ class ChibiTest : public QObject
 private:
     const TestModule *module;
     TestInstance *instance;
+    QString header;
 
 public:
     ChibiTest(const TestModule *module, ...);
     ChibiTest(const TestModule *new_module,
-              QMap<QString, QVariant> params);
+              const QMap<QString, QVariant> & params,
+              const QString & header = QString());
     void runTest();
 
     const QString testName();
+    const QString testHeader();
 
     /* Called by the engine after a test has finished running */
     /*
