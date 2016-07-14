@@ -35,7 +35,9 @@ ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QStr
         if (!module)
             qFatal(QString("Unable to locate module").toUtf8());
 
-        ChibiTest *test = new ChibiTest(module, plugin["params"].toMap());
+        ChibiTest *test = new ChibiTest(module,
+                                        plugin["params"].toMap(),
+                                        plugin["testTitle"].toString());
         connect(
             test,
             SIGNAL(testMessage(const QString,int,const QVariant)),
@@ -145,6 +147,8 @@ bool ChibiSequence::runNextTest()
 
     currentTest = testsToRun[currentTestNumber];
     qDebug() << "Starting up next test" << currentTest->testName();
+    if (currentTest->testHeader() != "")
+        emit setHeader(currentTest->testHeader());
 
     currentThread = new ChibiTestEngineThread(currentTest);
     QObject::connect(currentThread, SIGNAL(finished()),
