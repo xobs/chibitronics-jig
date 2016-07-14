@@ -37,11 +37,36 @@ Window {
     property var tests: [
         {
             testName: "ShellCmd",
+            testTitle: qsTr("Program Firmware"),
             params: {
-                command: "dir",
-
+                command: "openocd",
+                args: [
+                    "-f", "interface/raspberrypi2-native.cfg",
+                    "-c", "transport select swd",
+                    "-f", "target/klx.cfg",
+                    "-c", "klx.cpu configure -rtos ChibiOS",
+                    "-c", "reset_config srst_push_pull",
+                    "-c", "init",
+                    "-c", "reset halt",
+                    "-c", "echo -n 'SDID '",
+                    "-c", "mdw 0x40048024",
+                    "-c", "echo -n 'FCFG1 '",
+                    "-c", "mdw 0x4004804C",
+                    "-c", "echo -n 'FCFG2 '",
+                    "-c", "mdw 0x40048050",
+                    "-c", "echo -n 'UIDMH '",
+                    "-c", "mdw 0x40048058",
+                    "-c", "echo -n 'UIDML '",
+                    "-c", "mdw 0x4004805c",
+                    "-c", "echo -n 'UIDL '",
+                    "-c", "mdw 0x40048060",
+                    "-c", "flash write_image ltc.elf",
+                    "-c", "reset",
+                    "-c", "echo ')))>>-- Done Programming --<<(((",
+                    "-c", "exit"
+                ],
                 timeout: 1000,
-                success: "shellcmd"
+                success: ")))>>-- Done Programming --<<((("
             }
         },
         {
@@ -53,43 +78,7 @@ Window {
         {
             testName: "Header",
             params: {
-                message: "Step 1"
-            }
-        },
-        {
-            testName: "Delay",
-            params: {
-                msecs: 2000
-            }
-        },
-        {
-            testName: "Header",
-            params: {
-                message: "Second step"
-            }
-        },
-        {
-            testName: "Delay",
-            params: {
-                msecs: 4000
-            }
-        },
-        {
-            testName: "Header",
-            params: {
-                message: "Third step"
-            }
-        },
-        {
-            testName: "Delay",
-            params: {
-                msecs: 400
-            }
-        },
-        {
-            testName: "Header",
-            params: {
-                message: "Finnish"
+                message: qsTr("Done")
             }
         }
     ]
