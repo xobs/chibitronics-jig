@@ -6,6 +6,8 @@ Item {
 
     signal startTests
     property var errorCount;
+    width: 1280
+    height: 720
 
     function userInteraction() {
         if (stickersTest.state == "testing") {
@@ -96,29 +98,6 @@ Item {
         font.pixelSize: 32
     }
 
-    Image {
-        id: boardImage
-        anchors.right: parent.right
-        anchors.rightMargin: 216
-        anchors.left: parent.left
-        anchors.leftMargin: 31
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 177
-        anchors.top: parent.top
-        anchors.topMargin: 100
-        fillMode: Image.PreserveAspectFit
-        source: "../images/ltcsticker.png"
-    }
-
-
-    Text {
-        id: logOutput
-        x: 440
-        y: 106
-        width: 190
-        height: 357
-        font.pixelSize: 12
-    }
 
     Connections {
         target: activationArea
@@ -133,68 +112,6 @@ Item {
         font.pixelSize: 48
     }
 
-    Timer {
-        running: true
-        interval: 500
-        repeat: true
-        onTriggered: {
-            if (dotFill.currentPoint) {
-                if (!dotFill.frame)
-                    dotFill.frame = 0;
-                dotFill.frame++;
-                dotFill.requestPaint()
-            }
-        }
-    }
-
-    Canvas {
-        id: dotFill
-        objectName: "dotFill"
-        anchors.fill: parent;
-        property var testedPoints
-        property var failurePoints
-        property var currentPoint;
-        property var frame;
-        onPaint: {
-            var ctx = getContext("2d");
-            var ptIdx;
-            var x;
-            var y;
-
-            ctx.reset();
-
-            // Draw "success" points
-            ctx.fillStyle = Qt.rgba(0, 1, 0, 1);
-            if (testedPoints) {
-                for (ptIdx = 0; ptIdx < testedPoints.length; ptIdx++) {
-                    x = testedPoints[ptIdx].x;
-                    y = testedPoints[ptIdx].y;
-                    ctx.fillRect(x - 3, y - 3, 6, 6);
-                }
-            }
-
-            // Draw "failure" points
-            ctx.fillStyle = Qt.rgba(1, 0, 0, 1);
-            if (failurePoints) {
-                for (ptIdx = 0; ptIdx < failurePoints.length; ptIdx++) {
-                    x = failurePoints[ptIdx].x;
-                    y = failurePoints[ptIdx].y;
-                    ctx.fillRect(x - 3, y - 3, 6, 6);
-                }
-            }
-
-            // Draw current point
-            if (currentPoint) {
-                if (frame & 1)
-                    ctx.fillStyle = Qt.rgba(0, 1, 1, 1);
-                else
-                    ctx.fillStyle = Qt.rgba(1, 0, 1, 1);
-                x = currentPoint.x;
-                y = currentPoint.y;
-                ctx.fillRect(x - 3, y - 3, 6, 6);
-            }
-        }
-    }
 
 
 
@@ -224,7 +141,46 @@ Item {
 
     MouseArea {
         id: activationArea
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
         anchors.fill: parent
     }
+
+    Text {
+        id: stepList
+        x: 889
+        y: 115
+        width: 354
+        height: 559
+        text: qsTr("Text")
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        font.pixelSize: 12
+    }
+
+    Text {
+        id: logOutput
+        x: 0
+        y: 80
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        font.pixelSize: 12
+    }
+
+    Image {
+        id: boardImage
+        x: 74
+        y: 115
+        width: 750
+        height: 385
+        fillMode: Image.PreserveAspectFit
+        source: "../images/ltcsticker.png"
+    }
+
+
+
+
+
+
 
 }
