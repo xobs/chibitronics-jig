@@ -42,7 +42,7 @@ ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QStr
             test,
             SIGNAL(testMessage(const QString,int,const QVariant)),
             this,
-            SLOT(receiveTestMessage(const QString,int,const QVariant)));
+            SLOT(dispatchMessage(const QString,int,const QVariant)));
         _tests.append(test);
     }
 
@@ -75,9 +75,9 @@ bool ChibiSequence::runTests()
     return runNextTest();
 }
 
-void ChibiSequence::receiveTestMessage(const QString & name,
-                                       int type,
-                                       const QVariant & message)
+void ChibiSequence::dispatchMessage(const QString & name,
+                                    int type,
+                                    const QVariant & message)
 {
     if (type == InfoMessage) {
         QString txt;
