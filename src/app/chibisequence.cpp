@@ -56,6 +56,15 @@ ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QStr
     }
 }
 
+void ChibiSequence::testEngineLoaded()
+{
+    /* Report to the UI a list of tests */
+    QStringList testNames;
+    foreach (ChibiTest *test, _tests)
+        testNames.append(test->testName());
+    emit testListUpdated(testNames);
+}
+
 /* Returns true if there are more tests to run */
 bool ChibiSequence::runTests()
 {

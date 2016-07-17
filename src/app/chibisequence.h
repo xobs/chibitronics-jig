@@ -45,6 +45,9 @@ public slots:
     void cleanupCurrentTest(void);
     bool runTests(void);
 
+    /* Called after the test engine is loaded, but just before it is displayed */
+    void testEngineLoaded(void);
+
 signals:
     void testFinished();
     void testsFinished();
@@ -54,6 +57,7 @@ signals:
     void appendLog(const QVariant & message);
     void appendError(const QVariant & message);
     void appendPass();
+    void testListUpdated(const QVariant & testNames);
 };
 
 #endif // CHIBISEQUENCE_H
