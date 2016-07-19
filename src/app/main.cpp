@@ -30,9 +30,11 @@ int main(int argc, char *argv[])
 
     QObject *rootObject = engine.rootObjects().first();
     QVariant tests = QQmlProperty::read(rootObject, "tests");
+    QVariant logPath = QQmlProperty::read(rootObject, "logPath");
+
     QObject *stickersTest = rootObject->findChild<QObject *>("stickersTest");
 
-    ChibiSequence chibiSequence(&app, tests);
+    ChibiSequence chibiSequence(&app, tests, logPath.toString());
 
     QObject::connect(stickersTest, SIGNAL(startTests()),
                      &chibiSequence, SLOT(runTests()));
