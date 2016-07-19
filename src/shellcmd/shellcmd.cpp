@@ -5,10 +5,6 @@
 
 #define INTERESTING_STRING_PREFIX "!>>)} "
 static const FrameworkCallbacksQt *mod_callbacks;
-enum powerState {
-    powerOn,
-    powerOff,
-};
 
 class ShellCmd
 {
