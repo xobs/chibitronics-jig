@@ -14,7 +14,7 @@ class ChibiSequence : public QObject
 {
 	Q_OBJECT
 public:
-    explicit ChibiSequence(QObject *parent, const QVariant & testList, const QString & logFileName = QString());
+    explicit ChibiSequence(QObject *parent, const QVariant & testList, const QString & logPath = QString(), const QString & logFileName = QString());
 
 private:
     QList<ChibiTest *> _tests;
@@ -25,6 +25,7 @@ private:
     int currentTestNumber;
     ChibiTestEngineThread *currentThread;
     QFile log;
+    QString logPath;
     bool isRunning;
     int errorCount;
     bool debugMode;

@@ -23,8 +23,12 @@ public:
     }
 };
 
-ChibiSequence::ChibiSequence(QObject *parent, const QVariant & tests, const QString & logfile) :
+ChibiSequence::ChibiSequence(QObject *parent,
+                             const QVariant & tests,
+                             const QString & _logPath,
+                             const QString & logfile) :
     QObject(parent),
+    logPath(_logPath),
     isRunning(false)
 {
     /* For each test present, resolve the test to a plugin module and wire it up. */
@@ -92,7 +96,7 @@ void ChibiSequence::dispatchMessage(const QString & name,
         QString txt;
         QByteArray txtBytes;
 
-        txt = "INFO [" + name + "]: " + message.toString();
+        txt = message.toString();
         qDebug() << txt;
         emit appendLog(txt);
 
