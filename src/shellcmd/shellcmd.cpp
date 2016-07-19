@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <QProcess>
 
+#define INTERESTING_STRING_PREFIX "!>>)} "
 static const FrameworkCallbacksQt *mod_callbacks;
 enum powerState {
     powerOn,
@@ -49,6 +50,14 @@ class ShellCmd
             }
 
             QByteArray output = process.readAll();
+
+            // Log all interesting lines to the test framework.
+            // Interesting lines start with INTERESTING_STRING_PREFIX
+            foreach (QString line, output.split('\n')) {
+                if (line.startsWith(INTERESTING_STRING_PREFIX)) {
+                    mod_callbacks->send_message(key, InfoMessage, line.remove(0, sizeof(INTERESTING_STRING_PREFIX)));
+                }
+            }
 
             // Make sure the process didn't crash.
             if (process.exitStatus() != QProcess::NormalExit) {
