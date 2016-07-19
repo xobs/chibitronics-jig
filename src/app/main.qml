@@ -231,6 +231,7 @@ Window {
         {
             testName: "ShellCmd",
             testTitle: qsTr("Program Firmware"),
+            testDescription: qsTr("Running OpenOCD"),
             params: {
                 command: "openocd",
                 args: [
@@ -274,5 +275,6 @@ Window {
                 message: qsTr("Done")
             }
         }
-    ]
+    ];
+    property var logPath: "/logs/";
 }
