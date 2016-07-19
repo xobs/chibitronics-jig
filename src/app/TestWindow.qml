@@ -63,6 +63,16 @@ Item {
         anchors.fill: parent
     }
 
+    Image {
+        id: boardImage
+        x: 0
+        y: 58
+        width: 875
+        height: 432
+        fillMode: Image.PreserveAspectFit
+        source: "../images/ltcsticker.png"
+    }
+
     Text {
         id: stepList
         objectName: "stepList"
@@ -89,21 +99,11 @@ Item {
         font.pixelSize: 12
     }
 
-    Image {
-        id: boardImage
-        x: 0
-        y: 58
-        width: 875
-        height: 432
-        fillMode: Image.PreserveAspectFit
-        source: "../images/ltcsticker.png"
-    }
-
     Text {
         id: resultsText
         objectName: "resultsText"
-        x: 186
-        y: 87
+        x: 91
+        y: 99
         text: ""
         horizontalAlignment: Text.AlignHCenter
         font.bold: true
