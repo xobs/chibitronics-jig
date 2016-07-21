@@ -8,6 +8,7 @@ CONFIG += debug
 
 SOURCES += main.cpp \
     chibisequence.cpp \
+    logger.cpp \
     ../common/chibitestregistry.cpp \
     ../common/chibitest.cpp
 
@@ -23,6 +24,7 @@ RESOURCES += qml.qrc
 
 HEADERS += \
     chibisequence.h \
+    logger.h \
     ../common/chibitestregistry.h \
     ../common/chibitest.h \
     ../common/testmodule.h
