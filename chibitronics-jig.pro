@@ -3,8 +3,9 @@ SUBDIRS = \
           src/app \
           src/cmdline \
           src/delay \
-          src/setpower \
           src/header \
+          src/setpower \
           src/shellcmd \
-          src/updater \
-          src/swdprogram
+          src/swdprogram \
+          src/takepicture \
+          src/updater
