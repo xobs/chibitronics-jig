@@ -244,7 +244,9 @@ Window {
         },
         {
             testName: "TakePicture",
-            path: "/tester/images"
+            params: {
+                path: "/tester/images"
+            }
         },
         {
             testName: "Delay",
