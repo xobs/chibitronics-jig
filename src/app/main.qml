@@ -244,6 +244,7 @@ Window {
         },
         {
             testName: "TakePicture",
+            testTitle: qsTr("Take a picture"),
             params: {
                 path: "/tester/images"
             }
