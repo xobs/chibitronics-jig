@@ -8,4 +8,3 @@ SUBDIRS = \
           src/shellcmd \
           src/updater \
           src/swdprogram
-TARGET = chibitronics-jig
