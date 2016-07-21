@@ -1,2 +1,3 @@
 INCLUDEPATH += ../common
 DESTDIR = ../../build
+DEFINES += "TESTVER=0x00100000"
