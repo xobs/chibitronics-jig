@@ -29,11 +29,12 @@ class TakePicture
         {
             QProcess process;
             QStringList args;
+            QString saveFile = QString("%1%2%3.jpg").arg(outputPath).arg(QDir::separator()).arg(mod_callbacks->get_variable(key, "serial").toString());
 
             QDir::root().mkpath(outputPath);
             args << "-n"
-                 << "-r"
-                 << "-o" << QString("%1%2%3.jpg").arg(outputPath).arg(QDir::separator()).arg(mod_callbacks->get_variable(key, "serial").toString());
+                 //<< "-r" // Enable to save raw bayer data
+                 << "-o" << saveFile;
 
             // Combine stdout and stderr into one stream.
             process.setProcessChannelMode(QProcess::MergedChannels);
