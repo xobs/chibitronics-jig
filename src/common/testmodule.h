@@ -14,6 +14,7 @@ typedef enum test_message_type {
     InfoMessage,    // Non-error informational message.
     ErrorMessage,   // Error message.  Also indicates an error occurred.
     DebugMessage,   // Debug message, may be hidden
+    FatalMessage,   // An error message that indicates we can't continue at all.
     SetHeader,      // Set the window header / banner message
     TestPass,       // Indicate that the test passed
     StartTests,     // Used to start the tests from the beginning
