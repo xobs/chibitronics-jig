@@ -5,6 +5,8 @@
 
 #define INTERESTING_STRING_PREFIX "!>>)} "
 #define IDREG_PREFIX "!>>)}!! "
+#define SUCCESS_STRING ")))>>-- Done Programming --<<((("
+
 static const FrameworkCallbacksQt *mod_callbacks;
 enum powerState {
     powerOn,
@@ -26,20 +28,21 @@ class SwdProgrammer
               _name(QString(QObject::tr("Program SWD with %1")).arg(elfname))
         {
             cmd = "openocd";
-            params  << "-f" << "interface/raspberrypi2-native.cfg"
+            args  << "-f" << "interface/raspberrypi2-native.cfg"
                     << "-c" << "transport select swd"
                     << "-f" << "target/klx.cfg"
                     << "-c" << "klx.cpu configure -rtos ChibiOS"
                     << "-c" << "reset_config srst_push_pull"
                     << "-c" << "init"
                     << "-c" << "reset halt";
-            foreach (QString & region, idRegisters) {
-                params << "-c" << "echo -n \"" IDREG_PREFIX "\""
+            foreach (const QString & region, idRegisters) {
+                args << "-c" << "echo -n \"" IDREG_PREFIX "\""
                        << "-c" << QString("mdw %1").arg(region);
             }
-            params << "-c" << QString("flash write_image %1").arg(elfName);
-            params << "-c" << "reset";
-            params << "-c" << "exit";
+            args << "-c" << QString("flash write_image %1").arg(elfName);
+            args << "-c" << "reset";
+            args << "-c" << "echo \"" SUCCESS_STRING "\"";
+            args << "-c" << "exit";
         };
 
         void runTest(void)
@@ -58,13 +61,13 @@ class SwdProgrammer
 
             // If it's still running, that's a problem.
             if (process.state() != QProcess::NotRunning) {
-                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Process timed out")));
+                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Process timed out")), NULL);
                 process.terminate();
                 return;
             }
 
             QByteArray output = process.readAll();
-            QString idCode;
+            QString serialNumber;
 
             // Log all interesting lines to the test framework.
             // Interesting lines start with INTERESTING_STRING_PREFIX
@@ -73,9 +76,14 @@ class SwdProgrammer
                     mod_callbacks->send_message(key, InfoMessage, line.remove(0, sizeof(INTERESTING_STRING_PREFIX)), NULL);
                 }
                 else if (line.startsWith(IDREG_PREFIX)) {
-
+                    QStringList components = line.trimmed().split(" ");
+                    if (serialNumber.length() != 0)
+                        serialNumber += "-";
+                    serialNumber += components.last();
                 }
             }
+
+            mod_callbacks->send_message(key, SetVariable, "serial", serialNumber);
 
             // Make sure the process didn't crash.
             if (process.exitStatus() != QProcess::NormalExit) {
@@ -92,8 +100,8 @@ class SwdProgrammer
             }
 
             // Look for our search string.
-            if (success_str.length() && !output.contains(success_str.toUtf8())) {
-                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Unable to find search string")), NULL);
+            if (!output.contains(SUCCESS_STRING)) {
+                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Unable to find success string")), NULL);
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
@@ -108,7 +116,7 @@ class SwdProgrammer
     private:
         void *key;
         QString cmd;
-        QStringList params;
+        QStringList args;
         QString elfName;
         QStringList idRegisters;
         uint32_t timeout;
@@ -149,7 +157,7 @@ extern "C" {
     struct test_module_qt Q_DECL_EXPORT test_module = {
         TEST_MODULE_MAGIC_QT,
         SwdProgrammer__init,
-        QString("SwdProgrammer"),
+        QString("SwdProgram"),
         QString("Program via SWD"),
         SwdProgrammer__instance_init,
         SwdProgrammer__instance_name,
