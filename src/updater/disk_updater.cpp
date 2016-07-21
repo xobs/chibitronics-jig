@@ -3,24 +3,22 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QFileDevice>
 #include <QProcess>
 #include <QString>
 #include <QStringList>
 
 #define UPDATER_FILENAME "cc-updater.jig"
+#define TEMP_FILE "/tester/updater"
 
-#include <QDebug>
-
-DiskUpdater::DiskUpdater() {
+DiskUpdater::DiskUpdater() :
+    updateProcess(NULL)
+{
     ;
 }
 
 void DiskUpdater::doCheck() {
-#ifdef WIN64
-    QDir mediaDirectory("C:\\Users\\Sean\\Code\\chibitronics-jig");
-#else
     QDir mediaDirectory("/media");
-#endif
 
     // Only allow one updater at a time to run.
     if (updateProcess)
@@ -35,17 +33,31 @@ void DiskUpdater::doCheck() {
             // exists, but doesn't have the correct case.
             QString updateFileName = mediaDeviceInfo.absoluteFilePath() + QDir::separator() + UPDATER_FILENAME;
             QFile updateFile(updateFileName);
-            if (! updateFile.open(QFile::ReadOnly)) {
+            if (! updateFile.open(QFile::ReadOnly))
                 continue;
+
+            QFile outputFile(TEMP_FILE);
+            if (!outputFile.open(QFile::WriteOnly))
+                continue;
+
+            while (!updateFile.atEnd()) {
+                QByteArray bytes = updateFile.read(4096);
+                outputFile.write(bytes);
             }
-            qDebug() << "Updating" << QFileInfo(updateFile).absoluteFilePath();
+            updateFile.close();
+            outputFile.close();
+            outputFile.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner
+                                    | QFileDevice::ReadUser  | QFileDevice::WriteUser  | QFileDevice::ExeUser
+                                    | QFileDevice::ReadGroup | QFileDevice::ExeGroup
+                                    | QFileDevice::ReadOther | QFileDevice::ExeOther);
+
             updateProcess = new QProcess();
             QStringList arguments;
-            arguments << QString("0x") + QString(TESTVER).toInt(NULL, 16);
+            arguments << QString("0x") + QString::number(TESTVER, 16);
 
             connect(updateProcess, SIGNAL(finished(int)),
                     this, SLOT(updaterTerminated(int)));
-            updateProcess->start(updateFileName, arguments);
+            updateProcess->start(TEMP_FILE, arguments);
         }
     }
 }
