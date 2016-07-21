@@ -8,10 +8,6 @@
 #define SUCCESS_STRING ")))>>-- Done Programming --<<((("
 
 static const FrameworkCallbacksQt *mod_callbacks;
-enum powerState {
-    powerOn,
-    powerOff,
-};
 
 class SwdProgrammer
 {
@@ -61,7 +57,7 @@ class SwdProgrammer
 
             // If it's still running, that's a problem.
             if (process.state() != QProcess::NotRunning) {
-                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Process timed out")), NULL);
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Process timed out")), NULL);
                 process.terminate();
                 return;
             }
@@ -87,21 +83,21 @@ class SwdProgrammer
 
             // Make sure the process didn't crash.
             if (process.exitStatus() != QProcess::NormalExit) {
-                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Process did not have a normal exit")), NULL);
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Process did not have a normal exit")), NULL);
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
 
             // Make sure the exit code is good.
             if (process.exitCode() != 0) {
-                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Process exited with code %1")).arg(process.exitCode()), NULL);
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Process exited with code %1")).arg(process.exitCode()), NULL);
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
 
             // Look for our search string.
             if (!output.contains(SUCCESS_STRING)) {
-                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Unable to find success string")), NULL);
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Unable to find success string")), NULL);
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
