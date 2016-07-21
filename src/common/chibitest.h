@@ -7,7 +7,7 @@
 #include <QVariant>
 #include "testmodule.h"
 
-class ChibiTestEngine;
+class ChibiTestRegistry;
 
 #define TEST_ERROR 1
 #define TEST_INFO 0
@@ -21,6 +21,7 @@ private:
     const TestModule *module;
     TestInstance *instance;
     QString header;
+    ChibiTestRegistry *registry;
 
 public:
     ChibiTest(const TestModule *module, ...);
@@ -32,11 +33,8 @@ public:
     const QString testName();
     const QString testHeader();
 
-    /* Called by the engine after a test has finished running */
-    /*
-    const QString &getStatusString();
-    int getStatusValue();
-    */
+    void setRegistry(ChibiTestRegistry *reg);
+    ChibiTestRegistry *getRegistry();
 
 /*protected:  // these methods are called from the C wrapper */
     void setGpio(int gpio, int val);
@@ -49,11 +47,11 @@ public slots:
     void testError(const QString &string);
     void testDebug(const QString &string);
     void testData(const QString & name, int testMessageType,
-                  const QVariant & message);
+                  const QVariant & message, const QVariant & param);
 
 signals:
     void testMessage(const QString & name, int testMessageType,
-                     const QVariant & message);
+                     const QVariant & message, const QVariant & param);
 };
 
 #endif // CHIBITEST_H

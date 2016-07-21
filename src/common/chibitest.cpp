@@ -65,22 +65,22 @@ void ChibiTest::runTest()
 
 void ChibiTest::testInfo(const QString &string)
 {
-    emit testMessage(testName(), InfoMessage, string);
+    emit testMessage(testName(), InfoMessage, string, NULL);
 }
 
 void ChibiTest::testError(const QString &string)
 {
-    emit testMessage(testName(), ErrorMessage, string);
+    emit testMessage(testName(), ErrorMessage, string, NULL);
 }
 
 void ChibiTest::testDebug(const QString &string)
 {
-    emit testMessage(testName(), DebugMessage, string);
+    emit testMessage(testName(), DebugMessage, string, NULL);
 }
 
 void ChibiTest::testData(const QString & name, int testMessageType,
-                         const QVariant & message) {
-    emit testMessage(name, testMessageType, message);
+                         const QVariant & message, const QVariant & param) {
+    emit testMessage(name, testMessageType, message, param);
 }
 
 void ChibiTest::setGpio(int gpio, int val)
@@ -152,4 +152,14 @@ int ChibiTest::unexportGpio(int gpio)
 void ChibiTest::msleep(int msecs)
 {
     SleeperThread::msleep(msecs);
+}
+
+void ChibiTest::setRegistry(ChibiTestRegistry *reg)
+{
+    registry = reg;
+}
+
+ChibiTestRegistry *ChibiTest::getRegistry()
+{
+    return registry;
 }

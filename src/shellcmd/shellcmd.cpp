@@ -40,7 +40,7 @@ class ShellCmd
 
             // If it's still running, that's a problem.
             if (process.state() != QProcess::NotRunning) {
-                mod_callbacks->send_message(key, ErrorMessage, QString("Process timed out"));
+                mod_callbacks->send_message(key, ErrorMessage, QObject::tr("Process timed out"), NULL);
                 process.terminate();
                 return;
             }
@@ -51,32 +51,32 @@ class ShellCmd
             // Interesting lines start with INTERESTING_STRING_PREFIX
             foreach (QString line, output.split('\n')) {
                 if (line.startsWith(INTERESTING_STRING_PREFIX)) {
-                    mod_callbacks->send_message(key, InfoMessage, line.remove(0, sizeof(INTERESTING_STRING_PREFIX)));
+                    mod_callbacks->send_message(key, InfoMessage, line.remove(0, sizeof(INTERESTING_STRING_PREFIX)), NULL);
                 }
             }
 
             // Make sure the process didn't crash.
             if (process.exitStatus() != QProcess::NormalExit) {
-                mod_callbacks->send_message(key, ErrorMessage, QString("Process did not have a normal exit"));
-                mod_callbacks->send_message(key, DebugMessage, output);
+                mod_callbacks->send_message(key, ErrorMessage, QObject::tr("Process did not have a normal exit"), NULL);
+                mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
 
             // Make sure the exit code is good.
             if (process.exitCode() != 0) {
-                mod_callbacks->send_message(key, ErrorMessage, QString("Process exited with code %1").arg(process.exitCode()));
-                mod_callbacks->send_message(key, DebugMessage, output);
+                mod_callbacks->send_message(key, ErrorMessage, QString(QObject::tr("Process exited with code %1")).arg(process.exitCode()), NULL);
+                mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
 
             // Look for our search string.
             if (success_str.length() && !output.contains(success_str.toUtf8())) {
-                mod_callbacks->send_message(key, ErrorMessage, QString("Unable to find search string"));
-                mod_callbacks->send_message(key, DebugMessage, output);
+                mod_callbacks->send_message(key, ErrorMessage, QObject::tr("Unable to find search string"), NULL);
+                mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return;
             }
 
-            mod_callbacks->send_message(key, TestPass, "");
+            mod_callbacks->send_message(key, TestPass, "", NULL);
         };
 
         const QString & name() {

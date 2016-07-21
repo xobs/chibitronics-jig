@@ -74,8 +74,6 @@ public:
     }
 };
 
-
-
 #include "main.moc"
 
 int main(int argc, char *argv[])

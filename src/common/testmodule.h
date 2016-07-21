@@ -7,8 +7,8 @@
 #define TEST_MODULE_MAGIC_C     0x0592d523
 #define TEST_MODULE_MAGIC_QT    0x0592d524
 
-#define FRAMEWORK_MAGIC_QT 0x8f24b842
-#define FRAMEWORK_MAGIC_C 0x8f24b843
+#define FRAMEWORK_MAGIC_QT      0x8f24b842
+#define FRAMEWORK_MAGIC_C       0x8f24b843
 
 typedef enum test_message_type {
     InfoMessage,    // Non-error informational message.
@@ -23,6 +23,7 @@ typedef enum test_message_type {
     TestingPoint,   // Indes of the current (x, y) under test
     PassPoint,      // Indicates a specific (x, y) passed
     FailPoint,      // Indicates a specific (x, y) failed
+    SetVariable,    // Sets a variable within the test infrastructure
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
@@ -34,21 +35,22 @@ typedef struct test_instance TestInstance;
 #include <QMap>
 
 typedef struct framework_callbacks_qt {
-  uint32_t magic;
-  void (*send_message)(void *testObj, TestMessageType messageType, const QVariant & message);
-  void (*msleep)(void *testObj, int msecs);
-  int  (*get_gpio)(void *testObj, int gpio);
+    uint32_t magic;
+    void (*send_message)(void *testObj, TestMessageType messageType, const QVariant & message, const QVariant & parameter);
+    void (*msleep)(void *testObj, int msecs);
+    int  (*get_gpio)(void *testObj, int gpio);
+    const QVariant & (&get_variable)(void *testObj, const QVariant & key);
 } FrameworkCallbacksQt;
 
 typedef struct test_module_qt {
-  uint32_t          magic;
-  void            (*module_init)(const FrameworkCallbacksQt *callbacks);
-  const QString & module_name;
-  const QString & module_description;
-  TestInstance *  (*instance_init)(void *testObj, QMap<QString, QVariant> params);
-  const QString & (*instance_name)(TestInstance *instance);
-  void            (*instance_run)(TestInstance *instance);
-  void            (*instance_free)(TestInstance *instance);
+    uint32_t          magic;
+    void            (*module_init)(const FrameworkCallbacksQt *callbacks);
+    const QString & module_name;
+    const QString & module_description;
+    TestInstance *  (*instance_init)(void *testObj, QMap<QString, QVariant> params);
+    const QString & (*instance_name)(TestInstance *instance);
+    void            (*instance_run)(TestInstance *instance);
+    void            (*instance_free)(TestInstance *instance);
 } TestModuleQt;
 
 extern "C" {
@@ -56,7 +58,7 @@ extern "C" {
 
 typedef struct framework_callbacks {
   uint32_t magic;
-  void (*send_message)(void *testObj, TestMessageType messageType, const void *message);
+  void (*send_message)(void *testObj, TestMessageType messageType, const void *message, const void *parameter);
   void (*msleep)(void *testObj, int msecs);
   int  (*get_gpio)(void *testObj, int gpio);
 } FrameworkCallbacks;

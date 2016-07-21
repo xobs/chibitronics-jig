@@ -20,7 +20,7 @@ public:
 
     void runTest()
     {
-        mod_callbacks->send_message(obj, SetHeader, str);
+        mod_callbacks->send_message(obj, SetHeader, str, NULL);
     };
 
     const QString & name()

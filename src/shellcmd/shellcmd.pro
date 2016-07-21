@@ -5,3 +5,4 @@
 TEMPLATE = lib
 CONFIG += debug
 SOURCES += shellcmd.cpp
+HEADERS += ../common/testmodule.h

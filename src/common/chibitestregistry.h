@@ -14,12 +14,19 @@ class ChibiTestRegistry : public QObject
 private:
     QHash<QString, QVariant> registry;
 
+    // A list of variables constant throughout a test sequence.
+    QMap<QVariant, QVariant> variables;
+
 public:
     ChibiTestRegistry();
     bool addDirectory(const QDir & dir);
     bool addModule(const void *module);
     const QStringList moduleNames();
     const TestModule *getModule(const QString &name);
+
+    const QVariant & getVariable(const QVariant & key);
+    void setVariable(const QVariant & key, const QVariant & value);
+    void resetVariables();  // Call when the test sequence starts again
 };
 
 #endif // CHIBITESTREGISTRY_H

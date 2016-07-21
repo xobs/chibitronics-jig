@@ -10,19 +10,21 @@
 extern struct test_module_qt Q_DECL_IMPORT test_module;
 
 static void ct_test_message(void *testObj, TestMessageType messageType,
-                            const void *message) {
+                            const void *message, const void *param) {
     static_cast<ChibiTest*>(testObj)->testData(
         static_cast<ChibiTest*>(testObj)->testName(),
         messageType,
-        message);
+        message,
+        param);
 }
 
 static void ct_test_message_qt(void *testObj, TestMessageType messageType,
-                               const QVariant & message) {
+                               const QVariant & message, const QVariant & param) {
     static_cast<ChibiTest*>(testObj)->testData(
         static_cast<ChibiTest*>(testObj)->testName(),
         messageType,
-        message);
+        message,
+        param);
 }
 
 static void ct_msleep(void *testObj, int msecs) {
@@ -33,26 +35,31 @@ static void ct_set_gpio(void *testObj, int gpio, int val) {
     static_cast<ChibiTest*>(testObj)->setGpio(gpio, val);
 }
 
-int  ct_get_gpio(void *testObj, int gpio) {
+static int  ct_get_gpio(void *testObj, int gpio) {
     return static_cast<ChibiTest*>(testObj)->getGpio(gpio);
 }
 
-void ct_unexport_gpio(void *testObj, int gpio) {
+static void ct_unexport_gpio(void *testObj, int gpio) {
     static_cast<ChibiTest*>(testObj)->unexportGpio(gpio);
 }
 
+static const QVariant & ct_get_variable(void *testObj, const QVariant & key) {
+    return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
+}
+
 static const FrameworkCallbacks frameworkCallbacks = {
-  /* magic */           FRAMEWORK_MAGIC_C,
-  /* test_message */    ct_test_message,
-  /* msleep */          ct_msleep,
-  /* get_gpio */        ct_get_gpio,
+    /* magic */             FRAMEWORK_MAGIC_C,
+    /* test_message */      ct_test_message,
+    /* msleep */            ct_msleep,
+    /* get_gpio */          ct_get_gpio,
 };
 
 static const FrameworkCallbacksQt frameworkCallbacksQt = {
-  /* magic */           FRAMEWORK_MAGIC_QT,
-  /* test_message_qt */ ct_test_message_qt,
-  /* msleep */          ct_msleep,
-  /* get_gpio */        ct_get_gpio,
+    /* magic */             FRAMEWORK_MAGIC_QT,
+    /* test_message_qt */   ct_test_message_qt,
+    /* msleep */            ct_msleep,
+    /* get_gpio */          ct_get_gpio,
+    /* get_variable */      ct_get_variable,
 };
 
 
@@ -120,3 +127,14 @@ const QStringList ChibiTestRegistry::moduleNames() {
     return registry.keys();
 }
 
+void ChibiTestRegistry::setVariable(const QVariant &key, const QVariant &value) {
+    variables.insert(key, value);
+}
+
+const QVariant & ChibiTestRegistry::getVariable(const QVariant &key) {
+    return variables[key];
+}
+
+void ChibiTestRegistry::resetVariables() {
+    variables.clear();
+}

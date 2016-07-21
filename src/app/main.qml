@@ -229,38 +229,17 @@ Window {
     */
     property var tests: [
         {
-            testName: "ShellCmd",
+            testName: "SwdProgram",
             testTitle: qsTr("Program Firmware"),
             testDescription: qsTr("Running OpenOCD"),
             params: {
-                command: "openocd",
-                args: [
-                    "-f", "interface/raspberrypi2-native.cfg",
-                    "-c", "transport select swd",
-                    "-f", "target/klx.cfg",
-                    "-c", "klx.cpu configure -rtos ChibiOS",
-                    "-c", "reset_config srst_push_pull",
-                    "-c", "init",
-                    "-c", "reset halt",
-                    "-c", "echo -n \"!>>)} SDID \"",
-                    "-c", "mdw 0x40048024",
-                    "-c", "echo -n \"!>>)} FCFG1 \"",
-                    "-c", "mdw 0x4004804C",
-                    "-c", "echo -n \"!>>)} FCFG2 \"",
-                    "-c", "mdw 0x40048050",
-                    "-c", "echo -n \"!>>)} UIDMH \"",
-                    "-c", "mdw 0x40048058",
-                    "-c", "echo -n \"!>>)} UIDML \"",
-                    "-c", "mdw 0x4004805c",
-                    "-c", "echo -n \"!>>)} UIDL \"",
-                    "-c", "mdw 0x40048060",
-                    "-c", "flash write_image ltc.elf",
-                    "-c", "reset",
-                    "-c", "echo \")))>>-- Done Programming --<<(((\"",
-                    "-c", "exit"
+                elfname: "ltc.elf",
+                idregisters: [
+                    "0x40048058",
+                    "0x4004805c",
+                    "0x40048060"
                 ],
-                timeout: 1000,
-                success: ")))>>-- Done Programming --<<((("
+                timeout: 1000
             }
         },
         {

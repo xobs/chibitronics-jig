@@ -42,11 +42,12 @@ ChibiSequence::ChibiSequence(QObject *parent,
         ChibiTest *test = new ChibiTest(module,
                                         plugin["params"].toMap(),
                                         plugin["testTitle"].toString());
+        test->setRegistry(&testRegistry);
         connect(
             test,
-            SIGNAL(testMessage(const QString,int,const QVariant)),
+            SIGNAL(testMessage(const QString,int,const QVariant,const QVariant)),
             this,
-            SLOT(dispatchMessage(const QString,int,const QVariant)));
+            SLOT(dispatchMessage(const QString,int,const QVariant,const QVariant)));
         _tests.append(test);
     }
 
@@ -79,6 +80,7 @@ bool ChibiSequence::runTests()
     errorCount = 0;
     testsToRun.clear();
     testsToRun = _tests;
+    testRegistry.resetVariables();
 
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();
@@ -90,7 +92,8 @@ bool ChibiSequence::runTests()
 
 void ChibiSequence::dispatchMessage(const QString & name,
                                     int type,
-                                    const QVariant & message)
+                                    const QVariant & message,
+                                    const QVariant & parameter)
 {
     if (type == InfoMessage) {
         QString txt;
@@ -135,6 +138,8 @@ void ChibiSequence::dispatchMessage(const QString & name,
         emit addPoint(message, 1);
     else if (type == FailPoint)
         emit addPoint(message, 2);
+    else if (type == SetVariable)
+        testRegistry.setVariable(message, parameter);
     else
         qDebug() << name << "????:" << type << message.toString();
 }

@@ -4,5 +4,5 @@
 
 TEMPLATE = lib
 CONFIG += debug
-SOURCES += setpower.cpp
+SOURCES += swdprogram.cpp
 HEADERS += ../common/testmodule.h

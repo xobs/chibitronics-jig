@@ -42,7 +42,8 @@ public slots:
     */
     void dispatchMessage(const QString & name,
                          int testMessageType,
-                         const QVariant & message);
+                         const QVariant & message,
+                         const QVariant & param);
     void cleanupCurrentTest(void);
     bool runTests(void);
 

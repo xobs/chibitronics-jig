@@ -10,4 +10,5 @@ SOURCES += main.cpp \
 
 HEADERS += \
     ../common/chibitestregistry.h \
-    ../common/chibitest.h
+    ../common/chibitest.h \
+    ../common/testmodule.h

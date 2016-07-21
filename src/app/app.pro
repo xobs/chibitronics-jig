@@ -24,5 +24,5 @@ RESOURCES += qml.qrc
 HEADERS += \
     chibisequence.h \
     ../common/chibitestregistry.h \
-    ../common/chibitest.h
-
+    ../common/chibitest.h \
+    ../common/testmodule.h

@@ -5,4 +5,4 @@
 TEMPLATE = lib
 CONFIG += debug
 SOURCES += delay.cpp
-
+HEADERS += ../common/testmodule.h
