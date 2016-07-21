@@ -3,14 +3,14 @@
 }
 
 TEMPLATE += app
-QT += gui qml quick widgets
+QT += gui qml quick widgets sql
 CONFIG += debug
 
 SOURCES += main.cpp \
     chibisequence.cpp \
-    logger.cpp \
     ../common/chibitestregistry.cpp \
-    ../common/chibitest.cpp
+    ../common/chibitest.cpp \
+    chibilogger.cpp
 
 # Include QML files when we run translation tools
 lupdate_only{
@@ -24,7 +24,7 @@ RESOURCES += qml.qrc
 
 HEADERS += \
     chibisequence.h \
-    logger.h \
     ../common/chibitestregistry.h \
     ../common/chibitest.h \
-    ../common/testmodule.h
+    ../common/testmodule.h \
+    chibilogger.h

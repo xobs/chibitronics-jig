@@ -4,6 +4,7 @@
 #include <QDebug>
 #include "chibisequence.h"
 #include "testmodule.h"
+#include "chibilogger.h"
 
 class ChibiTest;
 class ChibiTestEngineThread : public QThread {
@@ -59,6 +60,8 @@ ChibiSequence::ChibiSequence(QObject *parent,
             qDebug() << "Unable to open logfile: " << log.errorString();
         }
     }
+
+    logger = new ChibiLogger(logPath + QDir::separator() + "chibilog.db");
 }
 
 void ChibiSequence::testEngineLoaded()

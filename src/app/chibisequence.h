@@ -9,6 +9,7 @@
 #include "chibitestregistry.h"
 
 class ChibiTestEngineThread;
+class ChibiLogger;
 
 class ChibiSequence : public QObject
 {
@@ -22,6 +23,7 @@ private:
     ChibiTestRegistry testRegistry;
 
     ChibiTest *currentTest;
+    ChibiLogger *logger;
     int currentTestNumber;
     ChibiTestEngineThread *currentThread;
     QFile log;
