@@ -10,6 +10,7 @@
 
 #define UPDATER_FILENAME "cc-updater.jig"
 #define TEMP_FILE "/tester/updater"
+#define MOUNT_DIR "/media"
 
 DiskUpdater::DiskUpdater() :
     updateProcess(NULL)
@@ -18,7 +19,7 @@ DiskUpdater::DiskUpdater() :
 }
 
 void DiskUpdater::doCheck() {
-    QDir mediaDirectory("/media");
+    QDir mediaDirectory(MOUNT_DIR);
 
     // Only allow one updater at a time to run.
     if (updateProcess)
