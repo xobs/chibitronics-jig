@@ -21,6 +21,8 @@ class TakePicture
               _name(QString(QObject::tr("Take a selfie")))
         {
             cmd = "raspistill";
+            if (!timeout)
+                timeout = 10000; // The picture can take a while
         };
 
         void runTest(void)
@@ -33,13 +35,10 @@ class TakePicture
                  << "-r"
                  << "-o" << QString("%1%2%3.jpg").arg(outputPath).arg(QDir::separator()).arg(mod_callbacks->get_variable(key, "serial").toString());
 
-            process.setProgram(cmd);
-            process.setArguments(args);
-
             // Combine stdout and stderr into one stream.
             process.setProcessChannelMode(QProcess::MergedChannels);
 
-            process.start();
+            process.start(cmd, args);
 
             // Wait for the process to end.
             process.waitForFinished(timeout);
@@ -52,7 +51,6 @@ class TakePicture
             }
 
             QByteArray output = process.readAll();
-            QString serialNumber;
 
             // Log all interesting lines to the test framework.
             // Interesting lines start with INTERESTING_STRING_PREFIX
