@@ -31,6 +31,7 @@ private:
     bool isRunning;
     int errorCount;
     bool debugMode;
+    bool advanceTest;
 
     bool runSelectedTests(QList<ChibiTest *> &tests);
 

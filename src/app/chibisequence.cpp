@@ -84,6 +84,7 @@ bool ChibiSequence::runTests()
     testsToRun.clear();
     testsToRun = _tests;
     testRegistry.resetVariables();
+    advanceTest = true;
 
     QString txt("---\n");
     QByteArray txtBytes = txt.toUtf8();
@@ -110,7 +111,7 @@ void ChibiSequence::dispatchMessage(const QString & name,
         txtBytes = txt.toUtf8();
         log.write(txtBytes);
     }
-    else if (type == ErrorMessage) {
+    else if ((type == ErrorMessage) || (type == FatalMessage)) {
         errorCount++;
         QString txt;
         QByteArray txtBytes;
@@ -123,6 +124,10 @@ void ChibiSequence::dispatchMessage(const QString & name,
         txt += "\n";
         txtBytes = txt.toUtf8();
         log.write(txtBytes);
+
+        // If it's fatal, don't allow us to advance the test.
+        if (type == FatalMessage)
+            advanceTest = false;
     }
     else if (type == DebugMessage) {
         QString txt;
@@ -160,7 +165,7 @@ bool ChibiSequence::runNextTest()
 {
     // Increment the test number, and return if we've run out of tests.
     currentTestNumber++;
-    if (currentTestNumber >= testsToRun.count()) {
+    if (!advanceTest || currentTestNumber >= testsToRun.count()) {
         isRunning = false;
         emit testsFinished();
         return false;
