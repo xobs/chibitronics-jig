@@ -1,4 +1,5 @@
 #include <QObject>
+#include <QProcess>
 
 class DiskUpdater : public QObject
 {
@@ -9,6 +10,7 @@ public:
 
 public slots:
     void doCheck();
+    void updaterTerminated(int result);
 
 signals:
     void updateAvailable(const QVariant & description);
@@ -16,4 +18,7 @@ signals:
     void updateProgress(const QVariant & progress);
     void updateFinished(const QVariant & message);
     void updateFailed(const QVariant & message);
+
+private:
+    QProcess *updateProcess;
 };
