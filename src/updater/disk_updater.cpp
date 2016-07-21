@@ -42,7 +42,7 @@ void DiskUpdater::doCheck() {
                 continue;
 
             while (!updateFile.atEnd()) {
-                QByteArray bytes = updateFile.read(4096);
+                QByteArray bytes = updateFile.read(BUFSIZ);
                 outputFile.write(bytes);
             }
             updateFile.close();
