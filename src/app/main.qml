@@ -243,6 +243,10 @@ Window {
             }
         },
         {
+            testName: "TakePicture",
+            path: "/tester/images"
+        },
+        {
             testName: "Delay",
             params: {
                 msecs: 1000
