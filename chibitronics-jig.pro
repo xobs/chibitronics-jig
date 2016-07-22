@@ -6,6 +6,7 @@ SUBDIRS = \
           src/header \
           src/setpower \
           src/shellcmd \
+          src/startbutton \
           src/swdprogram \
           src/takepicture \
           src/updater
