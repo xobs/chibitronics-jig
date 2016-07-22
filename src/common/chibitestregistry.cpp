@@ -8,23 +8,36 @@
 #include <QLibrary>
 
 extern struct test_module_qt Q_DECL_IMPORT test_module;
+static ChibiTestRegistry *currentTestRegistry;
 
 static void ct_test_message(void *testObj, TestMessageType messageType,
                             const void *message, const void *param) {
-    static_cast<ChibiTest*>(testObj)->testData(
-        static_cast<ChibiTest*>(testObj)->testName(),
-        messageType,
-        message,
-        param);
+    if (testObj)
+        static_cast<ChibiTest*>(testObj)->testData(
+            static_cast<ChibiTest*>(testObj)->testName(),
+            messageType,
+            message,
+            param);
+    else
+        emit currentTestRegistry->testMessage(QString(),
+                                              messageType,
+                                              message,
+                                              param);
 }
 
 static void ct_test_message_qt(void *testObj, TestMessageType messageType,
                                const QVariant & message, const QVariant & param) {
-    static_cast<ChibiTest*>(testObj)->testData(
-        static_cast<ChibiTest*>(testObj)->testName(),
-        messageType,
-        message,
-        param);
+    if (testObj)
+        static_cast<ChibiTest*>(testObj)->testData(
+            static_cast<ChibiTest*>(testObj)->testName(),
+            messageType,
+            message,
+            param);
+    else
+        emit currentTestRegistry->testMessage(QString(),
+                                              messageType,
+                                              message,
+                                              param);
 }
 
 static void ct_msleep(void *testObj, int msecs) {
@@ -47,7 +60,7 @@ static const QVariant & ct_get_variable(void *testObj, const QVariant & key) {
     return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
 }
 
-static const FrameworkCallbacks frameworkCallbacks = {
+static const FrameworkCallbacksC frameworkCallbacks = {
     /* magic */             FRAMEWORK_MAGIC_C,
     /* test_message */      ct_test_message,
     /* msleep */            ct_msleep,
@@ -62,8 +75,8 @@ static const FrameworkCallbacksQt frameworkCallbacksQt = {
     /* get_variable */      ct_get_variable,
 };
 
-
 ChibiTestRegistry::ChibiTestRegistry() {
+    currentTestRegistry = this;
     addDirectory(QDir(QCoreApplication::applicationDirPath()));
 }
 
