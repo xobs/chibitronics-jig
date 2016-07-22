@@ -1,3 +1,4 @@
+#ifdef __arm__
 /*
  * wiringPi:
  *	Arduino look-a-like Wiring library for the Raspberry Pi
@@ -2287,3 +2288,4 @@ int wiringPiSetupSys (void)
 
   return 0 ;
 }
+#endif

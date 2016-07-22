@@ -1,3 +1,4 @@
+#ifdef __arm__
 #include "testmodule.h"
 #include <wiringPi.h>
 #include <stddef.h>
@@ -28,3 +29,4 @@ struct test_module_c Q_DECL_EXPORT test_module = {
     NULL,
     NULL,
 };
+#endif
