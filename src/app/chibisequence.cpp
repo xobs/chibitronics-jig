@@ -32,6 +32,12 @@ ChibiSequence::ChibiSequence(QObject *parent,
     logPath(_logPath),
     isRunning(false)
 {
+    connect(
+        &testRegistry,
+        SIGNAL(testMessage(const QString,int,const QVariant,const QVariant)),
+        this,
+        SLOT(dispatchMessage(const QString,int,const QVariant,const QVariant)));
+
     /* For each test present, resolve the test to a plugin module and wire it up. */
     foreach (const QVariant & var, tests.toList()) {
         const QMap<QString, QVariant> plugin = var.toMap();
