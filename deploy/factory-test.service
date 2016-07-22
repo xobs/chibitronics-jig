@@ -1,11 +1,12 @@
 [Unit]
-Description=GUI and program launcher for Chibitronics stickers
+Description=Chibitronics Tester
 
 [Service]
-Type=simple
-ExecStart=/usr/bin/startx /home/aqs/gui/xsession.sh
-User=aqs
-WorkingDirectory=/home/aqs/gui
+User=pi
+Environment=PATH=/opt/openocd/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+ExecStart=/home/pi/tester/app
+Restart=always
+RestartSec=10
 
 [Install]
-WantedBy=getty.target
+WantedBy=default.target
