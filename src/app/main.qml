@@ -26,18 +26,7 @@ Window {
         }
 
         function userInteraction() {
-            if (state === "testing") {
-                console.log("Test already running");
-            }
-            else {
-                console.log("No test running, so starting one now.");
-                state = "testing";
-                getChildNamed("logOutput").text = "";
-                errorCount = 0;
-                currentTestIndex = 0;
-                testErrorCount = 0;
-                startTests();
-            }
+            startTests();
         }
 
         function onNextStep() {
@@ -89,6 +78,12 @@ Window {
         }
 
         function testsStarted() {
+            state = "testing";
+            getChildNamed("logOutput").text = "";
+            errorCount = 0;
+            currentTestIndex = 0;
+            testErrorCount = 0;
+
             console.log("Tests starting");
             dotFill.testedPoints = [];
             dotFill.failurePoints = [];
