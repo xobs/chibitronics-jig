@@ -27,6 +27,10 @@ public:
     const QVariant & getVariable(const QVariant & key);
     void setVariable(const QVariant & key, const QVariant & value);
     void resetVariables();  // Call when the test sequence starts again
+
+signals:
+    void testMessage(const QString & name, int testMessageType,
+                     const QVariant & message, const QVariant & param);
 };
 
 #endif // CHIBITESTREGISTRY_H
