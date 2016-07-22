@@ -57,16 +57,16 @@ typedef struct test_module_qt {
 extern "C" {
 #endif
 
-typedef struct framework_callbacks {
+typedef struct framework_callbacks_c {
   uint32_t magic;
   void (*send_message)(void *testObj, TestMessageType messageType, const void *message, const void *parameter);
   void (*msleep)(void *testObj, int msecs);
   int  (*get_gpio)(void *testObj, int gpio);
-} FrameworkCallbacks;
+} FrameworkCallbacksC;
 
 typedef struct test_module_c {
   uint32_t          magic;
-  void            (*module_init)(const FrameworkCallbacks *callbacks);
+  void            (*module_init)(const FrameworkCallbacksC *callbacks);
   const char *    module_name;
   const char *    module_description;
   TestInstance *  (*instance_init)(void *testObj, va_list ap);
@@ -83,4 +83,9 @@ typedef union test_module {
     TestModuleQt qt;
 } TestModule;
 #endif
+
+#ifndef Q_DECL_EXPORT
+#define Q_DECL_EXPORT
+#endif
+
 #endif /* TEST_MODULE_H_ */
