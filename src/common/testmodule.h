@@ -11,21 +11,21 @@
 #define FRAMEWORK_MAGIC_C       0x8f24b843
 
 typedef enum test_message_type {
-    InfoMessage,    // Non-error informational message.
-    ErrorMessage,   // Error message.  Also indicates an error occurred.
-    DebugMessage,   // Debug message, may be hidden
-    FatalMessage,   // An error message that indicates we can't continue at all.
-    SetHeader,      // Set the window header / banner message
-    TestPass,       // Indicate that the test passed
-    StartTests,     // Used to start the tests from the beginning
-    SetGpio,        // Sets a GPIO to "export", and sets its value to 1
-    ClearGpio,      // Exports a GPIO and sets its value to 0
-    UnexportGpio,   // Undoes the result of an "export"
-    TestingPoint,   // Indes of the current (x, y) under test
-    PassPoint,      // Indicates a specific (x, y) passed
-    FailPoint,      // Indicates a specific (x, y) failed
-    SetVariable,    // Sets a variable within the test infrastructure's current run
-    SetGlobal,      // Sets a persistent variable that is not dependent on the current run
+    InfoMessage,    // 0  / Non-error informational message.
+    ErrorMessage,   // 1  / Error message.  Also indicates an error occurred.
+    DebugMessage,   // 2  / Debug message, may be hidden
+    FatalMessage,   // 3  / An error message that indicates we can't continue at all.
+    SetHeader,      // 4  / Set the window header / banner message
+    TestPass,       // 5  / Indicate that the test passed
+    StartTests,     // 6  / Used to start the tests from the beginning
+    SetGpio,        // 7  / Sets a GPIO to "export", and sets its value to 1
+    ClearGpio,      // 8  / Exports a GPIO and sets its value to 0
+    UnexportGpio,   // 9  / Undoes the result of an "export"
+    TestingPoint,   // 10 / Indes of the current (x, y) under test
+    PassPoint,      // 11 / Indicates a specific (x, y) passed
+    FailPoint,      // 12 / Indicates a specific (x, y) failed
+    SetVariable,    // 13 / Sets a variable within the test infrastructure's current run
+    SetGlobal,      // 14 / Sets a persistent variable that is not dependent on the current run
 } TestMessageType;
 
 typedef struct test_instance TestInstance;

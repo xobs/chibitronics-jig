@@ -3,7 +3,6 @@ import QtQuick 2.0
 Item {
     id: testDisplay
     objectName: "testOutput"
-    signal startTests
     width: 1280
     height: 720
 
@@ -64,6 +63,7 @@ Item {
 
     Image {
         id: boardImage
+        objectName: "boardImage"
         x: 0
         y: 58
         width: 875

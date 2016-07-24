@@ -6,5 +6,6 @@
         <file>TestWindow.qml</file>
         <file>../images/ltcsticker.png</file>
         <file>../images/downarrow.png</file>
+        <file>../images/dataviewer.png</file>
     </qresource>
 </RCC>

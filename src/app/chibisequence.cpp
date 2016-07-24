@@ -25,7 +25,6 @@ public:
 };
 
 ChibiSequence::ChibiSequence(QObject *parent,
-                             const QVariant & tests,
                              const QString & _logPath,
                              const QString & logfile) :
     QObject(parent),
@@ -39,6 +38,29 @@ ChibiSequence::ChibiSequence(QObject *parent,
         SLOT(dispatchMessage(const QString,int,const QVariant,const QVariant)));
 
     /* For each test present, resolve the test to a plugin module and wire it up. */
+    /* Open the resulting logfile */
+    if (logfile != "") {
+        log.setFileName(logfile);
+        if (!log.open(QFile::ReadWrite | QFile::Append)) {
+            emit appendError("Unable to open logfile");
+            qDebug() << "Unable to open logfile: " << log.errorString();
+        }
+    }
+
+    logger = new ChibiLogger(logPath + QDir::separator() + "chibilog.db");
+}
+
+void ChibiSequence::setTests(QVariant tests)
+{
+    foreach (ChibiTest *test, _tests) {
+        disconnect(
+            test,
+            SIGNAL(testMessage(const QString,int,QVariant,QVariant)),
+            this,
+            SLOT(dispatchMessage(const QString,int,QVariant,QVariant)));
+    }
+    _tests.clear();
+
     foreach (const QVariant & var, tests.toList()) {
         const QMap<QString, QVariant> plugin = var.toMap();
         const TestModule *module = testRegistry.getModule(plugin["testName"].toString());
@@ -58,25 +80,15 @@ ChibiSequence::ChibiSequence(QObject *parent,
         _tests.append(test);
     }
 
-    /* Open the resulting logfile */
-    if (logfile != "") {
-        log.setFileName(logfile);
-        if (!log.open(QFile::ReadWrite | QFile::Append)) {
-            emit appendError("Unable to open logfile");
-            qDebug() << "Unable to open logfile: " << log.errorString();
-        }
-    }
-
-    logger = new ChibiLogger(logPath + QDir::separator() + "chibilog.db");
-}
-
-void ChibiSequence::testEngineLoaded()
-{
     /* Report to the UI a list of tests */
     QStringList testNames;
     foreach (ChibiTest *test, _tests)
         testNames.append(test->testName());
     emit testListUpdated(testNames);
+}
+
+void ChibiSequence::testEngineLoaded()
+{
 }
 
 /* Returns true if there are more tests to run */

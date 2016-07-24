@@ -21,10 +21,14 @@ int main(int argc, char *argv[])
 
     QObject *stickersTest = rootObject->findChild<QObject *>("stickersTest");
 
-    ChibiSequence chibiSequence(&app, tests, logPath.toString());
+    ChibiSequence chibiSequence(&app, logPath.toString());
 
     QObject::connect(stickersTest, SIGNAL(startTests()),
                      &chibiSequence, SLOT(runTests()));
+    QObject::connect(stickersTest,SIGNAL(sendMessage(QString,int,QVariant,QVariant)),
+                     &chibiSequence, SLOT(dispatchMessage(QString,int,QVariant,QVariant)));
+    QObject::connect(stickersTest, SIGNAL(setTests(QVariant)),
+                     &chibiSequence, SLOT(setTests(QVariant)));
 
     QObject::connect(&chibiSequence, SIGNAL(testFinished()),
                      stickersTest, SLOT(onNextStep()));
@@ -52,6 +56,7 @@ int main(int argc, char *argv[])
     QObject::connect(&chibiSequence, SIGNAL(setGlobal(QVariant,QVariant)),
                      stickersTest, SLOT(onSetGlobal(QVariant,QVariant)));
 
+    chibiSequence.setTests(tests);
     chibiSequence.testEngineLoaded();
     return app.exec();
 }

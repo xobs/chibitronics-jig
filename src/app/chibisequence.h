@@ -15,7 +15,7 @@ class ChibiSequence : public QObject
 {
 	Q_OBJECT
 public:
-    explicit ChibiSequence(QObject *parent, const QVariant & testList, const QString & logPath = QString(), const QString & logFileName = QString());
+    explicit ChibiSequence(QObject *parent, const QString & logPath = QString(), const QString & logFileName = QString());
 
 private:
     QList<ChibiTest *> _tests;
@@ -52,6 +52,9 @@ public slots:
 
     /* Called after the test engine is loaded, but just before it is displayed */
     void testEngineLoaded(void);
+
+    /* This sets the current test list to the JSON object specified */
+    void setTests(QVariant);
 
 signals:
     void testFinished();

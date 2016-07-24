@@ -18,6 +18,10 @@ Window {
         property int currentTestIndex: 0
         property int testErrorCount: 0
 
+        signal startTests
+        signal sendMessage(string str, int type, var message, var param);
+        signal setTests(var tests);
+
         function getChildNamed(n) {
             for (var d in data)
                 if (data[d].objectName == n)
@@ -140,8 +144,40 @@ Window {
         }
 
         function onSetGlobal(key, val) {
+            if (key === "devicetype") {
+                console.log("Switching to device named " + val);
+                if (val === "ltc") {
+                    getChildNamed("boardImage").source = "../images/ltcsticker.png";
+                    setTests(mainWindow.tests);
+                }
+                else if (val === "dataviewer") {
+                    getChildNamed("boardImage").source = "../images/dataviewer.png";
+                    setTests(mainWindow.dataviewer_tests);
+                }
+            }
+        }
+
+        focus: true
+        Keys.onPressed: {
+            if (event.key === 83) {
+                console.log("'s' seen, emitting start-test");
+                sendMessage("", 6, "", "");
+            }
+            else if (event.key === 68) {
+                sendMessage("", 14, "devicetype", "dataviewer");
+            }
+            else if (event.key === 76) {
+                sendMessage("", 14, "devicetype", "ltc");
+            }
+            else if (event.key === 16777216) {
+                quit();
+            }
+
+            else
+                console.log("Unrecognized key event: " + event.key);
         }
     }
+
 
     Canvas {
         id: dotFill
@@ -263,4 +299,39 @@ Window {
         }
     ];
     property var logPath: "/logs/";
+    property var dataviewer_tests: [
+        {
+            testName: "SwdProgram",
+            testTitle: qsTr("Program Firmware"),
+            params: {
+                elfname: "dataviewer.elf",
+                idregisters: [
+                    "0x40048058",
+                    "0x4004805c",
+                    "0x40048060"
+                ],
+                timeout: 1000
+            }
+        },
+        {
+            testName: "TakePicture",
+            testTitle: qsTr("Cheese a picture"),
+            params: {
+                path: "/tester/images"
+            }
+        },
+        {
+            testName: "Delay",
+            params: {
+                msecs: 1000
+            }
+        },
+        {
+            testName: "Header",
+            params: {
+                message: qsTr("Done")
+            }
+        }
+
+    ]
 }
