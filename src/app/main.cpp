@@ -47,6 +47,11 @@ int main(int argc, char *argv[])
     QObject::connect(&chibiSequence, SIGNAL(testListUpdated(const QVariant)),
                      stickersTest, SLOT(onTestListUpdated(const QVariant)));
 
+    QObject::connect(&chibiSequence, SIGNAL(setVariable(QVariant,QVariant)),
+                     stickersTest, SLOT(onSetVariable(QVariant,QVariant)));
+    QObject::connect(&chibiSequence, SIGNAL(setGlobal(QVariant,QVariant)),
+                     stickersTest, SLOT(onSetGlobal(QVariant,QVariant)));
+
     chibiSequence.testEngineLoaded();
     return app.exec();
 }
