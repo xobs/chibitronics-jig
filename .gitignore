@@ -4,6 +4,7 @@ Makefile
 *.swp
 *.swo
 *.moc
+*~
 moc_*.cpp
 qrc_*.cpp
 
@@ -16,7 +17,7 @@ qrc_*.cpp
 /chibitronics-jig
 
 # Output directory
-build
+build*
 
 # Windows thumbnail database
 Thumbs.db
