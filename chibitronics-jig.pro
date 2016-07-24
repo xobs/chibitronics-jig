@@ -4,9 +4,9 @@ SUBDIRS = \
           src/cmdline \
           src/delay \
           src/header \
+          src/jighardware \
           src/setpower \
           src/shellcmd \
-          src/startbutton \
           src/swdprogram \
           src/takepicture \
           src/updater

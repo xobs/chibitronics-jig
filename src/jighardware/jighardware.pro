@@ -4,6 +4,7 @@
 
 TEMPLATE = lib
 CONFIG += debug
-SOURCES += startbutton.c \
-           wiringpi.c
+SOURCES += \
+           wiringpi.c \
+    jighardware.c
 HEADERS += ../common/testmodule.h

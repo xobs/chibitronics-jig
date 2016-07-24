@@ -9,7 +9,7 @@ static void sendStart(void) {
     mod_callbacks->send_message(NULL, StartTests, NULL, NULL);
 }
 
-static void StartButton__init(const FrameworkCallbacksC *callbacks) {
+static void JigHardware__init(const FrameworkCallbacksC *callbacks) {
     mod_callbacks = callbacks;
 
     // Note: we've hacked wiringPi.c to work when not run as root.
@@ -21,8 +21,8 @@ static void StartButton__init(const FrameworkCallbacksC *callbacks) {
 
 struct test_module_c Q_DECL_EXPORT test_module = {
     TEST_MODULE_MAGIC_C,
-    StartButton__init,
-    "StartButton",
+    JigHardware__init,
+    "JigHardware",
     "Monitor the \"Start\" button",
     NULL,
     NULL,
