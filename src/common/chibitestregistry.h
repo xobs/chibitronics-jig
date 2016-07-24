@@ -17,6 +17,9 @@ private:
     // A list of variables constant throughout a test sequence.
     QMap<QVariant, QVariant> variables;
 
+    // A list of variables consistent throughout all test sequences.
+    QMap<QVariant, QVariant> globals;
+
 public:
     ChibiTestRegistry();
     bool addDirectory(const QDir & dir);
@@ -25,7 +28,9 @@ public:
     const TestModule *getModule(const QString &name);
 
     const QVariant & getVariable(const QVariant & key);
+    const QVariant & getGlobal(const QVariant & key);
     void setVariable(const QVariant & key, const QVariant & value);
+    void setGlobal(const QVariant & key, const QVariant & value);
     void resetVariables();  // Call when the test sequence starts again
 
 signals:

@@ -57,7 +57,17 @@ static void ct_unexport_gpio(void *testObj, int gpio) {
 }
 
 static const QVariant & ct_get_variable(void *testObj, const QVariant & key) {
-    return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
+    if (testObj)
+        return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
+    else
+        return currentTestRegistry->getVariable(key);
+}
+
+static const QVariant & ct_get_global(void *testObj, const QVariant & key) {
+    if (testObj)
+        return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
+    else
+        return currentTestRegistry->getGlobal(key);
 }
 
 static const FrameworkCallbacksC frameworkCallbacks = {
@@ -73,6 +83,7 @@ static const FrameworkCallbacksQt frameworkCallbacksQt = {
     /* msleep */            ct_msleep,
     /* get_gpio */          ct_get_gpio,
     /* get_variable */      ct_get_variable,
+    /* get_global */        ct_get_global,
 };
 
 ChibiTestRegistry::ChibiTestRegistry() {
@@ -150,4 +161,12 @@ const QVariant & ChibiTestRegistry::getVariable(const QVariant &key) {
 
 void ChibiTestRegistry::resetVariables() {
     variables.clear();
+}
+
+void ChibiTestRegistry::setGlobal(const QVariant &key, const QVariant &value) {
+    globals.insert(key, value);
+}
+
+const QVariant & ChibiTestRegistry::getGlobal(const QVariant &key) {
+    return globals[key];
 }
