@@ -12,11 +12,11 @@ Window {
         id: stickersTest
         objectName: "stickersTest"
         anchors.fill: parent
-        property var errorCount: 0
+        property int errorCount: 0
         property var testNames
         property var testStates
-        property var currentTestIndex: 0
-        property var testErrorCount: 0
+        property int currentTestIndex: 0
+        property int testErrorCount: 0
 
         function getChildNamed(n) {
             for (var d in data)
@@ -120,15 +120,15 @@ Window {
         }
 
         function addPoint(pt, typ) {
-            if (typ == 0) {
+            if (typ === 0) {
                 dotFill.currentPoint = pt;
             }
-            else if (typ == 1) {
+            else if (typ === 1) {
                 if (!dotFill.testedPoints)
                     dotFill.testedPoints = [];
                 dotFill.testedPoints.push(pt);
             }
-            else if (typ == 2) {
+            else if (typ === 2) {
                 if (!dotFill.failurePoints)
                     dotFill.failurePoints = [];
                 dotFill.failurePoints.push(pt);
