@@ -63,6 +63,10 @@ signals:
     void appendError(const QVariant & message);
     void appendPass();
     void testListUpdated(const QVariant & testNames);
+
+    /* Called when individual variables are set */
+    void setVariable(const QVariant & key, const QVariant & param);
+    void setGlobal(const QVariant & key, const QVariant & param);
 };
 
 #endif // CHIBISEQUENCE_H
