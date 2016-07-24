@@ -24,7 +24,8 @@ typedef enum test_message_type {
     TestingPoint,   // Indes of the current (x, y) under test
     PassPoint,      // Indicates a specific (x, y) passed
     FailPoint,      // Indicates a specific (x, y) failed
-    SetVariable,    // Sets a variable within the test infrastructure
+    SetVariable,    // Sets a variable within the test infrastructure's current run
+    SetGlobal,      // Sets a persistent variable that is not dependent on the current run
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
@@ -41,6 +42,7 @@ typedef struct framework_callbacks_qt {
     void (*msleep)(void *testObj, int msecs);
     int  (*get_gpio)(void *testObj, int gpio);
     const QVariant & (&get_variable)(void *testObj, const QVariant & key);
+    const QVariant & (&get_global)(void *testObj, const QVariant & key);
 } FrameworkCallbacksQt;
 
 typedef struct test_module_qt {
