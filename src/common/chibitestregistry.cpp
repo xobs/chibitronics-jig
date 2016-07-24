@@ -10,7 +10,7 @@
 extern struct test_module_qt Q_DECL_IMPORT test_module;
 static ChibiTestRegistry *currentTestRegistry;
 
-static void ct_test_message(void *testObj, TestMessageType messageType,
+static void ct_test_message_c(void *testObj, TestMessageType messageType,
                             const void *message, const void *param) {
     if (testObj)
         static_cast<ChibiTest*>(testObj)->testData(
@@ -23,6 +23,20 @@ static void ct_test_message(void *testObj, TestMessageType messageType,
                                               messageType,
                                               message,
                                               param);
+}
+
+static const void * ct_get_variable_c(void *testObj, const void *key) {
+    if (testObj)
+        return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key).value<void *>();
+    else
+        return currentTestRegistry->getVariable(key).value<void *>();
+}
+
+static const void * ct_get_global_c(void *testObj, const void *key) {
+    if (testObj)
+        return static_cast<ChibiTest*>(testObj)->getRegistry()->getGlobal(key).value<void *>();
+    else
+        return currentTestRegistry->getGlobal(key).value<void *>();
 }
 
 static void ct_test_message_qt(void *testObj, TestMessageType messageType,
@@ -56,14 +70,14 @@ static void ct_unexport_gpio(void *testObj, int gpio) {
     static_cast<ChibiTest*>(testObj)->unexportGpio(gpio);
 }
 
-static const QVariant & ct_get_variable(void *testObj, const QVariant & key) {
+static const QVariant & ct_get_variable_qt(void *testObj, const QVariant & key) {
     if (testObj)
         return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
     else
         return currentTestRegistry->getVariable(key);
 }
 
-static const QVariant & ct_get_global(void *testObj, const QVariant & key) {
+static const QVariant & ct_get_global_qt(void *testObj, const QVariant & key) {
     if (testObj)
         return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key);
     else
@@ -72,9 +86,11 @@ static const QVariant & ct_get_global(void *testObj, const QVariant & key) {
 
 static const FrameworkCallbacksC frameworkCallbacks = {
     /* magic */             FRAMEWORK_MAGIC_C,
-    /* test_message */      ct_test_message,
+    /* test_message */      ct_test_message_c,
     /* msleep */            ct_msleep,
     /* get_gpio */          ct_get_gpio,
+    /* get_variable */      ct_get_variable_c,
+    /* get_global */        ct_get_global_c,
 };
 
 static const FrameworkCallbacksQt frameworkCallbacksQt = {
@@ -82,8 +98,8 @@ static const FrameworkCallbacksQt frameworkCallbacksQt = {
     /* test_message_qt */   ct_test_message_qt,
     /* msleep */            ct_msleep,
     /* get_gpio */          ct_get_gpio,
-    /* get_variable */      ct_get_variable,
-    /* get_global */        ct_get_global,
+    /* get_variable */      ct_get_variable_qt,
+    /* get_global */        ct_get_global_qt,
 };
 
 ChibiTestRegistry::ChibiTestRegistry() {

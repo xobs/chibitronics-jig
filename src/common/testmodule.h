@@ -41,8 +41,8 @@ typedef struct framework_callbacks_qt {
     void (*send_message)(void *testObj, TestMessageType messageType, const QVariant & message, const QVariant & parameter);
     void (*msleep)(void *testObj, int msecs);
     int  (*get_gpio)(void *testObj, int gpio);
-    const QVariant & (&get_variable)(void *testObj, const QVariant & key);
-    const QVariant & (&get_global)(void *testObj, const QVariant & key);
+    const QVariant & (*get_variable)(void *testObj, const QVariant & key);
+    const QVariant & (*get_global)(void *testObj, const QVariant & key);
 } FrameworkCallbacksQt;
 
 typedef struct test_module_qt {
@@ -64,6 +64,8 @@ typedef struct framework_callbacks_c {
   void (*send_message)(void *testObj, TestMessageType messageType, const void *message, const void *parameter);
   void (*msleep)(void *testObj, int msecs);
   int  (*get_gpio)(void *testObj, int gpio);
+  const void * (*get_variable)(void *testObj, const void * key);
+  const void * (*get_global)(void *testObj, const void * key);
 } FrameworkCallbacksC;
 
 typedef struct test_module_c {
