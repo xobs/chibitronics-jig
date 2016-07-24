@@ -152,10 +152,14 @@ void ChibiSequence::dispatchMessage(const QString & name,
         emit addPoint(message, 1);
     else if (type == FailPoint)
         emit addPoint(message, 2);
-    else if (type == SetVariable)
+    else if (type == SetVariable) {
         testRegistry.setVariable(message, parameter);
-    else if (type == SetGlobal)
+        emit setVariable(message, parameter);
+    }
+    else if (type == SetGlobal) {
         testRegistry.setGlobal(message, parameter);
+        emit setGlobal(message, parameter);
+    }
     else
         qDebug() << name << "????:" << type << message.toString();
 }
