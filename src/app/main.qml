@@ -136,6 +136,11 @@ Window {
             dotFill.requestPaint()
         }
 
+        function onSetVariable(key, val) {
+        }
+
+        function onSetGlobal(key, val) {
+        }
     }
 
     Canvas {
