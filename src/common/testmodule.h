@@ -26,6 +26,7 @@ typedef enum test_message_type {
     FailPoint,      // 12 / Indicates a specific (x, y) failed
     SetVariable,    // 13 / Sets a variable within the test infrastructure's current run
     SetGlobal,      // 14 / Sets a persistent variable that is not dependent on the current run
+    CalibrateCamera,// 15 / Runs "raspistill -s", or sends "SIGUSR1" to "raspistill".
 } TestMessageType;
 
 typedef struct test_instance TestInstance;
