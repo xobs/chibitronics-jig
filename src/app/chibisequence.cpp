@@ -1,5 +1,6 @@
 #include <QtGlobal>
 #include <QThread>
+#include <QProcess>
 
 #include <QDebug>
 #include "chibisequence.h"
@@ -171,6 +172,22 @@ void ChibiSequence::dispatchMessage(const QString & name,
     else if (type == SetGlobal) {
         testRegistry.setGlobal(message, parameter);
         emit setGlobal(message, parameter);
+    }
+    else if (type == CalibrateCamera) {
+        static bool calibrating = false;
+        static QProcess *raspicamera;
+
+        if (calibrating) {
+            raspicamera->terminate();
+            QThread::msleep(500);
+            raspicamera->kill();
+            calibrating = false;
+        }
+        else {
+            raspicamera = new QProcess();
+            raspicamera->start("raspistill -s");
+            calibrating = true;
+        }
     }
     else
         qDebug() << name << "????:" << type << message.toString();
