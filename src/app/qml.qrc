@@ -7,5 +7,9 @@
         <file>../images/ltcsticker.png</file>
         <file>../images/downarrow.png</file>
         <file>../images/dataviewer.png</file>
+        <file>TestItemBackground.qml</file>
+        <file>TestItemStyle.qml</file>
+        <file>fonts/OpenSans-Regular.ttf</file>
+        <file>../images/icon-go.png</file>
     </qresource>
 </RCC>

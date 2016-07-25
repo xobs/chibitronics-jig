@@ -1,11 +1,17 @@
-import QtQuick 2.0
+import QtQuick 2.2
+import QtGraphicalEffects 1.0
+import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
+import QtQuick.Dialogs 1.0
+import QtQuick.Extras 1.4
+import QtQuick.Layouts 1.0
+import QtQuick.Window 2.1
 
 Item {
     id: testDisplay
     objectName: "testOutput"
     width: 1280
     height: 720
-
 
     Text {
         id: statusText
@@ -72,19 +78,50 @@ Item {
         source: "../images/ltcsticker.png"
     }
 
+    property color lightFontColor: "#222"
+
+    FontLoader {
+        id: openSans
+        source: "qrc:/fonts/OpenSans-Regular.ttf"
+     }
+
     Text {
+        id: textSingleton
+    }
+
+    StackView {
         id: stepList
         objectName: "stepList"
         x: 863
         y: 58
         width: 401
         height: 668
+
+        initialItem: ListView {
+            model: ListModel {
+            }
+
+            delegate: Button {
+                width: stepList.width
+                height: stepList.height * 0.125
+                text: testTitle
+                state: testState
+
+                style: TestItemStyle {
+                    fontColor: testDisplay.lightFontColor
+                    leftAlignedIconSource: "qrc:/../images/icon-go.png"
+                }
+            }
+        }
+
+        /*
         text: qsTr("[Test List]")
         font.family: "Times New Roman"
         textFormat: Text.RichText
         style: Text.Normal
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
         font.pixelSize: 32
+        */
     }
 
     Text {

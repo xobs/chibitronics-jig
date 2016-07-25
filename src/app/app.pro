@@ -15,7 +15,9 @@ SOURCES += main.cpp \
 # Include QML files when we run translation tools
 lupdate_only{
 SOURCES += TestWindow.qml \
-           main.qml
+           main.qml \
+           TestItemStyle.qml \
+           TestItemBackground.qml
 }
 
 TRANSLATIONS = app.ts

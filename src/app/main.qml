@@ -39,19 +39,16 @@ Window {
 
         function updateTestList() {
             var stepList = getChildNamed("stepList");
+            var newList = stepList.currentItem;
+            var newModel = newList.model;
 
-            stepList.text = "<ul>";
+            newModel.clear();
             for (var testIndex in testNames) {
-                if (testStates[testIndex] === 1)
-                    stepList.text += "<li><font color=\"green\">" + testNames[testIndex] + "</font></li>";
-                else if (testStates[testIndex] === 2)
-                    stepList.text += "<li><font color=\"red\">" + testNames[testIndex] + "</font></li>";
-                else if (testStates[testIndex] === 3)
-                    stepList.text += "<li><font color=\"blue\">" + testNames[testIndex] + "</font></li>";
-                else
-                    stepList.text += "<li>" + testNames[testIndex] + "</li>";
+                newModel.append({
+                    testTitle: testNames[testIndex],
+                    testState: testStates[testIndex]
+                });
             }
-            stepList.text += "</ul>";
         }
 
         function onSetHeader(msg) {
@@ -63,6 +60,13 @@ Window {
                 state = "fail";
             else
                 state = "pass";
+
+            // On a Fatal error, reset the "current test" to a black color,
+            // rather than leaving it in the "in-progress" coloring.
+            if (currentTestIndex < testNames.length) {
+                testStates[currentTestIndex] = 0;
+                updateTestList();
+            }
         }
 
         function onAppendLog(msg) {
@@ -109,7 +113,10 @@ Window {
                 testStates[currentTestIndex] = 1;
             currentTestIndex++;
             testErrorCount = 0;
-            testStates[currentTestIndex] = 3;
+
+            // If we have further tests, set their coloring to "test in progress"
+            if (currentTestIndex <= testNames.length)
+                testStates[currentTestIndex] = 3;
             updateTestList();
         }
 
