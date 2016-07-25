@@ -182,10 +182,6 @@ Window {
             else
                 console.log("Unrecognized key event: " + event.key);
         }
-
-        Component.onCompleted: {
-            switchToDevice("ltc");
-        }
     }
 
 
