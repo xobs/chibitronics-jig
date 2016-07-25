@@ -33,6 +33,9 @@ public:
     void setGlobal(const QVariant & key, const QVariant & value);
     void resetVariables();  // Call when the test sequence starts again
 
+    // Call this once everything is connected, to call plugins' init() function
+    void doInit();
+
 signals:
     void testMessage(const QString & name, int testMessageType,
                      const QVariant & message, const QVariant & param);

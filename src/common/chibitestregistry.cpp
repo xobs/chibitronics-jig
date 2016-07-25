@@ -84,7 +84,7 @@ static const QVariant & ct_get_global_qt(void *testObj, const QVariant & key) {
         return currentTestRegistry->getGlobal(key);
 }
 
-static const FrameworkCallbacksC frameworkCallbacks = {
+static const FrameworkCallbacksC frameworkCallbacksC = {
     /* magic */             FRAMEWORK_MAGIC_C,
     /* test_message */      ct_test_message_c,
     /* msleep */            ct_msleep,
@@ -135,8 +135,6 @@ bool ChibiTestRegistry::addModule(const void *module) {
         /* Don't re-add duplicate modules */
         if (registry.value(module_c->module_name).value<void *>() != NULL)
             return false;
-        module_c->module_init(&frameworkCallbacks);
-
         registry.insert(module_c->module_name,
                         QVariant::fromValue((void *)module_c));
     }
@@ -145,12 +143,25 @@ bool ChibiTestRegistry::addModule(const void *module) {
         /* Don't re-add duplicate modules */
         if (registry.value(module_qt->module_name).value<void *>() != NULL)
             return false;
-        module_qt->module_init(&frameworkCallbacksQt);
-
         registry.insert(module_qt->module_name,
                         QVariant::fromValue((void *)module_qt));
     }
     return true;
+}
+
+void ChibiTestRegistry::doInit() {
+
+    // Initialize modules once everything is wired up.  Otherwise, we won't
+    // be able to call messages during init functions.
+    foreach (QVariant module, registry) {
+        const TestModuleC *module_c = (const TestModuleC *)module.value<void *>();
+        const TestModuleQt *module_qt = (const TestModuleQt *)module.value<void *>();
+
+        if (module_c->magic == TEST_MODULE_MAGIC_C)
+            module_c->module_init(&frameworkCallbacksC);
+        else if (module_qt->magic == TEST_MODULE_MAGIC_QT)
+            module_qt->module_init(&frameworkCallbacksQt);
+    }
 }
 
 const TestModule *ChibiTestRegistry::getModule(const QString &name) {
