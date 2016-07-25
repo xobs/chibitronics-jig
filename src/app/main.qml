@@ -164,15 +164,28 @@ Window {
 
         focus: true
         Keys.onPressed: {
+
+            // s
             if (event.key === 83) {
                 sendMessage("", 6, "", "");
             }
+
+            // d
             else if (event.key === 68) {
                 sendMessage("", 14, "devicetype", "dataviewer");
             }
+
+            // l
             else if (event.key === 76) {
                 sendMessage("", 14, "devicetype", "ltc");
             }
+
+            // c
+            else if (event.key === 67) {
+                sendMessage("", 15, "", "");
+            }
+
+            // ESC
             else if (event.key === 16777216) {
                 quit();
             }
