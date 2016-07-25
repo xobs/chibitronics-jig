@@ -33,7 +33,7 @@ static void JigHardware__init(const FrameworkCallbacksC *callbacks) {
         mod_callbacks->send_message(NULL, SetGlobal, "devicetype", "dataviewer");
     }
     else {
-]        mod_callbacks->send_message(NULL, SetGlobal, "devicetype", "ltc");
+        mod_callbacks->send_message(NULL, SetGlobal, "devicetype", "ltc");
     }
 }
 
