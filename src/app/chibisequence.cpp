@@ -33,11 +33,10 @@ ChibiSequence::ChibiSequence(QObject *parent,
 {
     connect(
         &testRegistry,
-        SIGNAL(testMessage(const QString,int,const QVariant,const QVariant)),
+        SIGNAL(testMessage(const QString,int,QVariant,QVariant)),
         this,
-        SLOT(dispatchMessage(const QString,int,const QVariant,const QVariant)));
+        SLOT(dispatchMessage(const QString,int,QVariant,QVariant)));
 
-    /* For each test present, resolve the test to a plugin module and wire it up. */
     /* Open the resulting logfile */
     if (logfile != "") {
         log.setFileName(logfile);
