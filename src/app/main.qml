@@ -305,13 +305,8 @@ Window {
             }
         },
         {
-            testName: "Delay",
-            params: {
-                msecs: 1000
-            }
-        },
-        {
             testName: "Header",
+            testTitle: qsTr("Finished"),
             params: {
                 message: qsTr("Done")
             }
@@ -339,13 +334,8 @@ Window {
             }
         },
         {
-            testName: "Delay",
-            params: {
-                msecs: 1000
-            }
-        },
-        {
             testName: "Header",
+            testTitle: qsTr("Finished"),
             params: {
                 message: qsTr("Done")
             }
