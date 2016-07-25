@@ -62,3 +62,17 @@ to the console, which normally is not visible.
 If a test fails, call testError() and pass it a description of the error.
 If you return from runTest() without calling testError(), it is assume that
 the test has succeeded.
+
+
+Keyboard Interface
+------------------
+
+If you plug in a keyboard, you can manipulate some functions for test.
+
+| Key | Function  |
+| --- | --------- |
+|  c  | Bring up the "camera calibration" screen.  Press 'c' again to dismiss it. |
+|  s  | Start a test.  Equivalent to clicking the mouse, or shorting the "start" pins. |
+|  l  | Switch to "LtC" mode, ignoring the ltc/dataviewer strapping pin. |
+|  d  | Switch to "Data viewer" mode, ignoring the ltc/dataviewer strapping pin. |
+| ESC | Quit the program. If running on real hardware, the watchdog will start it again. |
