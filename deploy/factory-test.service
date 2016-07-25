@@ -5,6 +5,7 @@ Description=Chibitronics Tester
 User=pi
 Environment=PATH=/opt/openocd/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
 ExecStart=/home/pi/tester/app
+WorkingDirectory=/home/pi/tester/
 Restart=always
 RestartSec=10
 
