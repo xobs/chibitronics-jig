@@ -61,11 +61,11 @@ extern "C" {
 
 typedef struct framework_callbacks_c {
   uint32_t magic;
-  void (*send_message)(void *testObj, TestMessageType messageType, const void *message, const void *parameter);
+  void (*send_message)(void *testObj, TestMessageType messageType, const char *message, const char *parameter);
   void (*msleep)(void *testObj, int msecs);
   int  (*get_gpio)(void *testObj, int gpio);
-  const void * (*get_variable)(void *testObj, const void * key);
-  const void * (*get_global)(void *testObj, const void * key);
+  const char * (*get_variable)(void *testObj, const char * key);
+  const char * (*get_global)(void *testObj, const char * key);
 } FrameworkCallbacksC;
 
 typedef struct test_module_c {

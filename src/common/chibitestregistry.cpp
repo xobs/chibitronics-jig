@@ -11,32 +11,32 @@ extern struct test_module_qt Q_DECL_IMPORT test_module;
 static ChibiTestRegistry *currentTestRegistry;
 
 static void ct_test_message_c(void *testObj, TestMessageType messageType,
-                            const void *message, const void *param) {
+                            const char *message, const char *param) {
     if (testObj)
         static_cast<ChibiTest*>(testObj)->testData(
             static_cast<ChibiTest*>(testObj)->testName(),
             messageType,
-            message,
-            param);
+            QVariant(message),
+            QVariant(param));
     else
         emit currentTestRegistry->testMessage(QString(),
                                               messageType,
-                                              message,
-                                              param);
+                                              QVariant(message),
+                                              QVariant(param));
 }
 
-static const void * ct_get_variable_c(void *testObj, const void *key) {
+static const char * ct_get_variable_c(void *testObj, const char *key) {
     if (testObj)
-        return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key).value<void *>();
+        return static_cast<ChibiTest*>(testObj)->getRegistry()->getVariable(key).toString().toUtf8();
     else
-        return currentTestRegistry->getVariable(key).value<void *>();
+        return currentTestRegistry->getVariable(key).toString().toUtf8();
 }
 
-static const void * ct_get_global_c(void *testObj, const void *key) {
+static const char * ct_get_global_c(void *testObj, const char *key) {
     if (testObj)
-        return static_cast<ChibiTest*>(testObj)->getRegistry()->getGlobal(key).value<void *>();
+        return static_cast<ChibiTest*>(testObj)->getRegistry()->getGlobal(key).toString().toUtf8();
     else
-        return currentTestRegistry->getGlobal(key).value<void *>();
+        return currentTestRegistry->getGlobal(key).toString().toUtf8();
 }
 
 static void ct_test_message_qt(void *testObj, TestMessageType messageType,
