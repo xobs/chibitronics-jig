@@ -6,3 +6,4 @@ TEMPLATE = lib
 CONFIG += debug
 SOURCES += takepicture.cpp
 HEADERS += ../common/testmodule.h
+TRANSLATIONS = takepicture.ts

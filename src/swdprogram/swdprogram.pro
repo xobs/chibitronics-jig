@@ -6,3 +6,4 @@ TEMPLATE = lib
 CONFIG += debug
 SOURCES += swdprogram.cpp
 HEADERS += ../common/testmodule.h
+TRANSLATIONS = swdprogram.ts

@@ -6,3 +6,4 @@ TEMPLATE = lib
 CONFIG += debug
 SOURCES += header.cpp
 HEADERS += ../common/testmodule.h
+TRANSLATIONS = header.ts
