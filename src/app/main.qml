@@ -143,17 +143,23 @@ Window {
         function onSetVariable(key, val) {
         }
 
+        function switchToDevice(val) {
+            console.log("Switching to device named " + val);
+            if (val === "ltc") {
+                getChildNamed("boardImage").source = "../images/ltcsticker.png";
+                mainWindow.tests = mainWindow.ltc_tests;
+                setTests(mainWindow.tests);
+            }
+            else if (val === "dataviewer") {
+                getChildNamed("boardImage").source = "../images/dataviewer.png";
+                mainWindow.tests = mainWindow.dataviewer_tests;
+                setTests(mainWindow.tests);
+            }
+        }
+
         function onSetGlobal(key, val) {
             if (key === "devicetype") {
-                console.log("Switching to device named " + val);
-                if (val === "ltc") {
-                    getChildNamed("boardImage").source = "../images/ltcsticker.png";
-                    setTests(mainWindow.tests);
-                }
-                else if (val === "dataviewer") {
-                    getChildNamed("boardImage").source = "../images/dataviewer.png";
-                    setTests(mainWindow.dataviewer_tests);
-                }
+                switchToDevice(val);
             }
         }
 
@@ -175,6 +181,10 @@ Window {
 
             else
                 console.log("Unrecognized key event: " + event.key);
+        }
+
+        Component.onCompleted: {
+            switchToDevice("ltc");
         }
     }
 
@@ -263,7 +273,9 @@ Window {
        17) Verify red LED is not on
        18) Toggle power off
     */
-    property var tests: [
+    property var logPath: "/logs/";
+    property var tests;
+    property var ltc_tests: [
         {
             testName: "SwdProgram",
             testTitle: qsTr("Program Firmware"),
@@ -298,7 +310,6 @@ Window {
             }
         }
     ];
-    property var logPath: "/logs/";
     property var dataviewer_tests: [
         {
             testName: "SwdProgram",
@@ -332,6 +343,5 @@ Window {
                 message: qsTr("Done")
             }
         }
-
     ]
 }
