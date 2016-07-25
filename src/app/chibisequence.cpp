@@ -89,6 +89,7 @@ void ChibiSequence::setTests(QVariant tests)
 
 void ChibiSequence::testEngineLoaded()
 {
+    testRegistry.doInit();
 }
 
 /* Returns true if there are more tests to run */
