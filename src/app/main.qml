@@ -144,7 +144,6 @@ Window {
         }
 
         function switchToDevice(val) {
-            console.log("Switching to device named " + val);
             if (val === "ltc") {
                 getChildNamed("boardImage").source = "../images/ltcsticker.png";
                 mainWindow.tests = mainWindow.ltc_tests;
@@ -166,7 +165,6 @@ Window {
         focus: true
         Keys.onPressed: {
             if (event.key === 83) {
-                console.log("'s' seen, emitting start-test");
                 sendMessage("", 6, "", "");
             }
             else if (event.key === 68) {
