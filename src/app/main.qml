@@ -21,6 +21,7 @@ Window {
         signal startTests
         signal sendMessage(string str, int type, var message, var param);
         signal setTests(var tests);
+        signal quit
 
         function getChildNamed(n) {
             for (var d in data)

@@ -7,7 +7,6 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    //QGuiApplication app(argc, argv);
 
     app.setOverrideCursor(Qt::BlankCursor);
 
@@ -29,6 +28,8 @@ int main(int argc, char *argv[])
                      &chibiSequence, SLOT(dispatchMessage(QString,int,QVariant,QVariant)));
     QObject::connect(stickersTest, SIGNAL(setTests(QVariant)),
                      &chibiSequence, SLOT(setTests(QVariant)));
+    QObject::connect(stickersTest, SIGNAL(quit()),
+                     &app, SLOT(quit()));
 
     QObject::connect(&chibiSequence, SIGNAL(testFinished()),
                      stickersTest, SLOT(onNextStep()));
