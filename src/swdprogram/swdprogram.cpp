@@ -2,12 +2,16 @@
 #include <QString>
 #include <QStringList>
 #include <QProcess>
+#include <QThread>
 
 #define INTERESTING_STRING_PREFIX "!>>)} "
 #define IDREG_PREFIX "!>>)}!! "
 #define SUCCESS_STRING ")))>>-- Done Programming --<<((("
 
 static const FrameworkCallbacksQt *mod_callbacks;
+
+#define RESET_TRIES_MAX 200
+#define RESET_TRIES_DELAY_MSECS 20
 
 class SwdProgrammer
 {
@@ -29,7 +33,7 @@ class SwdProgrammer
                     << "-c" << "transport select swd"
                     << "-f" << "target/klx.cfg"
                     << "-c" << "klx.cpu configure -rtos ChibiOS"
-                    << "-c" << "reset_config srst_push_pull"
+                    << "-c" << "reset_config srst_push_pull srst_only connect_assert_srst"
                     << "-c" << "init"
                     << "-c" << "reset halt";
             foreach (const QString & region, idRegisters) {
@@ -53,7 +57,7 @@ class SwdProgrammer
                     << "-c" << "transport select swd"
                     << "-f" << "target/klx.cfg"
                     << "-c" << "klx.cpu configure -rtos ChibiOS"
-                    << "-c" << "reset_config srst_push_pull"
+                    << "-c" << "reset_config srst_push_pull srst_only connect_assert_srst"
                     << "-c" << "init"
                     << "-c" << "kinetis mdm mass_erase"
                     << "-c" << "reset halt"
@@ -98,9 +102,11 @@ class SwdProgrammer
 
             int reset_tries;
             bool did_reset = false;
-            for (reset_tries = 0; !did_reset && reset_tries < 5; reset_tries++) {
+            for (reset_tries = 0; !did_reset && reset_tries < RESET_TRIES_MAX; reset_tries++) {
                 if (resetChip())
                     did_reset = true;
+                else
+                    QThread::msleep(RESET_TRIES_DELAY_MSECS);
             }
             if (!did_reset) {
                 mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process did not complete")), NULL);
