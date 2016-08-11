@@ -16,7 +16,8 @@ class SwdProgrammer
         SwdProgrammer(void *new_key,
                  const QString & elfname,
                  QStringList idregisters,
-                 uint32_t timeout_msecs)
+                 uint32_t timeout_msecs,
+                 QStringList extras)
             : key(new_key),
               elfName(elfname),
               idRegisters(idregisters),
@@ -189,7 +190,8 @@ static TestInstance *SwdProgrammer__instance_init(void *testObj,
     SwdProgrammer *sc = new SwdProgrammer(testObj,
                                 params["elfname"].toString(),
                                 params["idregisters"].toStringList(),
-                                params["timeout"].toUInt());
+                                params["timeout"].toUInt(),
+                                params["extras"].toStringList());
     return (TestInstance *)sc;
 }
 
