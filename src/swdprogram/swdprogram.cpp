@@ -102,8 +102,10 @@ class SwdProgrammer
                 if (resetChip())
                     did_reset = true;
             }
-            if (!did_reset)
+            if (!did_reset) {
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process did not complete")), NULL);
                 return;
+            }
 
             process.setProgram(cmd);
             process.setArguments(args);
