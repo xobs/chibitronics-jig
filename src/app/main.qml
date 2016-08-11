@@ -297,6 +297,10 @@ Window {
             testDescription: qsTr("Running OpenOCD"),
             params: {
                 elfname: "ltc.elf",
+                extras: [
+                    "flash erase_address pad 0x5800 0x1a00",
+                    "flash write_image physical.bin 0x5900"
+                ],
                 idregisters: [
                     "0x40048058",
                     "0x4004805c",
