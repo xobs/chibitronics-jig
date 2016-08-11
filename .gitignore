@@ -25,3 +25,4 @@ Thumbs.db
 # Qt local files
 *.pro.user
 *.autosave
+.qmake.stash
