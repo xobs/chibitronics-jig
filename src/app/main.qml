@@ -101,6 +101,7 @@ Window {
                 testStates[i] = 0;
             testStates[0] = 3;
             dotFill.requestPaint()
+            updateTestList();
         }
 
         function testFinished() {
