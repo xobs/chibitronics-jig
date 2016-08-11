@@ -36,14 +36,74 @@ class SwdProgrammer
                        << "-c" << QString("mdw %1").arg(region);
             }
             args << "-c" << QString("flash write_image %1").arg(elfName);
+            foreach (const QString & ex, extras) {
+                args << "-c" << ex;
+            }
             args << "-c" << "reset";
             args << "-c" << "echo \"" SUCCESS_STRING "\"";
             args << "-c" << "exit";
         };
 
+        bool resetChip(void)
+        {
+            QProcess process;
+            QStringList resetArgs;
+            resetArgs  << "-f" << "interface/raspberrypi2-native.cfg"
+                    << "-c" << "transport select swd"
+                    << "-f" << "target/klx.cfg"
+                    << "-c" << "klx.cpu configure -rtos ChibiOS"
+                    << "-c" << "reset_config srst_push_pull"
+                    << "-c" << "init"
+                    << "-c" << "kinetis mdm mass_erase"
+                    << "-c" << "reset halt"
+                    << "-c" << "exit";
+
+            process.setProgram(cmd);
+            process.setArguments(resetArgs);
+            process.setProcessChannelMode(QProcess::MergedChannels);
+            process.start();
+            process.waitForFinished(timeout);
+
+            QByteArray output = process.readAll();
+
+            if (process.state() != QProcess::NotRunning) {
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process timed out")), NULL);
+                process.terminate();
+                mod_callbacks->send_message(key, DebugMessage, output, NULL);
+                return false;
+            }
+
+            // Make sure the process didn't crash.
+            if (process.exitStatus() != QProcess::NormalExit) {
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process did not have a normal exit")), NULL);
+                mod_callbacks->send_message(key, DebugMessage, output, NULL);
+                return false;
+            }
+
+            // Make sure the exit code is good.
+            if (process.exitCode() != 0) {
+                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process exited with code %1")).arg(process.exitCode()), NULL);
+                mod_callbacks->send_message(key, DebugMessage, output, NULL);
+                return false;
+            }
+
+            mod_callbacks->send_message(key, DebugMessage, "Reset CPU", NULL);
+            return true;
+        }
+
         void runTest(void)
         {
             QProcess process;
+
+            int reset_tries;
+            bool did_reset = false;
+            for (reset_tries = 0; !did_reset && reset_tries < 10; reset_tries++) {
+                if (resetChip())
+                    did_reset = true;
+            }
+            if (!did_reset)
+                return;
+
             process.setProgram(cmd);
             process.setArguments(args);
 
@@ -59,6 +119,7 @@ class SwdProgrammer
             if (process.state() != QProcess::NotRunning) {
                 mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Process timed out")), NULL);
                 process.terminate();
+                mod_callbacks->send_message(key, DebugMessage, QString(process.readAll()), NULL);
                 return;
             }
 
