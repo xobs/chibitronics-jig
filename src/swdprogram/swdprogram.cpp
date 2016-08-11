@@ -68,7 +68,7 @@ class SwdProgrammer
             QByteArray output = process.readAll();
 
             if (process.state() != QProcess::NotRunning) {
-                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process timed out")), NULL);
+                mod_callbacks->send_message(key, DebugMessage, QString(QObject::tr("Reset process timed out")), NULL);
                 process.terminate();
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return false;
@@ -76,14 +76,14 @@ class SwdProgrammer
 
             // Make sure the process didn't crash.
             if (process.exitStatus() != QProcess::NormalExit) {
-                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process did not have a normal exit")), NULL);
+                mod_callbacks->send_message(key, DebugMessage, QString(QObject::tr("Reset process did not have a normal exit")), NULL);
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return false;
             }
 
             // Make sure the exit code is good.
             if (process.exitCode() != 0) {
-                mod_callbacks->send_message(key, FatalMessage, QString(QObject::tr("Reset process exited with code %1")).arg(process.exitCode()), NULL);
+                mod_callbacks->send_message(key, DebugMessage, QString(QObject::tr("Reset process exited with code %1")).arg(process.exitCode()), NULL);
                 mod_callbacks->send_message(key, DebugMessage, output, NULL);
                 return false;
             }
@@ -98,7 +98,7 @@ class SwdProgrammer
 
             int reset_tries;
             bool did_reset = false;
-            for (reset_tries = 0; !did_reset && reset_tries < 10; reset_tries++) {
+            for (reset_tries = 0; !did_reset && reset_tries < 5; reset_tries++) {
                 if (resetChip())
                     did_reset = true;
             }
